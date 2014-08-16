@@ -22,6 +22,31 @@ Sample value:
 ```
 
 You will have to decode the base64 file in your backend on your own.
+Sample ruby code for decoding the base64-encoded file using paperclip:
+```ruby
+def create
+  @resource.attachment = decode_base64
+  # save resource and render response ...
+end
+
+def decode_base64
+  # decode base64 string
+  Rails.logger.info 'decoding base64 file'
+  decoded_data = Base64.decode64(params[:your_model][:base64])
+  # create 'file' understandable by Paperclip
+  data = StringIO.new(decoded_data)
+  data.class_eval do
+    attr_accessor :content_type, :original_filename
+  end
+
+  # set file properties
+  data.content_type = params[:your_model][:fileType]
+  data.original_filename = params[:your_model][:fileName]
+  
+  # return data to be used as the attachment file (paperclip)
+  data
+end
+```
 
 Example
 --------------------------
