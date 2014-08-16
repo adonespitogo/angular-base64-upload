@@ -20,8 +20,8 @@ angular.module('naif.base64', [])
 
       elem.on('change', function() {
         var file = elem[0].files[0];
-        scope.model.fileType = file.type;
-        scope.model.fileName = file.name;
+        scope.model.filetype = file.type;
+        scope.model.filename = file.name;
         // converts file to binary string
         reader.readAsBinaryString(file);
       });
