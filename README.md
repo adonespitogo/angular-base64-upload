@@ -10,7 +10,18 @@ Usage
 
 Include `angular.js` and `angular-base64-upload.js` in your application. Create a form and add `<input type='file' ng-file='yourModel' base-sixty-four-input>`.
 
-Note: `yourModel` will hold the 3 values from the directive namely `fileType`, `fileName` and `base64`. You will have to decode the base64 file in your backend on your own.
+Note: `yourModel` will hold the 3 values from the directive namely `fileType`, `fileName` and `base64`.
+
+Sample value:
+```json
+{
+  fileType: 'text/plain',
+  fileName: 'textfile.txt',
+  base64: '/asdjfo4sa]f57as]fd42sdf354asdf2as35fd4'
+}
+```
+
+You will have to decode the base64 file in your backend on your own.
 
 Example
 --------------------------
