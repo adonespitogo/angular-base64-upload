@@ -2,29 +2,27 @@ angular.module('naif.base64', [])
 .directive('baseSixtyFourInput', function () {
   return {
     restrict: 'A',
-    scope: {
-      model: '=ngFile'
-    },
-    link: function (scope, elem, attrs) {
-
-      scope.model = scope.model || {}
-
+    require: 'ngModel',
+    link: function (scope, elem, attrs, ngModel) {
+      var fileObject = {};
       scope.readerOnload = function(e){
         var base64 = btoa(e.target.result);
-        scope.model.base64 = base64;
-        scope.$apply()
-      }
+        fileObject.base64 = base64;
+        scope.$apply(function(){
+          ngModel.$setViewValue(fileObject);
+        });
+      };
 
       var reader = new FileReader();
-      reader.onload = scope.readerOnload
+      reader.onload = scope.readerOnload;
 
       elem.on('change', function() {
         var file = elem[0].files[0];
-        scope.model.filetype = file.type;
-        scope.model.filename = file.name;
+        fileObject.filetype = file.type;
+        fileObject.filename = file.name;
         // converts file to binary string
         reader.readAsBinaryString(file);
       });
     }
-  }
+  };
 });
