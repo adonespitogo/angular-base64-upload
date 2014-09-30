@@ -6,7 +6,11 @@
   "dependencies": {
     "grunt-cli": "^0.1.13"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-karma": "^0.9.0",
+    "karma": "^0.12.23"
+  },
   "scripts": {
     "test": "grunt test"
   },
