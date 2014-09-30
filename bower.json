@@ -1,6 +1,6 @@
 {
   "name": "angular-base64-upload",
-  "main": "angular-base64-upload.js",
+  "main": "src/angular-base64-upload.js",
   "version": "v0.0.1",
   "homepage": "https://github.com/adonespitogo/angular-base64-upload",
   "authors": [
