@@ -1,0 +1,34 @@
+{
+  "name": "angular-base64-upload",
+  "version": "0.0.1",
+  "description": "Angular directive for uploading base64-encoded files that you can pass along with the resource model.",
+  "main": "angular-base64-upload.js",
+  "dependencies": {
+    "grunt-cli": "^0.1.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adonespitogo/angular-base64-upload.git"
+  },
+  "keywords": [
+    "angularjs",
+    "angular",
+    "upload",
+    "base-64",
+    "upload",
+    "file",
+    "upload",
+    "ajax",
+    "upload"
+  ],
+  "author": "Adones Pitogo <pitogo.adones@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/adonespitogo/angular-base64-upload/issues"
+  },
+  "homepage": "https://github.com/adonespitogo/angular-base64-upload"
+}
