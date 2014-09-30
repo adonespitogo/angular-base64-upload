@@ -1,7 +1,7 @@
 {
   "name": "angular-base64-upload",
   "main": "angular-base64-upload.js",
-  "version": "0.0.1",
+  "version": "v0.0.1",
   "homepage": "https://github.com/adonespitogo/angular-base64-upload",
   "authors": [
     "Adones Pitogo <pitogo.adones@gmail.com>"
