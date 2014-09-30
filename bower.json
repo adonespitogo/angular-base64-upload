@@ -1,0 +1,36 @@
+{
+  "name": "angular-base64-upload",
+  "main": "angular-base64-upload.js",
+  "version": "0.0.1",
+  "homepage": "https://github.com/adonespitogo/angular-base64-upload",
+  "authors": [
+    "Adones Pitogo <pitogo.adones@gmail.com>"
+  ],
+  "description": "Angular directive for uploading base64-encoded files that you can pass along with the resource model.",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "angularjs",
+    "angular",
+    "upload",
+    "base-64",
+    "upload",
+    "file",
+    "upload",
+    "ajax",
+    "upload"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular": "~1.2.25",
+    "angular-mocks": "~1.2.25"
+  }
+}
