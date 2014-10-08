@@ -8,11 +8,17 @@ Note: This directive only supports single file selection.
 Usage
 -------
 
-Include `angular.js` and `angular-base64-upload.js` in your application. Create a form and add `<input type='file' ng-model='yourModel' base-sixty-four-input>`.
+Include `angular.js` and `angular-base64-upload.js` in your application and add `naif.base64` as dependency to your main module:
 
-Note: `yourModel` will hold the 3 values from the directive namely `filetype`, `filename` and `base64`.
+```
+angular.module('myApp', 'naif.base64');
+```
 
-Sample value:
+Create a form and add `<input type='file' ng-model='yourModel' base-sixty-four-input>`. 
+
+`yourModel` will hold the 3 values from the directive namely `filetype`, `filename` and `base64`.
+
+Sample `yourModel` value:
 ```json
 {
   fileType: 'text/plain',
