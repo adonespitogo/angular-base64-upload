@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Angular Base64 Upload Demo</title>
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular.min.js"></script>
-  <script type="text/javascript" src="../angular-base64-upload.js"></script>
+  <script type="text/javascript" src="../dist/angular-base64-upload.js"></script>
   <script type="text/javascript">
     angular.module('myApp', ['naif.base64']).controller('ctrl', function($scope, $http, $window){
       $scope.resource = {
@@ -30,7 +30,7 @@
     <label for="name">Name</label>
     <input type="text" name="name" ng-model="resource.user.name">
     <label for="file">Select File</label>
-    <input type="file" ng-file="resource.image" name="file" base-sixty-four-input>
+    <input type="file" ng-model="resource.image" name="file" base-sixty-four-input>
     <button type="submit" ng-click="uploadFile()">Submit</button>
   </form>
   <h2>File Info</h2>
@@ -41,7 +41,7 @@
     <b>File type: </b> {{resource.image.filetype}}
   </p>
   <p>
-    <b>Base 64 encoded: </b> 
+    <b>Base 64 encoded: </b>
     <p>
       <textarea name="" id="" cols="30" rows="10">
         {{resource.image.base64}}
