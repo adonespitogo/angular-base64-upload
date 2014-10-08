@@ -7,17 +7,12 @@
   <script type="text/javascript" src="../dist/angular-base64-upload.js"></script>
   <script type="text/javascript">
     angular.module('myApp', ['naif.base64']).controller('ctrl', function($scope, $http, $window){
-      $scope.resource = {
-        user: {
-          username: 'adonesp',
-          name: 'Adones Pitogo'
-        },
-        image: {}
-      }
+
       $scope.uploadFile = function(){
-        $http.post('server.php', $scope.resource)
+        $http.post('server.php', $scope.image)
         .success(function(res){
-          console.log(res)
+          alert('View file '+res+'  ?');
+          $window.location.assign(res);
         })
       }
     })
@@ -25,26 +20,24 @@
 </head>
 <body ng-controller="ctrl">
   <form>
-    <label for="name">Username</label>
-    <input type="text" name="username" ng-model="resource.user.username">
-    <label for="name">Name</label>
-    <input type="text" name="name" ng-model="resource.user.name">
-    <label for="file">Select File</label>
-    <input type="file" ng-model="resource.image" name="file" base-sixty-four-input>
+    <label for="file">Select Image</label>
+    <input type="file" ng-model="image" name="file" base-sixty-four-input>
     <button type="submit" ng-click="uploadFile()">Submit</button>
   </form>
+  Image Preview: <br>
+  <img ng-src="data:{{image.filetype}};base64,{{image.base64}}" alt="">
   <h2>File Info</h2>
   <p>
-    <b>File Name: </b> {{resource.image.filename}}
+    <b>File Name: </b> {{image.filename}}
   </p>
   <p>
-    <b>File type: </b> {{resource.image.filetype}}
+    <b>File type: </b> {{image.filetype}}
   </p>
   <p>
     <b>Base 64 encoded: </b>
     <p>
       <textarea name="" id="" cols="30" rows="10">
-        {{resource.image.base64}}
+        {{image.base64}}
       </textarea>
     </p>
   </p>

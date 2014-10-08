@@ -3,36 +3,41 @@
 class Base64File
 {
 
-  private $base_64 = '';
-  private $file_name = '';
+  private $base64 = '';
+  private $fileName = '';
 
-  function __construct($base64_string)
+  function __construct($attrs)
   {
-    $this->base_64 = $base64_string;
+    $this->base64 = $attrs['base64'];
+    $this->setFileName($attrs['filename']);
+    $this->decodeBase64File();
     return $this;
   }
 
-  function setFileName($file_name){
-    $this->file_name = $file_name;
-    return $this;
+  function setFileName($fileName){
+    $this->fileName = $fileName;
+    return $this->fileName;
   }
 
-  function decode_base_64_file( $base64_string ) {
-      $ifp = fopen( $this->file_name, "wb" );
-      fwrite( $ifp, base64_decode( $base64_string) );
-      fclose( $ifp );
-      return $this;
+  function decodeBase64File() {
+      $ifp = fopen($this->fileName, 'w');
+      fwrite( $ifp, base64_decode( $this->base64) );
+      fclose($ifp);
+      return $ifp;
   }
 
   function getFileName(){
-    return $this->file_name;
+    return $this->fileName;
   }
 
 }
-echo json_encode($_POST);
-if ($_POST['user']['image']) {
-  echo "asfdsaf";
-  // $file = new Base64File($_POST['image']['base64']).setFileName($_POST['image']['fileName'])
-}
+
+//parse request payload
+$postdata = file_get_contents("php://input");
+$request = json_decode($postdata, true);
+//end parse
+
+$file = new Base64File($request);
+echo $file->getFileName();
 
 ?>
