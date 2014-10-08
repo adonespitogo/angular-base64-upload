@@ -22,7 +22,7 @@ Sample value:
 ```
 
 You will have to decode the base64 file in your backend on your own.
-Sample ruby code for decoding the base64-encoded file using paperclip:
+Sample ruby code decoding the base64-encoded file for use in paperclip:
 ```ruby
 def create
   @resource.attachment = decode_base64
