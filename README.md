@@ -11,7 +11,7 @@ Usage
 Include `angular.js` and `angular-base64-upload.js` in your application and add `naif.base64` as dependency to your main module:
 
 ```
-angular.module('myApp', 'naif.base64');
+angular.module('myApp', ['naif.base64']);
 ```
 
 Create a form and add `<input type='file' ng-model='yourModel' base-sixty-four-input>`. 
@@ -21,8 +21,8 @@ Create a form and add `<input type='file' ng-model='yourModel' base-sixty-four-i
 Sample `yourModel` value:
 ```json
 {
-  fileType: 'text/plain',
-  fileName: 'textfile.txt',
+  filetype: 'text/plain',
+  filename: 'textfile.txt',
   base64: '/asdjfo4sa]f57as]fd42sdf354asdf2as35fd4'
 }
 ```
