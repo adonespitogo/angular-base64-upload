@@ -31,6 +31,9 @@ Sample `yourModel` value:
 }
 ```
 
+Server-Side
+---------------
+
 You will have to decode the base64 file in your backend on your own. Sample PHP code for decoding base64 file in [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
 Below is a ruby code for decoding the base64-encoded file to be passed to paperclip:
 ```ruby
