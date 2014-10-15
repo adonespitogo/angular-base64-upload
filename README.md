@@ -27,8 +27,8 @@ Sample `yourModel` value:
 }
 ```
 
-You will have to decode the base64 file in your backend on your own. There is a PHP sample code for decoding base64 file inde [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
-Below is a sample ruby code for decoding the base64-encoded file to be passed to paperclip:
+You will have to decode the base64 file in your backend on your own. Sample PHP code for decoding base64 file in [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+Below is a ruby code for decoding the base64-encoded file to be passed to paperclip:
 ```ruby
 def create
   @resource.attachment = decode_base64
