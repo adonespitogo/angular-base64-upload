@@ -5,6 +5,10 @@ Angular directive for uploading base64-encoded files that you can pass along wit
 
 Note: This directive only supports single file selection.
 
+Example
+--------------------------
+See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+
 Usage
 -------
 
@@ -53,10 +57,6 @@ def decode_base64
   data
 end
 ```
-
-Example
---------------------------
-See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
 
 ## License
 
