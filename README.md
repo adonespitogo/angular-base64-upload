@@ -5,6 +5,10 @@ Angular directive for uploading base64-encoded files that you can pass along wit
 
 Note: This directive only supports single file selection.
 
+Installation
+-------------
+<b>Bower:</b> `bower install angular-base64-upload`
+
 Example
 --------------------------
 See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
