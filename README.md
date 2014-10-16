@@ -27,9 +27,9 @@ Create a form and add `<input type='file' ng-model='yourModel' base-sixty-four-i
 Sample `yourModel` value after selecting a file:
 ```json
 {
-  "filetype": "text/plain",
-  "filename": "textfile.txt",
-  "base64": "/asdjfo4sa]f57as]fd42sdf354asdf2as35fd4"
+  "filetype": "image/jpeg",
+  "filename": "profile.jpg",
+  "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIcSUNDX1BST0ZJTEUAAQEAAAIMbGNtcwIQA..."
 }
 ```
 
