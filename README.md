@@ -22,7 +22,12 @@ Include `angular.js` and `angular-base64-upload.js` in your application and add 
 angular.module('myApp', ['naif.base64']);
 ```
 
-Create a form and add `<input type='file' ng-model='yourModel' base-sixty-four-input>`. 
+HTML: <br>
+```html
+<form>
+  <input type='file' ng-model='yourModel' base-sixty-four-input>
+</form>
+```
 
 Sample `yourModel` value after selecting a file:
 ```json
