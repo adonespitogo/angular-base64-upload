@@ -24,14 +24,12 @@ angular.module('myApp', ['naif.base64']);
 
 Create a form and add `<input type='file' ng-model='yourModel' base-sixty-four-input>`. 
 
-`yourModel` will hold the 3 values from the directive namely `filetype`, `filename` and `base64`.
-
-Sample `yourModel` value:
+Sample `yourModel` value after selecting a file:
 ```json
 {
-  filetype: 'text/plain',
-  filename: 'textfile.txt',
-  base64: '/asdjfo4sa]f57as]fd42sdf354asdf2as35fd4'
+  "filetype": "text/plain",
+  "filename": "textfile.txt",
+  "base64": "/asdjfo4sa]f57as]fd42sdf354asdf2as35fd4"
 }
 ```
 
