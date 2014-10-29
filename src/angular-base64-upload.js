@@ -20,6 +20,7 @@ angular.module('naif.base64', [])
         var file = elem[0].files[0];
         fileObject.filetype = file.type;
         fileObject.filename = file.name;
+        fileObject.filesize = file.size;
         // converts file to binary string
         reader.readAsBinaryString(file);
       });

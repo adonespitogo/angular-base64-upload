@@ -32,6 +32,7 @@ HTML: <br>
 Sample `yourModel` value after selecting a file:
 ```json
 {
+  "filesize": 54836,
   "filetype": "image/jpeg",
   "filename": "profile.jpg",
   "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIcSUNDX1BST0ZJTEUAAQEAAAIMbGNtcwIQA..."
