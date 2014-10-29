@@ -5,7 +5,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
+    banner: '/*! <%= pkg.title || pkg.name %> - <%= pkg.version %> - ' +
       '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
       '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
       '* Copyright (c) <%= pkg.author %> <%= grunt.template.today("yyyy") %>;' +
