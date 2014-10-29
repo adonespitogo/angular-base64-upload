@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.0.1 - 2014-09-30
+/*! angular-base64-upload - v0.0.2 - 2014-10-30
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2014; Licensed  */
 angular.module('naif.base64', [])
@@ -23,6 +23,7 @@ angular.module('naif.base64', [])
         var file = elem[0].files[0];
         fileObject.filetype = file.type;
         fileObject.filename = file.name;
+        fileObject.filesize = file.size;
         // converts file to binary string
         reader.readAsBinaryString(file);
       });
