@@ -2,7 +2,7 @@
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2014; Licensed  */
 angular.module('naif.base64', [])
-.directive('baseSixtyFourInput', function ($window) {
+.directive('baseSixtyFourInput', ['$window', function ($window) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -40,4 +40,4 @@ angular.module('naif.base64', [])
       }
     }
   };
-});
+}]);

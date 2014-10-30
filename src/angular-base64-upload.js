@@ -1,5 +1,5 @@
 angular.module('naif.base64', [])
-.directive('baseSixtyFourInput', function ($window) {
+.directive('baseSixtyFourInput', ['$window', function ($window) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -37,4 +37,4 @@ angular.module('naif.base64', [])
       }
     }
   };
-});
+}]);
