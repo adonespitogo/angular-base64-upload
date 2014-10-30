@@ -1,5 +1,5 @@
 angular.module('naif.base64', [])
-.directive('baseSixtyFourInput', function () {
+.directive('baseSixtyFourInput', function ($window) {
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -33,7 +33,7 @@ angular.module('naif.base64', [])
         for (var i = 0; i < len; i++) {
             binary += String.fromCharCode( bytes[ i ] );
         }
-        return window.btoa( binary );
+        return $window.btoa( binary );
       }
     }
   };
