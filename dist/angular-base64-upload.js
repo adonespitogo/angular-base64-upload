@@ -1,6 +1,6 @@
-/*! angular-base64-upload - v0.0.2 - 2014-10-30
+/*! angular-base64-upload - v0.0.2 - 2015-01-26
 * https://github.com/adonespitogo/angular-base64-upload
-* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2014; Licensed  */
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015; Licensed  */
 angular.module('naif.base64', [])
 .directive('baseSixtyFourInput', ['$window', function ($window) {
   return {
