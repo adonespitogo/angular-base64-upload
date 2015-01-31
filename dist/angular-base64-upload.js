@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.0.2 - 2015-01-26
+/*! angular-base64-upload - v0.0.4 - 2015-01-31
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015; Licensed  */
 angular.module('naif.base64', [])
@@ -13,7 +13,7 @@ angular.module('naif.base64', [])
         var base64 = _arrayBufferToBase64(e.target.result);
         fileObject.base64 = base64;
         scope.$apply(function(){
-          ngModel.$setViewValue(fileObject);
+          ngModel.$setViewValue(angular.copy(fileObject));
         });
       };
 
