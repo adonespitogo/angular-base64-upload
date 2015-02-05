@@ -1,0 +1,1 @@
+../dist/angular-base64-upload.js
