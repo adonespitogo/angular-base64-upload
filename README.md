@@ -13,7 +13,7 @@ Installation
 
 Example
 --------------------------
-See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+See the README.md on [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
 
 Usage
 -------
