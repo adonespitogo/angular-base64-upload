@@ -1,6 +1,6 @@
 {
   "name": "angular-base64-upload",
-  "version": "v0.0.4",
+  "version": "v0.0.5",
   "description": "Angular directive for uploading base64-encoded files that you can pass along with the resource model.",
   "main": "angular-base64-upload.js",
   "dependencies": {
@@ -18,10 +18,6 @@
     "karma-chrome-launcher": "^0.1.4",
     "karma-coverage": "^0.2.6",
     "karma-jasmine": "^0.1.5"
-  },
-  "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install && ./node_modules/grunt-cli/bin/grunt build",
-    "test": "grunt test"
   },
   "repository": {
     "type": "git",
