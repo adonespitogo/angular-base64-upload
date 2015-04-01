@@ -34,14 +34,14 @@ HTML: <br>
 Sample `yourModel` value after selecting a file:
 ```json
 {
-  "filesize": 54836,
+  "filesize": 54836 (bytes),
   "filetype": "image/jpeg",
   "filename": "profile.jpg",
   "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIcSUNDX1BST0ZJTEUAAQEAAAIMbGNtcwIQA..."
 }
 ```
 
-You can use the `yourModel.dataURI()` method to format it based on the
+You can use the `yourModel.dataURI()` method to format images based on the
 [dataURI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) that can
 be directly previewed in an `<img>` tag using Angular's `ng-src` directive:
 
