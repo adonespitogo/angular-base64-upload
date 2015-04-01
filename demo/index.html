@@ -24,14 +24,17 @@
     <input type="file" ng-model="image" name="file" base-sixty-four-input>
     <button type="submit" ng-click="uploadFile()">Submit</button>
   </form>
-  Image Preview: <br>
-  <img ng-src="data:{{image.filetype}};base64,{{image.base64}}" alt="">
+  <br>Image preview using the dataURI method: <br>
+  <img ng-src="{{image.dataURI()}}" alt="">
   <h2>File Info</h2>
   <p>
     <b>File Name: </b> {{image.filename}}
   </p>
   <p>
     <b>File type: </b> {{image.filetype}}
+  </p>
+  <p>
+    <b>File Size: </b> {{image.filesize}} bytes
   </p>
   <p>
     <b>Base 64 encoded: </b>

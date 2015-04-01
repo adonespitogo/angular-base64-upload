@@ -1,7 +1,7 @@
 
 describe('angular-base64-upload', function(){
 
-  var template = "<input type='file' ng-model='yourModel' base-sixty-four-input>"
+  var template = "<input type='file' ng-model='yourModel' base-sixty-four-input>";
 
   beforeEach(function(){
     module('naif.base64');
