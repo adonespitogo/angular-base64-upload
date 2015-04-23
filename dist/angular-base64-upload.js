@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.0.6 - 2015-04-23
+/*! angular-base64-upload - v0.0.7 - 2015-04-23
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015; Licensed  */
 angular.module('naif.base64', [])
@@ -24,7 +24,7 @@ angular.module('naif.base64', [])
         if(!elem[0].files.length) {
           return;
         }
-        
+
         var file = elem[0].files[0];
         fileObject.filetype = file.type;
         fileObject.filename = file.name;

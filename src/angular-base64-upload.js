@@ -21,7 +21,7 @@ angular.module('naif.base64', [])
         if(!elem[0].files.length) {
           return;
         }
-        
+
         var file = elem[0].files[0];
         fileObject.filetype = file.type;
         fileObject.filename = file.name;

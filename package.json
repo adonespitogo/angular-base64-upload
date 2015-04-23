@@ -1,6 +1,6 @@
 {
   "name": "angular-base64-upload",
-  "version": "v0.0.6",
+  "version": "v0.0.7",
   "description": "Angular directive for uploading base64-encoded files that you can pass along with the resource model.",
   "main": "angular-base64-upload.js",
   "dependencies": {
