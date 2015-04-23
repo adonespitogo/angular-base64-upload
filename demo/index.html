@@ -24,8 +24,8 @@
     <input type="file" ng-model="image" name="file" base-sixty-four-input>
     <button type="submit" ng-click="uploadFile()">Submit</button>
   </form>
-  <br>Image preview using the dataURI method: <br>
-  <img ng-src="{{image.dataURI()}}" alt="">
+  <br>Image preview: <br>
+  <img base-sixty-four-image="image" base-sixty-four-image-placeholder="placeholder.png" alt="">
   <h2>File Info</h2>
   <p>
     <b>File Name: </b> {{image.filename}}

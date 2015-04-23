@@ -1,6 +1,3 @@
-/*! angular-base64-upload - v0.0.6 - 2015-03-28
-* https://github.com/adonespitogo/angular-base64-upload
-* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015; Licensed  */
 angular.module('naif.base64', [])
 .directive('baseSixtyFourInput', ['$window', function ($window) {
   return {
@@ -21,11 +18,14 @@ angular.module('naif.base64', [])
       reader.onload = scope.readerOnload;
 
       elem.on('change', function() {
+        if(!elem[0].files.length) {
+          return;
+        }
+        
         var file = elem[0].files[0];
         fileObject.filetype = file.type;
         fileObject.filename = file.name;
         fileObject.filesize = file.size;
-        fileObject.dataURI = _assemble_data_uri;
         reader.readAsArrayBuffer(file);
       });
 
@@ -39,10 +39,23 @@ angular.module('naif.base64', [])
         }
         return $window.btoa( binary );
       }
+    }
+  }
+}])
+.directive('baseSixtyFourImage', [function() {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      scope.$watch(attrs.baseSixtyFourImage, function(fileObject) {
+        if(fileObject && fileObject.filetype.indexOf("image") == 0) {
+          elem.attr("src", _assemble_data_uri(fileObject));
+        } else {
+          elem.attr("src", attrs.baseSixtyFourImagePlaceholder)
+        }
+      });
 
-      // TODO: add handlers for other file types (e.g. video)
-      function _assemble_data_uri(){
-        return "data:image/" + this.filetype + ";base64," + this.base64;
+      function _assemble_data_uri(fileObject){
+        return "data:" + fileObject.filetype + ";base64," + fileObject.base64;
       }
     }
   };

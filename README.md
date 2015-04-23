@@ -41,11 +41,13 @@ Sample `yourModel` value after selecting a file:
 }
 ```
 
-You can use the `yourModel.dataURI()` method to format images based on the
-[dataURI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme) that can
-be directly previewed in an `<img>` tag using Angular's `ng-src` directive:
+You can use the `base-sixty-four-image` directive to display image preview:
 
-    <img ng-src="{{yourModel.dataURI()}}">
+    <img base-sixty-four-image="yourModel">
+
+If you also want to display a placeholder image, you can additionally use `base-sixty-four-image-placeholder` directive:
+
+    <img base-sixty-four-image="yourModel" base-sixty-four-image-placeholder="placeholder.png">
 
 Server-Side
 ---------------
