@@ -1,3 +1,6 @@
+/*! angular-base64-upload - v0.0.6 - 2015-04-23
+* https://github.com/adonespitogo/angular-base64-upload
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015; Licensed  */
 angular.module('naif.base64', [])
 .directive('baseSixtyFourInput', ['$window', function ($window) {
   return {
@@ -40,17 +43,17 @@ angular.module('naif.base64', [])
         return $window.btoa( binary );
       }
     }
-  }
+  };
 }])
 .directive('baseSixtyFourImage', [function() {
   return {
     restrict: 'A',
     link: function(scope, elem, attrs) {
       scope.$watch(attrs.baseSixtyFourImage, function(fileObject) {
-        if(fileObject && fileObject.filetype.indexOf("image") == 0) {
+        if(fileObject && fileObject.filetype.indexOf("image") === 0) {
           elem.attr("src", _assemble_data_uri(fileObject));
         } else {
-          elem.attr("src", attrs.baseSixtyFourImagePlaceholder)
+          elem.attr("src", attrs.baseSixtyFourImagePlaceholder);
         }
       });
 
