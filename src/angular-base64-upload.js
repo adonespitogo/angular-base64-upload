@@ -47,7 +47,7 @@ angular.module('naif.base64', [])
     restrict: 'A',
     link: function(scope, elem, attrs) {
       scope.$watch(attrs.baseSixtyFourImage, function(fileObject) {
-        if(fileObject && fileObject.filetype.indexOf("image") === 0) {
+        if(fileObject && fileObject.filetype && fileObject.filetype.indexOf("image") === 0) {
           elem.attr("src", _assemble_data_uri(fileObject));
         } else {
           elem.attr("src", attrs.baseSixtyFourImagePlaceholder);
