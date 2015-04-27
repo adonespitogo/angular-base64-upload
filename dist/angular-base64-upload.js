@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.0.7 - 2015-04-23
+/*! angular-base64-upload - v0.0.7 - 2015-04-26
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015; Licensed  */
 angular.module('naif.base64', [])
@@ -50,7 +50,7 @@ angular.module('naif.base64', [])
     restrict: 'A',
     link: function(scope, elem, attrs) {
       scope.$watch(attrs.baseSixtyFourImage, function(fileObject) {
-        if(fileObject && fileObject.filetype.indexOf("image") === 0) {
+        if(fileObject && fileObject.filetype && fileObject.filetype.indexOf("image") === 0) {
           elem.attr("src", _assemble_data_uri(fileObject));
         } else {
           elem.attr("src", attrs.baseSixtyFourImagePlaceholder);
