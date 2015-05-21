@@ -8,49 +8,74 @@
 
   var angular = window['angular'];
 
-  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
-  function _arrayBufferToBase64( buffer ) {
-    var binary = '';
-    var bytes = new Uint8Array( buffer );
-    var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-        binary += String.fromCharCode( bytes[ i ] );
-    }
-    return window.btoa( binary );
-  }
-
   angular.module('naif.base64', [])
   .directive('baseSixtyFourInput', function () {
     return {
       restrict: 'A',
       require: 'ngModel',
       link: function (scope, elem, attrs, ngModel) {
-        var fileObject = {};
 
-        scope.readerOnload = function(e){
+        var rawFiles;
+        var fileObjects;
+        var fileObject;
+        var readFileIndex;
+
+
+        function _readerOnLoad (e) {
+
           var base64 = _arrayBufferToBase64(e.target.result);
           fileObject.base64 = base64;
-          scope.$apply(function(){
-            ngModel.$setViewValue(angular.copy(fileObject));
-          });
-        };
+          fileObjects.push(fileObject);
 
-        var reader = new FileReader();
-        reader.onload = scope.readerOnload;
-
-        elem.on('change', function() {
-          if(!elem[0].files.length) {
-            return;
+          // read the next file if there is
+          if (fileObjects.length < rawFiles.length) {
+            readFileIndex ++;
+            _readFile();
           }
 
-          var file = elem[0].files[0];
+          // all files are read
+          else {
+            var newVal = attrs.multiple ? fileObjects : fileObjects[0];
+            window.console.log(newVal);
+
+            scope.$apply(function(){
+              ngModel.$setViewValue(angular.copy(newVal));
+            });
+          }
+
+        }
+
+        var reader = new FileReader();
+        reader.onload = _readerOnLoad;
+
+        function _readFile () {
+          var file = rawFiles[readFileIndex];
+
+          fileObject = {};
+
           fileObject.filetype = file.type;
           fileObject.filename = file.name;
           fileObject.filesize = file.size;
           reader.readAsArrayBuffer(file);
+        }
+
+        elem.on('change', function() {
+
+          if(!elem[0].files.length) {
+            return;
+          }
+
+          rawFiles = elem[0].files;
+          fileObjects = [];
+          readFileIndex = 0;
+
+          _readFile();
+
         });
+
       }
     };
+
   })
   .directive('baseSixtyFourImage', [function() {
     return {
@@ -71,6 +96,17 @@
     };
   }]);
 
+
+  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  function _arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+  }
 
 
 })(this);

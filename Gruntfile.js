@@ -13,14 +13,15 @@ module.exports = function(grunt) {
     config: {
       dist:'./dist',
       src: './src',
+      demo: './demo',
       js: [
         '<%= config.src %>/**/*.js'
       ]
     },
     copy: {
       dist: {
-        src: ['<%= uglify.dist.dest %>'],
-        dest: './demo/<%= pkg.name %>.min.js'
+        src: ['<%= config.src %>/<%= pkg.name %>.js'],
+        dest: './demo/<%= pkg.name %>.js'
       }
     },
     clean: ['<%= config.dist %>'],

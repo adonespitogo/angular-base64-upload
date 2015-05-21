@@ -3,10 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>Angular Base64 Upload Demo</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.18/angular.min.js"></script>
-  <script type="text/javascript" src="angular-base64-upload.min.js"></script>
+  <script type="text/javascript" src="angular-base64-upload.js"></script>
   <script type="text/javascript">
-    angular.module('myApp', ['naif.base64']).controller('ctrl', function($scope, $http, $window){
+    angular.module('myApp', ['naif.base64'])
+    .controller('ctrl', function($scope, $http, $window){
+
+      $scope.files = [];
 
       $scope.uploadFile = function(){
         $http.post('server.php', $scope.image)
@@ -19,30 +23,35 @@
   </script>
 </head>
 <body ng-controller="ctrl">
-  <form>
-    <label for="file">Select Image</label>
-    <input type="file" ng-model="image" name="file" base-sixty-four-input>
-    <button type="submit" ng-click="uploadFile()">Submit</button>
-  </form>
-  <br>Image preview: <br>
-  <img base-sixty-four-image="image" base-sixty-four-image-placeholder="placeholder.png" alt="">
-  <h2>File Info</h2>
-  <p>
-    <b>File Name: </b> {{image.filename}}
-  </p>
-  <p>
-    <b>File type: </b> {{image.filetype}}
-  </p>
-  <p>
-    <b>File Size: </b> {{image.filesize}} bytes
-  </p>
-  <p>
-    <b>Base 64 encoded: </b>
-    <p>
-      <textarea name="" id="" cols="30" rows="10">
-        {{image.base64}}
-      </textarea>
-    </p>
-  </p>
+  <div class="container">
+    <h3>Multiple Files</h3>
+    <form>
+      <div class="input-group">
+        <label for="file">Select Files</label>
+        <input type="file" ng-model="files" name="file" base-sixty-four-input multiple>
+      </div>
+    </form>
+    <b>Model Value:</b>
+    <table class="table">
+      <tr>
+        <th>filename</th>
+        <th>filetype</th>
+        <th>filesize (<i><small>bytes</small></i>)</th>
+        <th>base64</th>
+      </tr>
+      <tr ng-repeat="file in files">
+        <td>{{file.filename}}</td>
+        <td>{{file.filetype}}</td>
+        <td>{{file.filesize}}</td>
+        <td>{{file.base64.substring(0, 30)}}...</td>
+      </tr>
+      <tr>
+        <td colspan="4" ng-show="files.length == 0">
+          <small><i>No file selected.</i></small>
+        </td>
+      </tr>
+    </table>
+    <hr>
+  </div>
 </body>
 </html>

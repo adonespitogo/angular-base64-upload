@@ -5,15 +5,14 @@ angular-base64-upload
 
 Angular directive for uploading base64-encoded files that you can pass along with the resource model. This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file).
 
-<b>Note:</b> This directive only supports single file selection.
-
 Installation
 -------------
 <b>Bower:</b> `bower install angular-base64-upload`
+<b>NPM:</b> `npm install angular-base64-upload`
 
 Example
 --------------------------
-See the README.md on [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
 
 Usage
 -------
@@ -24,7 +23,8 @@ Include `angular.js` and `angular-base64-upload.js` in your application and add 
 angular.module('myApp', ['naif.base64']);
 ```
 
-HTML: <br>
+Sigle File Selection
+------------
 ```html
 <form>
   <input type='file' ng-model='yourModel' base-sixty-four-input>
@@ -41,13 +41,14 @@ Sample `yourModel` value after selecting a file:
 }
 ```
 
-You can use the `base-sixty-four-image` directive to display image preview:
-
-    <img base-sixty-four-image="yourModel">
-
-If you also want to display a placeholder image, you can additionally use `base-sixty-four-image-placeholder` directive:
-
-    <img base-sixty-four-image="yourModel" base-sixty-four-image-placeholder="placeholder.png">
+Multiple File Selection
+--------------
+Just add `multiple` attribute to the input element. `yourModel` will be an array of sample value above.
+```html
+  <form>
+    <input type="file" ng-model="yourModel" multiple>
+  </form>
+```
 
 Server-Side
 ---------------
@@ -81,11 +82,17 @@ def decode_base64
   # set file properties
   data.content_type = params[:your_model][:filetype]
   data.original_filename = params[:your_model][:filename]
-  
+
   # return data to be used as the attachment file (paperclip)
   data
 end
 ```
+
+Chagelog
+--------
+ V0.1.0
+ - Support for multiple file selection.
+ - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives.
 
 ## License
 
