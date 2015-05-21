@@ -10,21 +10,74 @@
     angular.module('myApp', ['naif.base64'])
     .controller('ctrl', function($scope, $http, $window){
 
+      var uploadedCount = 0;
+
       $scope.files = [];
 
-      $scope.uploadFile = function(){
-        $http.post('server.php', $scope.image)
-        .success(function(res){
-          alert('View file '+res+'  ?');
-          $window.location.assign(res);
-        })
+      $scope.uploadFiles = function(){
+
+        var files = angular.copy($scope.files);
+
+        if ($scope.file) {
+          files.push($scope.file);
+        }
+
+        if (files.length === 0) {
+          $window.alert('Please select files!');
+          return false;
+        };
+
+        for (var i = files.length - 1; i >= 0; i--) {
+          var file = files[i];
+          $http.post('server.php', file)
+          .success(function(res){
+            uploadedCount ++;
+            if (uploadedCount == files.length) {
+              $window.alert('View uploaded files?');
+              $window.location.assign('/uploads');
+            }
+          });
+        }
+
+
+
       }
     })
   </script>
+  <style>
+    body{padding-bottom: 50px;}
+  </style>
 </head>
 <body ng-controller="ctrl">
   <div class="container">
-    <h3>Multiple Files</h3>
+    <h3>Single File Selection</h3>
+    <form>
+      <div class="input-group">
+        <label for="file">Select Files</label>
+        <input type="file" ng-model="file" name="file" base-sixty-four-input>
+      </div>
+    </form>
+    <table class="table">
+      <tr>
+        <th>filename</th>
+        <th>filetype</th>
+        <th>filesize (<i><small>bytes</small></i>)</th>
+        <th>base64</th>
+      </tr>
+      <tr ng-show="file">
+        <td>{{file.filename}}</td>
+        <td>{{file.filetype}}</td>
+        <td>{{file.filesize}}</td>
+        <td>{{file.base64.substring(0, 30)}}...</td>
+      </tr>
+      <tr>
+        <td colspan="4" ng-show="!file">
+          <small><i>No file selected.</i></small>
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <h3>Multiple Files Selection</h3>
     <form>
       <div class="input-group">
         <label for="file">Select Files</label>
@@ -51,7 +104,7 @@
         </td>
       </tr>
     </table>
-    <hr>
+    <button class="btn btn-success" ng-click="uploadFiles()">Upload Files</button>
   </div>
 </body>
 </html>

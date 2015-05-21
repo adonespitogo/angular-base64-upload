@@ -31,10 +31,8 @@
 
           // all files are read
           else {
-            var newVal = attrs.multiple ? fileObjects : fileObjects[0];
-            window.console.log(newVal);
-
             scope.$apply(function(){
+              var newVal = attrs.multiple ? fileObjects : fileObjects[0];
               ngModel.$setViewValue(angular.copy(newVal));
             });
           }
