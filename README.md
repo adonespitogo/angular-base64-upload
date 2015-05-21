@@ -7,8 +7,8 @@ Angular directive for uploading base64-encoded files that you can pass along wit
 
 Installation
 -------------
-<b>bower:</b> `bower install angular-base64-upload`
-<b>npm:</b> `npm install angular-base64-upload`
+ - Bower -  `bower install angular-base64-upload`
+ - NPM - `npm install angular-base64-upload`
 
 Example
 --------------------------
@@ -43,12 +43,38 @@ Sample `yourModel` value after selecting a file:
 
 Multiple File Selection
 --------------
-Just add `multiple` attribute to the input element. `yourModel` will be an array of sample value above.
+Just add `multiple` attribute to the input element. `yourModel` will be an array of base64 file objects.
 ```html
   <form>
     <input type="file" ng-model="yourModel" multiple>
   </form>
 ```
+
+Events
+---------
+Based from the [FileReader API Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). Events are broadcasted to the `$rootScope` following the naming convention `base64:event:[handler_name]`.
+ - Event Names
+   - `base64:event:onabort`
+   - `base64:event:onerror`
+   - `base64:event:onloadstart`
+   - `base64:event:onloadend`
+   - `base64:event:onprogress`
+ - Params
+   - `EventObject` - Angular broadcast event object.
+   - `EventObject` - File reader event object depending on the event type. This can be an `abort`, `error`, `load`, `loadstart`, `loadend`, or `progress` event object.
+   - `FileList` - Array of selected files.
+   - `FileObjects` - Array of base64 file objects that are done reading.
+   - `File` - Current file being read by the file reader.
+ - Example:
+   ```
+   $rootScope.$on(
+     'base64:event:onerror',
+     function (eventObj, fileReaderEventObj, rawFiles, fileObjs, fileObj) {
+      console.log("An error occured while reading file:");
+        console.log(fileObj);
+     }
+   );
+   ```
 
 Server-Side
 ---------------

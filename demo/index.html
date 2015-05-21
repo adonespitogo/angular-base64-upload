@@ -8,7 +8,15 @@
   <script type="text/javascript" src="angular-base64-upload.js"></script>
   <script type="text/javascript">
     angular.module('myApp', ['naif.base64'])
-    .controller('ctrl', function($scope, $http, $window){
+    .controller('ctrl', function($scope, $http, $window, $rootScope){
+
+      $rootScope.$on('base64:event:onloadstart', function (e, readerEvent, rawFiles, fileObjects, fileObject) {
+        console.log(e);
+        console.log(readerEvent);
+        console.log(rawFiles);
+        console.log(fileObjects);
+        console.log(fileObject);
+      });
 
       var uploadedCount = 0;
 
