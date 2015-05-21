@@ -5,17 +5,23 @@ module.exports = function(grunt) {
   grunt.initConfig({
     // Metadata.
     pkg: grunt.file.readJSON('package.json'),
-    banner: '/*! <%= pkg.title || pkg.name %> - <%= pkg.version %> - ' +
-      '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-      '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-      '* Copyright (c) <%= pkg.author %> <%= grunt.template.today("yyyy") %>;' +
-      ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+    banner:
+      '/*! <%= pkg.title || pkg.name %> - <%= pkg.version %>\n' +
+      '* <%= pkg.homepage %>\n' +
+      '* Copyright (c) <%= pkg.author %> <%= grunt.template.today("yyyy") %>;\n' +
+      '* Licensed <%= pkg.license %> */\n',
     config: {
       dist:'./dist',
       src: './src',
       js: [
         '<%= config.src %>/**/*.js'
       ]
+    },
+    copy: {
+      dist: {
+        src: ['<%= uglify.dist.dest %>'],
+        dest: './demo/<%= pkg.name %>.min.js'
+      }
     },
     clean: ['<%= config.dist %>'],
 
@@ -75,12 +81,13 @@ module.exports = function(grunt) {
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify']);
+  grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
   grunt.registerTask('default', ['karma:unit']);
 
 };
