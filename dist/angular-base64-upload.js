@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.0.9
+/*! angular-base64-upload - v0.1.0
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015;
 * Licensed MIT */
@@ -74,26 +74,7 @@
       }
     };
 
-  })
-  .directive('baseSixtyFourImage', [function() {
-    return {
-      restrict: 'A',
-      link: function(scope, elem, attrs) {
-        scope.$watch(attrs.baseSixtyFourImage, function(fileObject) {
-          if(fileObject && fileObject.filetype && fileObject.filetype.indexOf("image") === 0) {
-            elem.attr("src", _assemble_data_uri(fileObject));
-          } else {
-            elem.attr("src", attrs.baseSixtyFourImagePlaceholder);
-          }
-        });
-
-        function _assemble_data_uri(fileObject){
-          return "data:" + fileObject.filetype + ";base64," + fileObject.base64;
-        }
-      }
-    };
-  }]);
-
+  });
 
   //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
   function _arrayBufferToBase64( buffer ) {
@@ -105,7 +86,6 @@
     }
     return window.btoa( binary );
   }
-
 
 })(this);
 
