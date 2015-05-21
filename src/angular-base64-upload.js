@@ -10,7 +10,7 @@ angular.module('naif.base64', [])
         var base64 = _arrayBufferToBase64(e.target.result);
         fileObject.base64 = base64;
         scope.$apply(function(){
-          ngModel.$setViewValue(fileObject);
+          ngModel.$setViewValue(angular.copy(fileObject));
         });
       };
 
@@ -18,6 +18,10 @@ angular.module('naif.base64', [])
       reader.onload = scope.readerOnload;
 
       elem.on('change', function() {
+        if(!elem[0].files.length) {
+          return;
+        }
+
         var file = elem[0].files[0];
         fileObject.filetype = file.type;
         fileObject.filename = file.name;
@@ -34,6 +38,24 @@ angular.module('naif.base64', [])
             binary += String.fromCharCode( bytes[ i ] );
         }
         return $window.btoa( binary );
+      }
+    }
+  };
+}])
+.directive('baseSixtyFourImage', [function() {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      scope.$watch(attrs.baseSixtyFourImage, function(fileObject) {
+        if(fileObject && fileObject.filetype && fileObject.filetype.indexOf("image") === 0) {
+          elem.attr("src", _assemble_data_uri(fileObject));
+        } else {
+          elem.attr("src", attrs.baseSixtyFourImagePlaceholder);
+        }
+      });
+
+      function _assemble_data_uri(fileObject){
+        return "data:" + fileObject.filetype + ";base64," + fileObject.base64;
       }
     }
   };

@@ -13,7 +13,7 @@ Installation
 
 Example
 --------------------------
-See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+See the README.md on [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
 
 Usage
 -------
@@ -34,17 +34,33 @@ HTML: <br>
 Sample `yourModel` value after selecting a file:
 ```json
 {
-  "filesize": 54836,
+  "filesize": 54836 (bytes),
   "filetype": "image/jpeg",
   "filename": "profile.jpg",
   "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIcSUNDX1BST0ZJTEUAAQEAAAIMbGNtcwIQA..."
 }
 ```
 
+You can use the `base-sixty-four-image` directive to display image preview:
+
+    <img base-sixty-four-image="yourModel">
+
+If you also want to display a placeholder image, you can additionally use `base-sixty-four-image-placeholder` directive:
+
+    <img base-sixty-four-image="yourModel" base-sixty-four-image-placeholder="placeholder.png">
+
 Server-Side
 ---------------
 
-You will have to decode the base64 file in your backend on your own. Sample PHP code for decoding base64 file in [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+You will have to decode the base64 file in your backend on your own.
+Sample PHP code for decoding base64 file in
+[demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+Start it by cd-ing to this directory and running:
+
+    php -S 0.0.0.0:8000
+
+Then point your browser to [http://localhost:8000]().
+
 Below is a ruby code for decoding the base64-encoded file to be passed to paperclip:
 ```ruby
 def create
