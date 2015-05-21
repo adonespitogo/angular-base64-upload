@@ -7,8 +7,8 @@ Angular directive for uploading base64-encoded files that you can pass along wit
 
 Installation
 -------------
-<b>Bower:</b> `bower install angular-base64-upload`
-<b>NPM:</b> `npm install angular-base64-upload`
+<b>bower:</b> `bower install angular-base64-upload`
+<b>npm:</b> `npm install angular-base64-upload`
 
 Example
 --------------------------
