@@ -119,6 +119,7 @@ Chagelog
  V0.1.0
  - Support for multiple file selection.
  - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives.
+ - Broadcast file reader events to $rootScope.
 
 ## License
 
