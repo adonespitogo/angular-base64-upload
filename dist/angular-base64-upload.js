@@ -12,7 +12,7 @@
   .directive('baseSixtyFourInput', [
     function () {
 
-      var handler_names = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress'];
+      var handler_names = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
       var isolate = {};
 
       for (var i = handler_names.length - 1; i >= 0; i--) {
@@ -42,7 +42,7 @@
 
             for (var i = handler_names.length - 1; i >= 0; i--) {
               var handler_name = handler_names[i];
-              if (typeof scope[handler_name] === 'function') {
+              if (typeof scope[handler_name] === 'function' && handler_name !== 'onload') {
                 reader[handler_name] = _readerOnEvent(scope[handler_name]);
               }
             }
