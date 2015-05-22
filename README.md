@@ -83,7 +83,7 @@ Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/d
 
 Example
    ```
-   $scope.errorHandler = function (e, reader, fileList, fileObjs, file) {
+   $scope.errorHandler = function (event, reader, fileList, fileObjs, file) {
      console.log("An error occurred while reading file: "+file.name);
      reader.abort();
    };
