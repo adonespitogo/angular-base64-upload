@@ -10,6 +10,10 @@
     angular.module('myApp', ['naif.base64'])
     .controller('ctrl', function($scope, $http, $window, $rootScope){
 
+      $scope.progressHandler = function (e, readerE, reader) {
+        console.log(e);
+      };
+
       var uploadedCount = 0;
 
       $scope.files = [];
@@ -54,7 +58,7 @@
     <form name="formSingle">
       <div class="input-group">
         <label for="file">Select Files</label>
-        <input type="file" ng-model="file" name="file" base-sixty-four-input required>
+        <input type="file" ng-model="file" name="file" base-sixty-four-input required onprogress="progressHandler">
       </div>
       <div class="well">
         formSingle.file.$error:
@@ -65,13 +69,13 @@
       <tr>
         <th>filename</th>
         <th>filetype</th>
-        <th>filesize (<i><small>bytes</small></i>)</th>
+        <th>filesize (<i><small>KB</small></i>)</th>
         <th>base64</th>
       </tr>
       <tr ng-show="file">
         <td>{{file.filename}}</td>
         <td>{{file.filetype}}</td>
-        <td>{{file.filesize}}</td>
+        <td>{{file.filesize / 1000}}</td>
         <td>{{file.base64.substring(0, 30)}}...</td>
       </tr>
       <tr>
@@ -85,7 +89,7 @@
     <form name="formMultiple">
       <div class="input-group">
         <label for="file">Select Files</label>
-        <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*" maxsize="500" required minnum="2">
+        <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*, .iso" maxsize="500" required minnum="2">
       </div>
       <div class="well">
         formMultiple.files.$error:
@@ -97,13 +101,13 @@
       <tr>
         <th>filename</th>
         <th>filetype</th>
-        <th>filesize (<i><small>bytes</small></i>)</th>
+        <th>filesize (<i><small>KB</small></i>)</th>
         <th>base64</th>
       </tr>
       <tr ng-repeat="file in files">
         <td>{{file.filename}}</td>
         <td>{{file.filetype}}</td>
-        <td>{{file.filesize}}</td>
+        <td>{{file.filesize / 1000}}</td>
         <td>{{file.base64.substring(0, 30)}}...</td>
       </tr>
       <tr>

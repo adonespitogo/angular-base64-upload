@@ -53,8 +53,8 @@ Validations
 ------------
  - `maxsize` = Maximum file size in kilobytes (KB)
  - `minsize` = Minimum file size in kilobytes (KB)
- - `maxnum` = Maximum number of items to select
- - `minnum` = Minimum number of items to select
+ - `maxnum` = Maximum number of items to select (available for multiple file selection)
+ - `minnum` = Minimum number of items to select (available for multiple file selection)
  - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type`
  - `required` = required
 
@@ -64,28 +64,30 @@ Validations
 
 Events
 ---------
-Based from the [FileReader API Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). Events are broadcasted to the `$rootScope` following the naming convention `base64:event:[handler_name]`.
- - Event Names
-   - `base64:event:onabort`
-   - `base64:event:onerror`
-   - `base64:event:onloadstart`
-   - `base64:event:onloadend`
-   - `base64:event:onprogress`
+Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). You can pass file reader event handlers by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`. The `onload` event is reserved for processing validations and other internal stuff.
+ - List of available events names:
+   - `onabort`
+   - `onerror`
+   - `onloadstart`
+   - `onloadend`
+   - `onprogress`
  - Params
-   - `EventObject` - Angular broadcast event object.
    - `EventObject` - File reader event object depending on the event type. This can be an `abort`, `error`, `load`, `loadstart`, `loadend`, or `progress` event object.
+   - `FileReader` - [File Reader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) instance used to read file blobs.
    - `FileList` - Array of selected files.
    - `FileObjects` - Array of base64 file objects that are done reading.
    - `File` - Current file being read by the file reader.
- - Example:<br>
+
+Example
    ```
-   $rootScope.$on(
-     'base64:event:onerror',
-     function (eventObj, fileReaderEventObj, rawFiles, fileObjs, fileObj) {
-      console.log("An error occured while reading file:");
-        console.log(fileObj);
-     }
-   );
+   $scope.errorHandler = function (e, reader, fileList, fileObjs, file) {
+     console.log("An error occurred while reading file: "+file.name);
+     reader.abort();
+   };
+
+   <form>
+    <input type="file" base-sixty-four-input ng-model="myfile" onerror="errorHandler">
+   <form>
    ```
 
 Server-Side
@@ -130,9 +132,9 @@ Changelog
 --------
  V0.1.0
  - Support for multiple file selection
- - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives
- - Broadcast file reader events to $rootScope
+ - Support for file reader event handlers
  - Added validations
+ - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives
 
 ## License
 

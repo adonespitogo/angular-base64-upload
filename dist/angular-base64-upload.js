@@ -10,18 +10,47 @@
 
   angular.module('naif.base64', [])
   .directive('baseSixtyFourInput', [
-    '$rootScope',
-    function ($rootScope) {
+    function () {
+
+      var handler_names = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress'];
+      var isolate = {};
+
+      for (var i = handler_names.length - 1; i >= 0; i--) {
+        var h = handler_names[i];
+        isolate[h] = '=';
+      }
 
       return {
         restrict: 'A',
         require: 'ngModel',
+        scope: isolate,
         link: function (scope, elem, attrs, ngModel) {
 
           var rawFiles = [];
           var fileObjects = [];
           var fileObject = {};
           var readFileIndex = 0;
+          var reader = new window.FileReader();
+
+          function _readerOnEvent (handler_function) {
+            return function (e) {
+              handler_function(e, reader, rawFiles, fileObjects, rawFiles[readFileIndex]);
+            };
+          }
+
+          function _attachEventHandlers () {
+
+            for (var i = handler_names.length - 1; i >= 0; i--) {
+              var handler_name = handler_names[i];
+              if (typeof scope[handler_name] === 'function') {
+                reader[handler_name] = _readerOnEvent(scope[handler_name]);
+              }
+            }
+
+            reader.onload = _readerOnLoad;
+          }
+
+          _attachEventHandlers();
 
           function _setViewValue () {
             scope.$apply(function(){
@@ -48,25 +77,6 @@
             }
 
           }
-
-          function _readerOnEvent (handler_name) {
-            return function (e) {
-              $rootScope.$broadcast('base64:event:'+handler_name, e, rawFiles, fileObjects, rawFiles[readFileIndex]);
-            };
-          }
-
-          var reader = new window.FileReader();
-          reader.onabort = _readerOnEvent('onabort');
-          reader.onerror = _readerOnEvent('onerror');
-          reader.onloadstart = _readerOnEvent('onloadstart');
-          reader.onloadend = _readerOnEvent('onloadend');
-          reader.onprogress = _readerOnEvent('onprogress');
-          reader.onload = _readerOnLoad;
-
-          function _startReadingFiles() {
-            _readFile();
-          }
-
           function _readFile () {
             var file = rawFiles[readFileIndex];
 
@@ -99,6 +109,12 @@
 
           // VALIDATIONS =========================================================
 
+          function _setValidity (key, val) {
+            scope.$apply(function () {
+              ngModel.$setValidity(key, val);
+            });
+          }
+
           ngModel.$validators.required = function (model, view) {
             var val = model || view || [];
             if (val.hasOwnProperty('length')) {
@@ -107,53 +123,39 @@
             return val ? true : false;
           };
 
-          ngModel.$validators.maxnum = function () {
-            if (attrs.maxnum) {
-              if (rawFiles.length > parseInt(attrs.maxnum)) {
-                return false;
-              }
-            }
-            return true;
-          };
-
-          ngModel.$validators.minnum = function () {
-            if (attrs.minnum) {
-              if (rawFiles.length < parseInt(attrs.minnum)) {
-                return false;
-              }
-            }
-            return true;
-          };
-
-          function _setValidity (key, val) {
-            scope.$apply(function () {
-              ngModel.$setValidity(key, val);
-            });
-          }
-
           function _validate () {
 
-            // check each file
+            if (attrs.maxnum && attrs.multiple) {
+              if (rawFiles.length > parseInt(attrs.maxnum)) {
+                _setValidity('maxnum', false);
+              }
+            }
+
+            if (attrs.minnum && attrs.multiple) {
+              if (rawFiles.length < parseInt(attrs.minnum)) {
+                _setValidity('minnum', false);
+              }
+            }
+
+            // check each file for file size
             for (var i = rawFiles.length - 1; i >= 0; i--) {
               var file = rawFiles[i];
 
               if (attrs.maxsize) {
                 if (file.size > parseFloat(attrs.maxsize) * 1000) {
                   _setValidity('maxsize', false);
-                  return;
                 }
               }
 
               if (attrs.minsize) {
                 if (file.size < parseFloat(attrs.minsize) * 1000) {
                   _setValidity('minsize', false);
-                  return;
                 }
               }
 
             }
 
-            _startReadingFiles();
+            _readFile();
 
           }
 
