@@ -59,13 +59,16 @@ Validations
  - `required` = required
 
 ```html
-<input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*" maxsize="5000" required>
+<form>
+  <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*" maxsize="5000" required>
+  <span ng-show="form.files.$error.maxsize">File must be less than 5000 KB</span>
+</form>
 ```
 
 Events
 ---------
 Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). You can pass file reader event handlers by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`. The `onload` event is reserved for processing validations and other internal stuff.
- - List of available events names:
+ - List of available event names:
    - `onabort`
    - `onerror`
    - `onloadstart`
