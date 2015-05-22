@@ -18,10 +18,17 @@
         require: 'ngModel',
         link: function (scope, elem, attrs, ngModel) {
 
-          var rawFiles;
-          var fileObjects;
-          var fileObject;
-          var readFileIndex;
+          var rawFiles = [];
+          var fileObjects = [];
+          var fileObject = {};
+          var readFileIndex = 0;
+
+          function _setViewValue () {
+            scope.$apply(function(){
+              var newVal = attrs.multiple ? fileObjects : (fileObjects[0] || []);
+              ngModel.$setViewValue(angular.copy(newVal));
+            });
+          }
 
           function _readerOnLoad (e) {
 
@@ -29,18 +36,15 @@
             fileObject.base64 = base64;
             fileObjects.push(fileObject);
 
+            readFileIndex ++;
             // read the next file if there is
-            if (fileObjects.length < rawFiles.length) {
-              readFileIndex ++;
+            if (readFileIndex < rawFiles.length) {
               _readFile();
             }
 
             // all files are read
             else {
-              scope.$apply(function(){
-                var newVal = attrs.multiple ? fileObjects : fileObjects[0];
-                ngModel.$setViewValue(angular.copy(newVal));
-              });
+              _setViewValue();
             }
 
           }
@@ -51,6 +55,12 @@
             };
           }
 
+          function _setValidity (key, val) {
+            scope.$apply(function () {
+              ngModel.$setValidity(key, val);
+            });
+          }
+
           var reader = new window.FileReader();
           reader.onabort = _readerOnEvent('onabort');
           reader.onerror = _readerOnEvent('onerror');
@@ -58,6 +68,60 @@
           reader.onloadend = _readerOnEvent('onloadend');
           reader.onprogress = _readerOnEvent('onprogress');
           reader.onload = _readerOnLoad;
+
+          ngModel.$validators.required = function (model, view) {
+            var val = model || view || [];
+            if (val.hasOwnProperty('length')) {
+              return val.length > 0;
+            }
+            return val ? true : false;
+          };
+
+          ngModel.$validators.maxnum = function () {
+            if (attrs.maxnum) {
+              if (rawFiles.length > parseInt(attrs.maxnum)) {
+                return false;
+              }
+            }
+            return true;
+          };
+
+          ngModel.$validators.minnum = function () {
+            if (attrs.minnum) {
+              if (rawFiles.length < parseInt(attrs.minnum)) {
+                return false;
+              }
+            }
+            return true;
+          };
+
+          function _validate () {
+
+            ngModel.$validate();
+
+            // check each file
+            for (var i = rawFiles.length - 1; i >= 0; i--) {
+              var file = rawFiles[i];
+
+              if (attrs.maxsize) {
+                if (file.size > parseFloat(attrs.maxsize) * 1000) {
+                  _setValidity('maxsize', false);
+                  return;
+                }
+              }
+
+              if (attrs.minsize) {
+                if (file.size < parseFloat(attrs.minsize) * 1000) {
+                  _setValidity('minsize', false);
+                  return;
+                }
+              }
+
+            }
+
+            _readFile();
+
+          }
 
           function _readFile () {
             var file = rawFiles[readFileIndex];
@@ -79,7 +143,13 @@
             fileObjects = [];
             readFileIndex = 0;
 
-            _readFile();
+            _setValidity('maxsize', true);
+            _setValidity('minsize', true);
+            _setValidity('maxnum', true);
+            _setValidity('minnum', true);
+            _setValidity('required', false);
+
+            _validate();
 
           });
 

@@ -24,7 +24,7 @@ module.exports = function(grunt) {
         dest: './demo/<%= pkg.name %>.js'
       }
     },
-    clean: ['<%= config.dist %>'],
+    clean: ['<%= config.dist %>', '<%= config.demo %>/<%= pkg.name %>.js'],
 
     // Task configuration.
     concat: {
@@ -77,6 +77,12 @@ module.exports = function(grunt) {
             background: false,
             singleRun: true
         }
+    },
+    watch: {
+      src: {
+        files: ['<%= config.src %>/<%= pkg.name %>.js'],
+        tasks: ['build']
+      }
     }
   });
 
@@ -86,6 +92,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);

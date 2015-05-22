@@ -49,6 +49,18 @@ Just add `multiple` attribute to the input element. `yourModel` will be an array
     <input type="file" ng-model="yourModel" multiple>
   </form>
 ```
+Validations
+------------
+ - `maxsize` = Maximum file size in kilobytes (KB)
+ - `minsize` = Minimum file size in kilobytes (KB)
+ - `maxnum` = Maximum number of items to select
+ - `minnum` = Minimum number of items to select
+ - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type`
+ - `required` = required
+
+```html
+<input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*" maxsize="5000" required>
+```
 
 Events
 ---------
@@ -65,7 +77,7 @@ Based from the [FileReader API Event Handlers](https://developer.mozilla.org/en-
    - `FileList` - Array of selected files.
    - `FileObjects` - Array of base64 file objects that are done reading.
    - `File` - Current file being read by the file reader.
- - Example:
+ - Example:<br>
    ```
    $rootScope.$on(
      'base64:event:onerror',
@@ -117,9 +129,10 @@ end
 Chagelog
 --------
  V0.1.0
- - Support for multiple file selection.
- - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives.
- - Broadcast file reader events to $rootScope.
+ - Support for multiple file selection
+ - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives
+ - Broadcast file reader events to $rootScope
+ - Added validations
 
 ## License
 
