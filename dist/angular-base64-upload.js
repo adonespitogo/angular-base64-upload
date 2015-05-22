@@ -49,16 +49,10 @@
 
           }
 
-          function _readerOnEvent (type) {
+          function _readerOnEvent (handler_name) {
             return function (e) {
-              $rootScope.$broadcast('base64:event:'+type, e, rawFiles, fileObjects, rawFiles[readFileIndex]);
+              $rootScope.$broadcast('base64:event:'+handler_name, e, rawFiles, fileObjects, rawFiles[readFileIndex]);
             };
-          }
-
-          function _setValidity (key, val) {
-            scope.$apply(function () {
-              ngModel.$setValidity(key, val);
-            });
           }
 
           var reader = new window.FileReader();
@@ -69,58 +63,8 @@
           reader.onprogress = _readerOnEvent('onprogress');
           reader.onload = _readerOnLoad;
 
-          ngModel.$validators.required = function (model, view) {
-            var val = model || view || [];
-            if (val.hasOwnProperty('length')) {
-              return val.length > 0;
-            }
-            return val ? true : false;
-          };
-
-          ngModel.$validators.maxnum = function () {
-            if (attrs.maxnum) {
-              if (rawFiles.length > parseInt(attrs.maxnum)) {
-                return false;
-              }
-            }
-            return true;
-          };
-
-          ngModel.$validators.minnum = function () {
-            if (attrs.minnum) {
-              if (rawFiles.length < parseInt(attrs.minnum)) {
-                return false;
-              }
-            }
-            return true;
-          };
-
-          function _validate () {
-
-            ngModel.$validate();
-
-            // check each file
-            for (var i = rawFiles.length - 1; i >= 0; i--) {
-              var file = rawFiles[i];
-
-              if (attrs.maxsize) {
-                if (file.size > parseFloat(attrs.maxsize) * 1000) {
-                  _setValidity('maxsize', false);
-                  return;
-                }
-              }
-
-              if (attrs.minsize) {
-                if (file.size < parseFloat(attrs.minsize) * 1000) {
-                  _setValidity('minsize', false);
-                  return;
-                }
-              }
-
-            }
-
+          function _startReadingFiles() {
             _readFile();
-
           }
 
           function _readFile () {
@@ -152,6 +96,66 @@
             _validate();
 
           });
+
+          // VALIDATIONS =========================================================
+
+          ngModel.$validators.required = function (model, view) {
+            var val = model || view || [];
+            if (val.hasOwnProperty('length')) {
+              return val.length > 0;
+            }
+            return val ? true : false;
+          };
+
+          ngModel.$validators.maxnum = function () {
+            if (attrs.maxnum) {
+              if (rawFiles.length > parseInt(attrs.maxnum)) {
+                return false;
+              }
+            }
+            return true;
+          };
+
+          ngModel.$validators.minnum = function () {
+            if (attrs.minnum) {
+              if (rawFiles.length < parseInt(attrs.minnum)) {
+                return false;
+              }
+            }
+            return true;
+          };
+
+          function _setValidity (key, val) {
+            scope.$apply(function () {
+              ngModel.$setValidity(key, val);
+            });
+          }
+
+          function _validate () {
+
+            // check each file
+            for (var i = rawFiles.length - 1; i >= 0; i--) {
+              var file = rawFiles[i];
+
+              if (attrs.maxsize) {
+                if (file.size > parseFloat(attrs.maxsize) * 1000) {
+                  _setValidity('maxsize', false);
+                  return;
+                }
+              }
+
+              if (attrs.minsize) {
+                if (file.size < parseFloat(attrs.minsize) * 1000) {
+                  _setValidity('minsize', false);
+                  return;
+                }
+              }
+
+            }
+
+            _startReadingFiles();
+
+          }
 
         }
       };

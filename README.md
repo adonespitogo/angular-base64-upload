@@ -126,7 +126,7 @@ def decode_base64
 end
 ```
 
-Chagelog
+Changelog
 --------
  V0.1.0
  - Support for multiple file selection
