@@ -14,6 +14,10 @@
         console.log(e);
       };
 
+      $scope.onloadHandler = function (e, reader) {
+        console.log('onloadHandler');
+      };
+
       var uploadedCount = 0;
 
       $scope.files = [];
@@ -43,8 +47,6 @@
           });
         }
 
-
-
       }
     })
   </script>
@@ -58,7 +60,7 @@
     <form name="formSingle">
       <div class="input-group">
         <label for="file">Select Files</label>
-        <input type="file" ng-model="file" name="file" base-sixty-four-input required onprogress="progressHandler">
+        <input type="file" ng-model="file" name="file" base-sixty-four-input required onprogress="progressHandler" onload="onloadHandler">
       </div>
       <div class="well">
         formSingle.file.$error:

@@ -57,6 +57,10 @@
 
           function _readerOnLoad (e) {
 
+            if (typeof scope['onload'] === 'function') {
+              scope.onload(e, reader, rawFiles, fileObjects, rawFiles[readFileIndex]);
+            }
+
             var base64 = _arrayBufferToBase64(e.target.result);
             fileObject.base64 = base64;
             fileObjects.push(fileObject);

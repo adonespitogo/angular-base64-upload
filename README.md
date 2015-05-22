@@ -140,5 +140,25 @@ Changelog
  - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives
 
 ## License
+ Released under the terms of MIT License.
+
+Contribution
+------------
+ - using GRUNT as build tool
+ - `grunt build` to build the project
+
+Author
+-------
+Adones Pitoto <pitogo.adones@gmail.com>
+
+Contributors
+------------
+ - [@agibson-fl](https://github.com/agibson-fl)
+ - [@drola](https://github.com/drola)
+ - [@jamesharrington](https://github.com/jamesharrington)
+ - [@gbrennon](https://github.com/gbrennon)
+ - [@boxfrommars](https://github.com/boxfrommars)
+ - [@kermit666](https://github.com/kermit666)
+ - [@marksyzm](https://github.com/marksyzm)
 
 Released under the terms of MIT License.
