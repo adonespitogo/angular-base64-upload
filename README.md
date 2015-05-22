@@ -67,10 +67,11 @@ Validations
 
 Events
 ---------
-Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). You can pass file reader event handlers by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`. The `onload` event is reserved for processing validations and other internal stuff.
+Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). You can pass file reader event handlers by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`.
  - List of available event names:
    - `onabort`
    - `onerror`
+   - `onload`
    - `onloadstart`
    - `onloadend`
    - `onprogress`
@@ -139,9 +140,6 @@ Changelog
  - Added validations
  - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives
 
-## License
- Released under the terms of MIT License.
-
 Contribution
 ------------
  - using GRUNT as build tool
@@ -160,5 +158,7 @@ Contributors
  - [@boxfrommars](https://github.com/boxfrommars)
  - [@kermit666](https://github.com/kermit666)
  - [@marksyzm](https://github.com/marksyzm)
+
+## License
 
 Released under the terms of MIT License.
