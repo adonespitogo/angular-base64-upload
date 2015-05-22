@@ -59,7 +59,7 @@ Validations
  - `required` = required
 
 ```html
-<form>
+<form name="form">
   <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*" maxsize="5000" required>
   <span ng-show="form.files.$error.maxsize">File must be less than or equal to 5000 KB</span>
 </form>
