@@ -6,10 +6,9 @@
 
   'use strict';
 
-  var angular = window['angular'];
+  var mod = window.angular.module('naif.base64', []);
 
-  angular.module('naif.base64', [])
-  .directive('baseSixtyFourInput', [
+  mod.directive('baseSixtyFourInput', [
     function () {
 
       var EVENT_NAMES = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
