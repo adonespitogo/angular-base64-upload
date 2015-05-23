@@ -80,11 +80,11 @@ module.exports = function(grunt) {
       }
     },
     karma: {
-        unit: {
-            configFile: 'karma-unit.js',
-            background: false,
-            singleRun: true
-        }
+      unit: {
+        configFile: 'test/karma-config.js',
+        background: false,
+        singleRun: true
+      }
     },
     watch: {
       src: {
@@ -104,7 +104,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
-  grunt.registerTask('test', ['karma:unit']);
+  grunt.registerTask('test', ['jshint', 'karma:unit']);
   grunt.registerTask('default', ['build']);
 
 };

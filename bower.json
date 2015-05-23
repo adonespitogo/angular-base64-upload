@@ -1,7 +1,7 @@
 {
   "name": "angular-base64-upload",
   "main": "src/angular-base64-upload.js",
-  "version": "v0.1.1",
+  "version": "v0.1.2",
   "homepage": "https://github.com/adonespitogo/angular-base64-upload",
   "authors": [
     "Adones Pitogo <pitogo.adones@gmail.com>"
@@ -31,6 +31,7 @@
   ],
   "devDependencies": {
     "angular": "~1.2.25",
-    "angular-mocks": "~1.2.25"
+    "angular-mocks": "~1.2.25",
+    "jquery": "~2.1.4"
   }
 }

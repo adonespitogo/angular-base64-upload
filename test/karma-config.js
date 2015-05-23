@@ -4,7 +4,7 @@ module.exports = function ( karma ) {
     /**
      * From where to look for files, starting with the location of this file.
      */
-    basePath: '.',
+    basePath: './../',
 
     /**
      * This is the list of file patterns to load into the browser during testing.
@@ -12,6 +12,7 @@ module.exports = function ( karma ) {
     files: [
       "bower_components/angular/angular.min.js",
       "bower_components/angular-mocks/angular-mocks.js",
+      "bower_components/jquery/dist/jquery.js",
       "src/angular-base64-upload.js",
       "test/angular-base64-upload.spec.js"
     ],
@@ -21,7 +22,7 @@ module.exports = function ( karma ) {
     },
 
     frameworks: [ 'jasmine' ],
-    plugins: [ 'karma-jasmine', 'karma-chrome-launcher', 'karma-coverage'],
+    // plugins: [ 'karma-jasmine', 'karma-chrome-launcher', 'karma-coverage', ''],
 
     logLevel:  'WARN',
     /**
@@ -58,7 +59,7 @@ module.exports = function ( karma ) {
      * the aesthetic advantage of not launching a browser every time you save.
      */
     browsers: [
-      'Chrome'
+      'PhantomJS'
     ]
   });
 };
