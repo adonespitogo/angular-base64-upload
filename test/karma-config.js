@@ -12,7 +12,10 @@ module.exports = function ( karma ) {
       "bower_components/angular/angular.min.js",
       "bower_components/angular-mocks/angular-mocks.js",
       "bower_components/jquery/dist/jquery.js",
+      "bower_components/lodash/lodash.js",
       "src/angular-base64-upload.js",
+      "test/globals.js",
+      "test/mocks.js",
       "test/angular-base64-upload.spec.js"
     ],
 

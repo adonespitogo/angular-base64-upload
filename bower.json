@@ -32,6 +32,7 @@
   "devDependencies": {
     "angular": "~1.2.25",
     "angular-mocks": "~1.2.25",
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "lodash": "~3.9.0"
   }
 }

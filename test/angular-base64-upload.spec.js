@@ -1,68 +1,29 @@
 describe('angular-base64-upload', function(){
 
-  var template = "<input type='file' ng-model='yourModel' base-sixty-four-input on-change='onChangeHandler'>";
-  var $compile;
-  var $rootScope;
-  var $scope;
-  var $window;
-  var elem;
-  var compiled;
+  beforeEach(function () {
 
-  function FileReaderMock() {
-    var self = this;
-    // var EVENTS = ['onload', 'onloadstart', 'onloadend', 'onerror', 'onabort'];
 
-    var event = {
-      target: {
-        result: null
-      }
+
+    fileMock = {
+      type: 'image/jpeg',
+      name: 'this-is-an-image-name.jpg',
+      size: 343434,
     };
 
-    self.result = null;
+    filesMock = [];
 
-    self.triggerEvent = function (eventName) {
-      if (typeof self[eventName] === 'function') {
-        event.target.result = self.result;
-        self[eventName](event);
-      }
-    };
-
-    self.readAsArrayBuffer = function () {
-      self.triggerEvent('onload');
-    };
-
-    self.abort = function () {
-      self.triggerEvent('onabort');
-    };
-
-    return self;
-  }
-
-  $window = {
-    _arrayBufferToBase64: function () {
-      return 'base64-mock-string';
-    },
-    FileReader: FileReaderMock
-  };
-
-  var fileMock = {
-    type: 'image/jpeg',
-    name: 'this-is-an-image-name.jpg',
-    size: 343434,
-  };
-
-  var filesMock = [];
-
-  for (var i = 10; i >= 0; i--) {
-    filesMock[i] = fileMock;
-  }
-
-  var eventMock = {
-    type: 'change',
-    target: {
-      files: filesMock
+    for (var i = 10; i >= 0; i--) {
+      filesMock[i] = fileMock;
     }
-  };
+
+    eventMock = {
+      type: 'change',
+      target: {
+        files: filesMock
+      }
+    };
+
+  });
 
   beforeEach(function(){
     module('naif.base64');
@@ -72,13 +33,8 @@ describe('angular-base64-upload', function(){
     });
 
     inject(function($injector){
-
       $compile = $injector.get('$compile');
       $rootScope = $injector.get('$rootScope');
-      $scope = $rootScope.$new();
-      elem = angular.element(template);
-      compiled = $compile(elem)($scope);
-      $scope.$digest();
     });
 
   });
@@ -87,7 +43,9 @@ describe('angular-base64-upload', function(){
     $scope.$destroy();
   });
 
-  it('should should trigger on-change handler', function(){
+  it('should trigger on-change handler', function () {
+
+    compileTemplate();
 
     eventMock.target.files = [fileMock];
     $scope.onChangeHandler = function (e, fileList) {
@@ -96,6 +54,56 @@ describe('angular-base64-upload', function(){
     };
 
     elem.triggerHandler(eventMock);
+  });
+
+  it('should trigger onload handler on single file selection', function () {
+
+    compileTemplate({event: 'onload', handler: 'onloadHandler'});
+    eventMock.target.files = [fileMock];
+
+    var expectedFileObject = {
+      filename: fileMock.name,
+      filetype: fileMock.type,
+      filesize: fileMock.size,
+      base64: $window._arrayBufferToBase64()
+    };
+    var expectedFileObjects = [expectedFileObject];
+    var expectedFileList = eventMock.target.files;
+
+    $scope.onloadHandler = function (e, reader, file, fileList, fileObjects, fileObject) {
+      expect(e.target.result).toBe(new FileReaderMock().result);
+      expect(typeof reader.onload).toBe('function');
+      expect(file).toEqual(fileMock);
+      expect(fileList).toEqual(expectedFileList);
+      expect(fileObjects).toEqual(expectedFileObjects);
+      expect(fileObject).toEqual(expectedFileObject);
+    };
+
+    elem.triggerHandler(eventMock);
+
+  });
+
+  it('should support multi-select input', function () {
+
+    compileTemplate({ngModel: 'files', multiple: true});
+
+    var expectedFileObject = {
+      filename: fileMock.name,
+      filetype: fileMock.type,
+      filesize: fileMock.size,
+      base64: $window._arrayBufferToBase64()
+    };
+    var expectedFileList = eventMock.target.files;
+    var expectedFileObjects = _.map(expectedFileList, function () {
+      return expectedFileObject;
+    });
+
+    elem.triggerHandler(eventMock);
+
+    console.log('$scope.files');
+    expect($scope.files).toEqual(expectedFileObjects);
+    // expect(typeof $scope.files).toBe('array');
+
   });
 
 });
