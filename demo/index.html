@@ -52,7 +52,7 @@
   </script>
   <style>
     body{padding-bottom: 50px;}
-    .well{margin-top: 15px;}
+    .alert{margin-top: 15px;}
   </style>
 </head>
 <body ng-controller="ctrl">
@@ -63,7 +63,7 @@
         <label for="file">Select File</label>
         <input type="file" ng-model="file" name="file" base-sixty-four-input required onprogress="progressHandler" onload="onloadHandler">
       </div>
-      <div class="well">
+      <div class="alert" ng-class="{'alert-danger': form.file.$invalid, 'alert-success': form.file.$valid}">
         form.file.$error:
         {{form.file.$error}}
       </div>
@@ -93,7 +93,7 @@
         <label for="file">Select Files</label>
         <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*, .zip" maxsize="500" required minnum="2">
       </div>
-      <div class="well">
+      <div class="alert" ng-class="{'alert-danger': form.files.$invalid, 'alert-success': form.files.$valid}">
         form.files.$error:
         {{form.files.$error}}
       </div>
