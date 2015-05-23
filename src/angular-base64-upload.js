@@ -37,7 +37,7 @@
 
           var rawFiles = [];
           var fileObjects = [];
-          var validityState = DEFAULT_VALIDITY_STATE;
+          var validityState = angular.copy(DEFAULT_VALIDITY_STATE);
 
           function _attachHandlerForEvent (handler, fReader, file, fileObject) {
             return function (e) {
@@ -119,7 +119,7 @@
             _onChange(e, rawFiles);
 
             // reset validation states
-            _setValidity(DEFAULT_VALIDITY_STATE);
+            validityState = angular.copy(DEFAULT_VALIDITY_STATE);
 
             _validate();
             _readFiles();
@@ -132,8 +132,9 @@
             scope.$apply(function () {
               for (var i = VALIDATORS.length - 1; i >= 0; i--) {
                 var validator = VALIDATORS[i];
-                validityState[validator] = validity[validator] || validityState[validator] || DEFAULT_VALIDITY_STATE[validator];
-                ngModel.$setValidity(validator, validityState[validator]);
+                var valid = validity[validator] === undefined? validityState[validator] : validity[validator];
+                ngModel.$setValidity(validator, valid);
+                validityState[validator] = valid;
               }
             });
           }
@@ -148,16 +149,18 @@
 
           function _validate () {
 
+            var validity = {};
+
             // check max/min number
             if (attrs.maxnum && attrs.multiple) {
               if (rawFiles.length > parseInt(attrs.maxnum)) {
-                _setValidity({'maxnum': false});
+                validity.maxnum = false;
               }
             }
 
             if (attrs.minnum && attrs.multiple) {
               if (rawFiles.length < parseInt(attrs.minnum)) {
-                _setValidity({'minnum': false});
+                validity.minnum = false;
               }
             }
 
@@ -167,17 +170,19 @@
 
               if (attrs.maxsize) {
                 if (file.size > parseFloat(attrs.maxsize) * 1000) {
-                  _setValidity({'maxsize': false});
+                  validity.maxsize = false;
                 }
               }
 
               if (attrs.minsize) {
                 if (file.size < parseFloat(attrs.minsize) * 1000) {
-                  _setValidity({'minsize': false});
+                  validity.minsize = false;
                 }
               }
 
             }
+
+            _setValidity(validity);
 
           }
 
