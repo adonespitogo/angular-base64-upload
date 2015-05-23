@@ -147,7 +147,7 @@ Contribution
 
 Author
 -------
-Adones Pitoto <pitogo.adones@gmail.com>
+[Adones Pitogo](http://adonespitogo.com)
 
 Contributors
 ------------
