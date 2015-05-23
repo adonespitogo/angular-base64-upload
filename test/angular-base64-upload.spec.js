@@ -4,24 +4,45 @@ describe('angular-base64-upload', function(){
   var $compile;
   var $rootScope;
   var $scope;
-  var provide;
   var $window;
   var elem;
-  var input;
   var compiled;
-
-  var onChangeHandler;
 
   function FileReaderMock() {
     var self = this;
-    self.readAsArrayBuffer = function (file) {
-      self.onload({
-        target: {
-          result: null
-        }
-      });
+    // var EVENTS = ['onload', 'onloadstart', 'onloadend', 'onerror', 'onabort'];
+
+    var event = {
+      target: {
+        result: null
+      }
     };
+
+    self.result = null;
+
+    self.triggerEvent = function (eventName) {
+      if (typeof self[eventName] === 'function') {
+        event.target.result = self.result;
+        self[eventName](event);
+      }
+    };
+
+    self.readAsArrayBuffer = function () {
+      self.triggerEvent('onload');
+    };
+
+    self.abort = function () {
+      self.triggerEvent('onabort');
+    };
+
     return self;
+  }
+
+  $window = {
+    _arrayBufferToBase64: function () {
+      return 'base64-mock-string';
+    },
+    FileReader: FileReaderMock
   };
 
   var fileMock = {
@@ -34,7 +55,7 @@ describe('angular-base64-upload', function(){
 
   for (var i = 10; i >= 0; i--) {
     filesMock[i] = fileMock;
-  };
+  }
 
   var eventMock = {
     type: 'change',
@@ -45,13 +66,6 @@ describe('angular-base64-upload', function(){
 
   beforeEach(function(){
     module('naif.base64');
-
-    $window = {
-      _arrayBufferToBase64: function (file) {
-        return 'base64-mock-string';
-      },
-      FileReader: FileReaderMock
-    };
 
     module(function ($provide) {
       $provide.value('$window', $window);

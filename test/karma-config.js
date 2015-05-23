@@ -1,4 +1,3 @@
-var grunt = require('grunt');
 module.exports = function ( karma ) {
   karma.set({
     /**
@@ -28,7 +27,7 @@ module.exports = function ( karma ) {
     /**
      * How to report, by default.
      */
-    reporters: ['progress', 'coverage'],
+    reporters: ['story', 'coverage'],
 
     coverageReporter: {
       type : 'html',
