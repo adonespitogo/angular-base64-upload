@@ -153,7 +153,7 @@ v0.1.1
  - Added `on-change` event.
 
 
- V0.1.0
+V0.1.0
  - Support for multiple file selection
  - Support for file reader event handlers
  - Added validations
