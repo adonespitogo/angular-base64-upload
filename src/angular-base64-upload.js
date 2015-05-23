@@ -8,11 +8,11 @@
   .directive('baseSixtyFourInput', [
     function () {
 
-      var handler_names = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
+      var EVENT_NAMES = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
       var isolate = {};
 
-      for (var i = handler_names.length - 1; i >= 0; i--) {
-        var h = handler_names[i];
+      for (var i = EVENT_NAMES.length - 1; i >= 0; i--) {
+        var h = EVENT_NAMES[i];
         isolate[h] = '=';
       }
 
@@ -36,10 +36,10 @@
 
           function _attachEventHandlers () {
 
-            for (var i = handler_names.length - 1; i >= 0; i--) {
-              var handler_name = handler_names[i];
-              if (typeof scope[handler_name] === 'function' && handler_name !== 'onload') {
-                reader[handler_name] = _readerOnEvent(scope[handler_name]);
+            for (var i = EVENT_NAMES.length - 1; i >= 0; i--) {
+              var e = EVENT_NAMES[i];
+              if (typeof scope[e] === 'function' && e !== 'onload') { // don't attach handler to onload yet
+                reader[e] = _readerOnEvent(scope[e]);
               }
             }
 
@@ -71,12 +71,10 @@
               _readFile();
             }
 
-            // all files are read
-            else {
-              _setViewValue();
-            }
+            _setViewValue();
 
           }
+
           function _readFile () {
             var file = rawFiles[readFileIndex];
 
@@ -97,6 +95,7 @@
             fileObjects = [];
             readFileIndex = 0;
 
+            // reset validation states
             _setValidity('maxsize', true);
             _setValidity('minsize', true);
             _setValidity('maxnum', true);
@@ -104,6 +103,7 @@
             _setValidity('required', false);
 
             _validate();
+            _readFile();
 
           });
 
@@ -125,6 +125,7 @@
 
           function _validate () {
 
+            // check max/min number
             if (attrs.maxnum && attrs.multiple) {
               if (rawFiles.length > parseInt(attrs.maxnum)) {
                 _setValidity('maxnum', false);
@@ -154,8 +155,6 @@
               }
 
             }
-
-            _readFile();
 
           }
 

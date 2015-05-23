@@ -59,7 +59,7 @@
     <h3>Single File Selection</h3>
     <form name="formSingle">
       <div class="input-group">
-        <label for="file">Select Files</label>
+        <label for="file">Select File</label>
         <input type="file" ng-model="file" name="file" base-sixty-four-input required onprogress="progressHandler" onload="onloadHandler">
       </div>
       <div class="well">
@@ -67,6 +67,7 @@
         {{formSingle.file.$error}}
       </div>
     </form>
+    <b>Model Value:</b>
     <table class="table">
       <tr>
         <th>filename</th>
