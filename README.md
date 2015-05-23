@@ -152,6 +152,7 @@ v0.1.1
  - Event handlers receive new set of params `(Event, FileReader, File, FileList, FileObjects, FileObject)`.
  - Added `on-change` event.
 
+
  V0.1.0
  - Support for multiple file selection
  - Support for file reader event handlers
