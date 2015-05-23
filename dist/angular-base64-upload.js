@@ -24,14 +24,6 @@
     function ($window) {
 
       var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
-      var VALIDATORS = ['maxsize', 'minsize', 'maxnum', 'minnum', 'required'];
-      var DEFAULT_VALIDITY_STATE = {
-        maxsize: true,
-        minsize: true,
-        maxnum: true,
-        minnum: true,
-        required: false
-      };
       var isolateScope = {
         onChange: '&'
       };
@@ -51,9 +43,12 @@
             return;
           }
 
+          if (attrs.required) {
+            ngModel.$setViewValue(null); // need set falsy to activate required state when user predefines value for model
+          }
+
           var rawFiles = [];
           var fileObjects = [];
-          var validityState = angular.copy(DEFAULT_VALIDITY_STATE);
 
           function _attachHandlerForEvent (eventName, handler, fReader, file, fileObject) {
             fReader[eventName] =  function (e) {
@@ -131,73 +126,67 @@
 
             fileObjects = [];
             rawFiles = e.target.files; // use event target so we can mock the files from test
+            _readFiles();
 
             _onChange(e);
-
-            // reset validation states
-            validityState = angular.copy(DEFAULT_VALIDITY_STATE);
-
-            _validate();
-            _readFiles();
 
           });
 
           // VALIDATIONS =========================================================
 
-          function _setValidity (validity) {
-            scope.$apply(function () {
-              for (var i = VALIDATORS.length - 1; i >= 0; i--) {
-                var validator = VALIDATORS[i];
-                var valid = validity[validator] === undefined? validityState[validator] : validity[validator];
-                ngModel.$setValidity(validator, valid);
-                validityState[validator] = valid;
-              }
-            });
+          function _required (val) {
+            var valid = val.length? (val.length > 0) : (val? true:false);
+            ngModel.$setValidity('required', valid);
+            return val;
           }
 
-          function _validate () {
-
-            var validity = {};
-
-            if (attrs.required) {
-              var valid = rawFiles.length > 0;
-              validity.required = valid;
-            }
-
-            // check max/min number
+          function _maxnum (val) {
             if (attrs.maxnum && attrs.multiple) {
-              if (rawFiles.length > parseInt(attrs.maxnum)) {
-                validity.maxnum = false;
-              }
+              var valid = val.length? val.length <= parseInt(attrs.maxnum) : false;
+              ngModel.$setValidity('maxnum', valid);
             }
-
-            if (attrs.minnum && attrs.multiple) {
-              if (rawFiles.length < parseInt(attrs.minnum)) {
-                validity.minnum = false;
-              }
-            }
-
-            // check each file for file size
-            for (var i = rawFiles.length - 1; i >= 0; i--) {
-              var file = rawFiles[i];
-
-              if (attrs.maxsize) {
-                if (file.size > parseFloat(attrs.maxsize) * 1000) {
-                  validity.maxsize = false;
-                }
-              }
-
-              if (attrs.minsize) {
-                if (file.size < parseFloat(attrs.minsize) * 1000) {
-                  validity.minsize = false;
-                }
-              }
-
-            }
-
-            _setValidity(validity);
-
+            return val;
           }
+
+          function _minnum (val) {
+            if (attrs.minnum && attrs.multiple) {
+              var valid = val.length? val.length >= parseInt(attrs.minnum) : false;
+              ngModel.$setValidity('minnum', valid);
+            }
+            return val;
+          }
+
+          function _checkFileSize (file) {
+            if (attrs.maxsize) {
+              if (file.filesize > parseFloat(attrs.maxsize) * 1000) {
+                ngModel.$setValidity('maxsize', false);
+              }
+            }
+
+            if (attrs.minsize) {
+              if (file.filesize < parseFloat(attrs.minsize) * 1000) {
+                ngModel.$setValidity('minsize', false);
+              }
+            }
+          }
+
+          function _fileSize (val) {
+            if (val.length) {
+              for (var i = val.length - 1; i >= 0; i--) {
+                var file = val[i];
+                _checkFileSize(file);
+              }
+            }
+            else {
+              _checkFileSize(val);
+            }
+            return val;
+          }
+
+          ngModel.$parsers.push(_required);
+          ngModel.$parsers.push(_maxnum);
+          ngModel.$parsers.push(_minnum);
+          ngModel.$parsers.push(_fileSize);
 
         }
       };

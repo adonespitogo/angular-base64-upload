@@ -63,8 +63,8 @@ module.exports = function(grunt) {
         newcap: true,
         noarg: true,
         sub: true,
-        undef: false,
-        unused: false,
+        undef: true,
+        unused: true,
         boss: true,
         eqnull: true,
         browser: true,
@@ -79,6 +79,23 @@ module.exports = function(grunt) {
         src: 'src/angular-base64-upload.js'
       },
       tests: {
+        options: {
+          curly: true,
+          eqeqeq: true,
+          immed: true,
+          latedef: true,
+          newcap: true,
+          noarg: true,
+          sub: true,
+          undef: false,
+          unused: false,
+          boss: true,
+          eqnull: true,
+          browser: true,
+          globals: {
+            angular: true
+          }
+        },
         src: 'test/**/*.js'
       }
     },

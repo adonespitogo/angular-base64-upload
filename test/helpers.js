@@ -7,7 +7,8 @@ function compileTemplate (opts) {
   opts = {
     ngModel: opts.ngModel || 'model',
     events: opts.events || [],
-    multiple: opts.multiple || false
+    multiple: opts.multiple || false,
+    attrs: opts.attrs || []
   };
 
   template = "<input type='file' base-sixty-four-input>";
@@ -25,6 +26,11 @@ function compileTemplate (opts) {
 
   if (opts.multiple) {
     elem.attr('multiple', true);
+  }
+
+  for (var ii = opts.attrs.length - 1; ii >= 0; ii--) {
+    var attr = opts.attrs[ii];
+    elem.attr(attr['attr'], attr['val']);
   }
 
   compiled = $compile(elem)($scope);

@@ -98,14 +98,13 @@ describe('angular-base64-upload', function(){
       handlerSpies.push(spy);
     }
 
-    FileReaderMock.autoTriggerEvents = true; // triggers all event listeners on fileReder.readAsArrayBuffer(file)
+    FileReaderMock.autoTriggerEvents = true; // triggers all file reader event listeners on fileReder.readAsArrayBuffer(file)
     elem.triggerHandler(eventmock);
     FileReaderMock.autoTriggerEvents = false;
 
     for (var a = handlerSpies.length - 1; a >= 0; a--) {
       expect(handlerSpies[a]).toHaveBeenCalled();
     }
-
 
   });
 
@@ -125,6 +124,10 @@ describe('angular-base64-upload', function(){
 
     elem.triggerHandler(eventmock);
     expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('should validate required', function () {
+
   });
 
 });
