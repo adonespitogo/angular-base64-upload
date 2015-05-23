@@ -101,9 +101,9 @@
 
           }
 
-          function _onChange (e, fileList) {
+          function _onChange (e) {
             if (attrs.onChange) {
-              scope.onChange()(e, fileList);
+              scope.onChange()(e, rawFiles);
             }
           }
 
@@ -116,7 +116,7 @@
             fileObjects = [];
             rawFiles = elem[0].files;
 
-            _onChange(e, rawFiles);
+            _onChange(e);
 
             // reset validation states
             validityState = angular.copy(DEFAULT_VALIDITY_STATE);
