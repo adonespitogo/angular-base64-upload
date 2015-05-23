@@ -50,6 +50,22 @@ describe('angular-base64-upload', function(){
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should support multi-select input', function () {
+
+    compileTemplate({ngModel: 'files', multiple: true});
+
+    var expectedFileList = eventmock.target.files;
+    var expectedFileObjects = _.map(expectedFileList, function () {
+      return fileObjectmock;
+    });
+
+    elem.triggerHandler(eventmock);
+
+    expect($scope.files).toEqual(expectedFileObjects);
+    expect($scope.files.length).toBe(expectedFileObjects.length);
+
+  });
+
   it('should trigger file reader event handlers', function () {
 
     eventmock.target.files = [fileMock];
@@ -90,22 +106,6 @@ describe('angular-base64-upload', function(){
       expect(handlerSpies[a]).toHaveBeenCalled();
     }
 
-
-  });
-
-  it('should support multi-select input', function () {
-
-    compileTemplate({ngModel: 'files', multiple: true});
-
-    var expectedFileList = eventmock.target.files;
-    var expectedFileObjects = _.map(expectedFileList, function () {
-      return fileObjectmock;
-    });
-
-    elem.triggerHandler(eventmock);
-
-    expect($scope.files).toEqual(expectedFileObjects);
-    expect($scope.files.length).toBe(expectedFileObjects.length);
 
   });
 
