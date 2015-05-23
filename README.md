@@ -145,6 +145,7 @@ Change Log
 
 v0.1.2
  - Remove `required` validation from `$scope.$validators` to work with angualar versions prior to 1.3.x
+ - Move validators to `ngModel.$parsers`, it's more angular way
  - Added unit tests
 
 v0.1.1
