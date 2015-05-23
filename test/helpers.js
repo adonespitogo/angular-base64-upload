@@ -1,3 +1,5 @@
+// helper functions
+
 function compileTemplate (opts) {
 
   opts = opts || {};
