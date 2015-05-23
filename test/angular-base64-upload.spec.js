@@ -109,4 +109,22 @@ describe('angular-base64-upload', function(){
 
   });
 
+  it('should no trigger events when no file is selected', function () {
+
+    eventmock.target.files = [];
+
+    var event = {
+      name: 'on-change',
+      handler: function () {},
+      bindTo: 'onChangeHandler'
+    };
+
+    compileTemplate({events: [event]});
+
+    var spy = spyOn($scope, 'onChangeHandler').andCallThrough();
+
+    elem.triggerHandler(eventmock);
+    expect(spy).not.toHaveBeenCalled();
+  });
+
 });
