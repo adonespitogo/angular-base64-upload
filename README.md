@@ -67,8 +67,11 @@ Validations
 
 Events
 ---------
-Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). You can pass file reader event handlers by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`.
- - List of available event names:
+
+<b>FileReader Events</b>
+
+You can listen to all [FileReader events](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers) by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`.
+ - List of file reader event names:
    - `onabort`
    - `onerror`
    - `onload`
@@ -78,11 +81,19 @@ Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/d
  - Params
    - `EventObject` - File reader event object depending on the event type. This can be an `abort`, `error`, `load`, `loadstart`, `loadend`, or `progress` event object.
    - `FileReader` - A singleton [File Reader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) instance used to read file blobs.
+   - `File` - Current file being read by the file reader.
    - `FileList` - Array of selected files.
    - `FileObjects` - Array of base64 file objects that are done reading.
-   - `File` - Current file being read by the file reader.
+   - `Object` - Result of reading the file. In case of reading error, `object.base64` might be undefined.
 
-Example
+<b>`on-change`</b>
+
+Gets triggered when user changes the input. `<input on-change="onChangeHandlerFunc">`
+ - Params:
+   - Event - Event object.
+   - FileList - Array of selected files.
+
+Example event handler implementation:
    ```
    $scope.errorHandler = function (event, reader, fileList, fileObjs, file) {
      console.log("An error occurred while reading file: "+file.name);
@@ -93,6 +104,7 @@ Example
     <input type="file" base-sixty-four-input ng-model="myfile" onerror="errorHandler">
    <form>
    ```
+
 
 Server-Side
 ---------------
@@ -134,6 +146,12 @@ end
 
 Changelog
 --------
+
+v0.1.1
+ - Remove the use of singleton file reader instance. Each file is read by respective file reader.
+ - Event handlers receive new set of params `(Event, FileReader, File, FileList, FileObjects, FileObject)`.
+ - Added `on-change` event.
+
  V0.1.0
  - Support for multiple file selection
  - Support for file reader event handlers

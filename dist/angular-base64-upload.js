@@ -11,7 +11,7 @@
   mod.directive('baseSixtyFourInput', [
     function () {
 
-      var EVENT_NAMES = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
+      var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
       var VALIDATORS = ['maxsize', 'minsize', 'maxnum', 'minnum', 'required'];
       var DEFAULT_VALIDITY_STATE = {
         maxsize: true,
@@ -20,10 +20,12 @@
         minnum: true,
         required: false
       };
-      var isolateScope = {};
+      var isolateScope = {
+        onChange: '&'
+      };
 
-      for (var i = EVENT_NAMES.length - 1; i >= 0; i--) {
-        var e = EVENT_NAMES[i];
+      for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
+        var e = FILE_READER_EVENTS[i];
         isolateScope[e] = '&';
       }
 
@@ -67,8 +69,8 @@
 
           function _attachEventHandlers (fReader, file, fileObject) {
 
-            for (var i = EVENT_NAMES.length - 1; i >= 0; i--) {
-              var e = EVENT_NAMES[i];
+            for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
+              var e = FILE_READER_EVENTS[i];
               if (attrs[e] && e !== 'onload') { // don't attach handler to onload yet
                 fReader[e] = _attachHandlerForEvent(scope[e], fReader, file, fileObject);
               }
@@ -103,13 +105,22 @@
 
           }
 
-          elem.on('change', function() {
+          function _onChange (e, fileList) {
+            if (attrs.onChange) {
+              scope.onChange()(e, fileList);
+            }
+          }
+
+          elem.on('change', function(e) {
+
             if(!elem[0].files.length) {
               return;
             }
 
-            rawFiles = elem[0].files;
             fileObjects = [];
+            rawFiles = elem[0].files;
+
+            _onChange(e, rawFiles);
 
             // reset validation states
             _setValidity(DEFAULT_VALIDITY_STATE);
