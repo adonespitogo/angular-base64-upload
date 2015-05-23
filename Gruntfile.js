@@ -107,7 +107,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
-  grunt.registerTask('test', ['jshint', 'karma:unit']);
+  grunt.registerTask('test', ['jshint:angular-base64-upload', 'jshint:tests', 'karma:unit']);
   grunt.registerTask('default', ['build']);
 
 };

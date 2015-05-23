@@ -16,6 +16,7 @@ module.exports = function ( karma ) {
       "src/angular-base64-upload.js",
       "test/globals.js",
       "test/mocks.js",
+      "test/helpers.js",
       "test/angular-base64-upload.spec.js"
     ],
 

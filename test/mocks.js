@@ -1,26 +1,7 @@
-// contains mock objects used in testing
-
-function compileTemplate (opts) {
-
-  opts = opts || {};
-
-  opts = {
-    ngModel: opts.ngModel || 'file',
-    event: opts.event || 'none',
-    handler: opts.handler || 'none',
-    multiple: opts.multiple || false
-  };
-
-  template = "<input type='file' ng-model='"+opts.ngModel+"' base-sixty-four-input "+opts.event+"='"+opts.handler+"' "+(opts.multiple? 'multiple': '')+">";
-  $scope = $rootScope.$new();
-  elem = angular.element(template);
-  compiled = $compile(elem)($scope);
-  $scope.$digest();
-}
+// contains mock objects/properties/functions used in testing
 
 function FileReaderMock() {
   var self = this;
-  // var EVENTS = ['onload', 'onloadstart', 'onloadend', 'onerror', 'onabort'];
 
   var event = {
     target: {
@@ -33,24 +14,60 @@ function FileReaderMock() {
   self.triggerEvent = function (eventName) {
     if (typeof self[eventName] === 'function') {
       event.target.result = self.result;
+      event.type = eventName;
       self[eventName](event);
     }
   };
 
   self.readAsArrayBuffer = function () {
     self.triggerEvent('onload');
+
+    if (FileReaderMock.autoTriggerEvents) {
+      for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
+        var e = FILE_READER_EVENTS[i];
+        self.triggerEvent(e);
+      }
+    }
+
   };
 
   self.abort = function () {
     self.triggerEvent('onabort');
   };
-
   return self;
 }
 
-$window = {
+FileReaderMock.autoTriggerEvents = false;
+
+var $windowMock = {
   _arrayBufferToBase64: function () {
     return 'base64-mock-string';
   },
   FileReader: FileReaderMock
+};
+
+FileMock = {
+  type: 'image/jpeg',
+  name: 'this-is-an-image-name.jpg',
+  size: 343434,
+};
+
+FileListMock = [];
+
+for (var i = 10; i >= 0; i--) {
+  FileListMock[i] = FileMock;
+}
+
+eventMock = {
+  type: 'change',
+  target: {
+    files: FileListMock
+  }
+};
+
+fileObjectMock = {
+  filename: FileMock.name,
+  filetype: FileMock.type,
+  filesize: FileMock.size,
+  base64: $windowMock._arrayBufferToBase64()
 };

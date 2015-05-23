@@ -5,8 +5,12 @@ var $compile;
 var $rootScope;
 var $scope;
 var $window;
-var elem;
-var compiled;
-var fileMock;
-var filesMock;
+var elem; // result of angular.element(template);
+var compiled; // result of $compile(scope)(elem);
+var FileMock;
+var FileListMock;
 var eventMock;
+
+var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
+
+var fileObjectMock;
