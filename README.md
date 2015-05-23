@@ -144,7 +144,7 @@ Change Log
 --------
 
 v0.1.2
- - Refactor required validation to work on angualar versions prior to 1.3.x
+ - Refactor required validation to work with angualar versions prior to 1.3.x
  - Added unit tests
 
 v0.1.1
