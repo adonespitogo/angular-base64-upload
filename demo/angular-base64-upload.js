@@ -7,18 +7,28 @@
   mod.directive('baseSixtyFourInput', [
     function () {
 
-      var EVENT_NAMES = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
-      var isolate = {};
+      var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
+      var VALIDATORS = ['maxsize', 'minsize', 'maxnum', 'minnum', 'required'];
+      var DEFAULT_VALIDITY_STATE = {
+        maxsize: true,
+        minsize: true,
+        maxnum: true,
+        minnum: true,
+        required: false
+      };
+      var isolateScope = {
+        onChange: '&'
+      };
 
-      for (var i = EVENT_NAMES.length - 1; i >= 0; i--) {
-        var h = EVENT_NAMES[i];
-        isolate[h] = '=';
+      for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
+        var e = FILE_READER_EVENTS[i];
+        isolateScope[e] = '&';
       }
 
       return {
         restrict: 'A',
         require: '?ngModel',
-        scope: isolate,
+        scope: isolateScope,
         link: function (scope, elem, attrs, ngModel) {
 
           if (!ngModel) {
@@ -27,94 +37,105 @@
 
           var rawFiles = [];
           var fileObjects = [];
-          var fileObject = {};
-          var readFileIndex = 0;
-          var reader = new window.FileReader();
+          var validityState = angular.copy(DEFAULT_VALIDITY_STATE);
 
-          function _readerOnEvent (handler_function) {
-            return function (e) {
-              handler_function(e, reader, rawFiles, fileObjects, rawFiles[readFileIndex]);
+          function _attachHandlerForEvent (eventName, handler, fReader, file, fileObject) {
+            fReader[eventName] =  function (e) {
+              handler()(e, fReader, file, rawFiles, fileObjects, fileObject);
             };
           }
 
-          function _readerOnLoad (e) {
+          function _readerOnLoad (fReader, file, fileObject) {
 
-            if (typeof scope['onload'] === 'function') {
-              scope.onload(e, reader, rawFiles, fileObjects, rawFiles[readFileIndex]);
-            }
+            return function (e) {
 
-            var base64 = _arrayBufferToBase64(e.target.result);
-            fileObject.base64 = base64;
-            fileObjects.push(fileObject);
+              var base64 = _arrayBufferToBase64(e.target.result);
+              fileObject.base64 = base64;
+              fileObjects.push(fileObject);
 
-            readFileIndex ++;
-            // read the next file if there is
-            if (readFileIndex < rawFiles.length) {
-              _readFile();
-            }
+              if (attrs.onload) {
+                scope.onload()(e, fReader,  file, rawFiles, fileObjects, fileObject);
+              }
 
-            _setViewValue();
+              _setViewValue();
+
+            };
 
           }
 
-          function _attachEventHandlers () {
+          function _attachEventHandlers (fReader, file, fileObject) {
 
-            for (var i = EVENT_NAMES.length - 1; i >= 0; i--) {
-              var e = EVENT_NAMES[i];
-              if (typeof scope[e] === 'function' && e !== 'onload') { // don't attach handler to onload yet
-                reader[e] = _readerOnEvent(scope[e]);
+            for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
+              var e = FILE_READER_EVENTS[i];
+              if (attrs[e] && e !== 'onload') { // don't attach handler to onload yet
+                _attachHandlerForEvent(e, scope[e], fReader, file, fileObject);
               }
             }
 
-            reader.onload = _readerOnLoad;
+            fReader.onload = _readerOnLoad(fReader, file, fileObject);
           }
-
-          _attachEventHandlers();
 
           function _setViewValue () {
             scope.$apply(function(){
-              var newVal = attrs.multiple ? fileObjects : (fileObjects[0] || []);
+              var newVal = attrs.multiple ? fileObjects : (fileObjects[0] || null);
               ngModel.$setViewValue(angular.copy(newVal));
             });
           }
 
-          function _readFile () {
-            var file = rawFiles[readFileIndex];
+          function _readFiles () {
 
-            fileObject = {};
+            for (var i = rawFiles.length - 1; i >= 0; i--) {
 
-            fileObject.filetype = file.type;
-            fileObject.filename = file.name;
-            fileObject.filesize = file.size;
-            reader.readAsArrayBuffer(file);
+              var reader = new window.FileReader();
+              var file = rawFiles[i];
+              var fileObject = {};
+
+              fileObject.filetype = file.type;
+              fileObject.filename = file.name;
+              fileObject.filesize = file.size;
+
+              _attachEventHandlers(reader, file, fileObject);
+
+              reader.readAsArrayBuffer(file);
+            }
+
           }
 
-          elem.on('change', function() {
+          function _onChange (e) {
+            if (attrs.onChange) {
+              scope.onChange()(e, rawFiles);
+            }
+          }
+
+          elem.on('change', function(e) {
+
             if(!elem[0].files.length) {
               return;
             }
 
-            rawFiles = elem[0].files;
             fileObjects = [];
-            readFileIndex = 0;
+            rawFiles = elem[0].files;
+
+            _onChange(e);
 
             // reset validation states
-            _setValidity('maxsize', true);
-            _setValidity('minsize', true);
-            _setValidity('maxnum', true);
-            _setValidity('minnum', true);
-            _setValidity('required', false);
+            validityState = angular.copy(DEFAULT_VALIDITY_STATE);
 
             _validate();
-            _readFile();
+            _readFiles();
 
           });
 
           // VALIDATIONS =========================================================
 
-          function _setValidity (key, val) {
+          function _setValidity (validity) {
             scope.$apply(function () {
-              ngModel.$setValidity(key, val);
+              for (var i = VALIDATORS.length - 1; i >= 0; i--) {
+                var validator = VALIDATORS[i];
+                var valid = validity[validator] === undefined? validityState[validator] : validity[validator];
+                ngModel.$setValidity(validator, valid);
+                validityState[validator] = valid;
+              }
             });
           }
 
@@ -128,16 +149,18 @@
 
           function _validate () {
 
+            var validity = {};
+
             // check max/min number
             if (attrs.maxnum && attrs.multiple) {
               if (rawFiles.length > parseInt(attrs.maxnum)) {
-                _setValidity('maxnum', false);
+                validity.maxnum = false;
               }
             }
 
             if (attrs.minnum && attrs.multiple) {
               if (rawFiles.length < parseInt(attrs.minnum)) {
-                _setValidity('minnum', false);
+                validity.minnum = false;
               }
             }
 
@@ -147,17 +170,19 @@
 
               if (attrs.maxsize) {
                 if (file.size > parseFloat(attrs.maxsize) * 1000) {
-                  _setValidity('maxsize', false);
+                  validity.maxsize = false;
                 }
               }
 
               if (attrs.minsize) {
                 if (file.size < parseFloat(attrs.minsize) * 1000) {
-                  _setValidity('minsize', false);
+                  validity.minsize = false;
                 }
               }
 
             }
+
+            _setValidity(validity);
 
           }
 

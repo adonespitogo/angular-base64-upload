@@ -10,12 +10,18 @@
     angular.module('myApp', ['naif.base64'])
     .controller('ctrl', function($scope, $http, $window, $rootScope){
 
-      $scope.progressHandler = function (e, readerE, reader) {
-        console.log(e);
+      $scope.loadEndHandler = function (e, reader, file, rawFiles, fileObjects, fileObj) {
+        // console.log(e);
+        // console.log(reader);
+        // console.log(file);
+        // console.log(rawFiles);
+        // console.log(fileObjects);
+        // console.log(fileObj);
       };
 
-      $scope.onloadHandler = function () {
-        console.log('onload');
+      $scope.onChange = function (e, fileList) {
+        // console.log(e);
+        // console.log(fileList);
       };
 
       var uploadedCount = 0;
@@ -61,7 +67,7 @@
     <h3>Single File Selection</h3>
       <div class="input-group">
         <label for="file">Select File</label>
-        <input type="file" ng-model="file" name="file" base-sixty-four-input required onprogress="progressHandler" onload="onloadHandler">
+        <input type="file" ng-model="file" name="file" base-sixty-four-input required onloadend="loadEndHandler" on-change="onChange">
       </div>
       <div class="alert" ng-class="{'alert-danger': form.file.$invalid, 'alert-success': form.file.$valid}">
         form.file.$error:
