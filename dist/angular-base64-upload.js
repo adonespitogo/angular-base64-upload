@@ -43,8 +43,8 @@
           var fileObjects = [];
           var validityState = angular.copy(DEFAULT_VALIDITY_STATE);
 
-          function _attachHandlerForEvent (handler, fReader, file, fileObject) {
-            return function (e) {
+          function _attachHandlerForEvent (eventName, handler, fReader, file, fileObject) {
+            fReader[eventName] =  function (e) {
               handler()(e, fReader, file, rawFiles, fileObjects, fileObject);
             };
           }
@@ -72,7 +72,7 @@
             for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
               var e = FILE_READER_EVENTS[i];
               if (attrs[e] && e !== 'onload') { // don't attach handler to onload yet
-                fReader[e] = _attachHandlerForEvent(scope[e], fReader, file, fileObject);
+                _attachHandlerForEvent(e, scope[e], fReader, file, fileObject);
               }
             }
 
