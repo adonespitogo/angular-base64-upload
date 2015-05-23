@@ -52,6 +52,7 @@
   </script>
   <style>
     body{padding-bottom: 50px;}
+    .well{margin-top: 15px;}
   </style>
 </head>
 <body ng-controller="ctrl">
@@ -67,7 +68,7 @@
         {{form.file.$error}}
       </div>
     <b>Model Value:</b>
-    <table class="table">
+    <table class="table table-bordered table-striped">
       <tr>
         <th>filename</th>
         <th>filetype</th>
@@ -97,7 +98,7 @@
         {{form.files.$error}}
       </div>
     <b>Model Value:</b>
-    <table class="table">
+    <table class="table table-bordered table-striped">
       <tr>
         <th>filename</th>
         <th>filetype</th>
