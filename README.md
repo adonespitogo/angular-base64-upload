@@ -143,6 +143,10 @@ end
 Change Log
 --------
 
+v0.1.2
+ - Refactor required validation to work on angualar versions prior to 1.3.x
+ - Added unit tests
+
 v0.1.1
  - Remove the use of singleton file reader instance. Each file is read by respective file reader.
  - FileReader event handlers receive new set of arguments `(Event, FileReader, File, FileList, FileObjects, FileObject)`.
@@ -160,6 +164,8 @@ Contribution
 ------------
  - using GRUNT as build tool
  - `grunt build` to build the project
+ - `grunt test` to run unit tests
+ - Uses [jasmine 1.3](http://jasmine.github.io/1.3/introduction.html) in writing unit test specs
 
 Author
 -------
