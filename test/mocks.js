@@ -20,13 +20,15 @@ function FileReaderMock() {
   };
 
   self.readAsArrayBuffer = function () {
-    self.triggerEvent('onload');
 
     if (FileReaderMock.autoTriggerEvents) {
       for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
         var e = FILE_READER_EVENTS[i];
         self.triggerEvent(e);
       }
+    }
+    else {
+      self.triggerEvent('onload');
     }
 
   };
