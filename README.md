@@ -78,7 +78,7 @@ Events
    - `onprogress`
  - Params
    - `EventObject` - File reader event object depending on the event type. This can be an `abort`, `error`, `load`, `loadstart`, `loadend`, or `progress` event object.
-   - `FileReader` - A singleton [File Reader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) instance used to read file blobs.
+   - `FileReader` - A [File Reader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) instance used to read the file. Each file is read by respective file reader instance.
    - `File` - Current file being read by the file reader.
    - `FileList` - Array of selected files.
    - `FileObjects` - Array of base64 file objects that are done reading.
