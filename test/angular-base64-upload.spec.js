@@ -29,6 +29,16 @@ describe('angular-base64-upload', function(){
     $scope.$destroy();
   });
 
+  it('should support single file selection', function () {
+
+    compileTemplate({ngModel: 'file'});
+
+    elem.triggerHandler(eventmock);
+
+    expect($scope.file).toEqual(fileObjectmock);
+
+  });
+
   it('should support multi-select input', function () {
 
     compileTemplate({ngModel: 'files', multiple: true});
