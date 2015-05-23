@@ -51,11 +51,11 @@ Just add `multiple` attribute to the input element. `yourModel` will be an array
 ```
 Validations
 ------------
- - `maxsize` = Maximum file size in kilobytes (KB)
- - `minsize` = Minimum file size in kilobytes (KB)
- - `maxnum` = Maximum number of items to select (available for multiple file selection)
- - `minnum` = Minimum number of items to select (available for multiple file selection)
- - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type`
+ - `maxsize` = Maximum file size in kilobytes (KB) (applied to all files when multi-select is enabled)
+ - `minsize` = Minimum file size in kilobytes (KB) (applied to all files when multi-select is enabled)
+ - `maxnum` = Maximum number of items to select (applicable only for multi-select)
+ - `minnum` = Minimum number of items to select (applicable only for multi-select)
+ - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type` comma separated
  - `required` = required
 
 ```html
