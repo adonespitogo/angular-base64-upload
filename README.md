@@ -149,7 +149,7 @@ Change Log
 
 v0.1.1
  - Remove the use of singleton file reader instance. Each file is read by respective file reader.
- - Event handlers receive new set of params `(Event, FileReader, File, FileList, FileObjects, FileObject)`.
+ - FileReader event handlers receive new set of params `(Event, FileReader, File, FileList, FileObjects, FileObject)`.
  - Added `on-change` event.
 
 
