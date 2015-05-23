@@ -139,17 +139,14 @@
             });
           }
 
-          ngModel.$validators.required = function (model, view) {
-            var val = model || view || [];
-            if (val.hasOwnProperty('length')) {
-              return val.length > 0;
-            }
-            return val ? true : false;
-          };
-
           function _validate () {
 
             var validity = {};
+
+            if (attrs.required) {
+              var valid = rawFiles.length > 0;
+              validity.required = valid;
+            }
 
             // check max/min number
             if (attrs.maxnum && attrs.multiple) {
