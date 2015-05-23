@@ -3,31 +3,24 @@
 class Base64File
 {
 
-  private $base64 = '';
-  private $fileName = '';
+  public $base64 = '';
+  public $filename = '';
+
+  private $folder = 'uploads';
 
   function __construct($attrs)
   {
     $this->base64 = $attrs['base64'];
-    $this->setFileName($attrs['filename']);
+    $this->filename = $this->folder.'/'.$attrs['filename'];
     $this->decodeBase64File();
     return $this;
   }
 
-  function setFileName($fileName){
-    $this->fileName = $fileName;
-    return $this->fileName;
-  }
-
   function decodeBase64File() {
-      $ifp = fopen($this->fileName, 'w');
+      $ifp = fopen($this->filename, 'w');
       fwrite( $ifp, base64_decode( $this->base64) );
       fclose($ifp);
       return $ifp;
-  }
-
-  function getFileName(){
-    return $this->fileName;
   }
 
 }
@@ -38,6 +31,6 @@ $request = json_decode($postdata, true);
 //end parse
 
 $file = new Base64File($request);
-echo $file->getFileName();
+echo $file->filename;
 
 ?>

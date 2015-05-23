@@ -5,15 +5,14 @@ angular-base64-upload
 
 Angular directive for uploading base64-encoded files that you can pass along with the resource model. This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file).
 
-<b>Note:</b> This directive only supports single file selection.
-
 Installation
 -------------
-<b>Bower:</b> `bower install angular-base64-upload`
+ - Bower -  `bower install angular-base64-upload`
+ - NPM - `npm install angular-base64-upload`
 
 Example
 --------------------------
-See the README.md on [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
 
 Usage
 -------
@@ -24,7 +23,8 @@ Include `angular.js` and `angular-base64-upload.js` in your application and add 
 angular.module('myApp', ['naif.base64']);
 ```
 
-HTML: <br>
+Sigle File Selection
+------------
 ```html
 <form>
   <input type='file' ng-model='yourModel' base-sixty-four-input>
@@ -41,13 +41,58 @@ Sample `yourModel` value after selecting a file:
 }
 ```
 
-You can use the `base-sixty-four-image` directive to display image preview:
+Multiple File Selection
+--------------
+Just add `multiple` attribute to the input element. `yourModel` will be an array of base64 file objects.
+```html
+  <form>
+    <input type="file" ng-model="yourModel" multiple>
+  </form>
+```
+Validations
+------------
+ - `maxsize` = Maximum file size in kilobytes (KB)
+ - `minsize` = Minimum file size in kilobytes (KB)
+ - `maxnum` = Maximum number of items to select (available for multiple file selection)
+ - `minnum` = Minimum number of items to select (available for multiple file selection)
+ - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type`
+ - `required` = required
 
-    <img base-sixty-four-image="yourModel">
+```html
+<form name="form">
+  <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*" maxsize="5000" required>
+  <span ng-show="form.files.$error.maxsize">Files must not exceed 5000 KB</span>
+</form>
+```
 
-If you also want to display a placeholder image, you can additionally use `base-sixty-four-image-placeholder` directive:
+Events
+---------
+Based from the [FileReader Event Handlers](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers). You can pass file reader event handlers by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`.
+ - List of available event names:
+   - `onabort`
+   - `onerror`
+   - `onload`
+   - `onloadstart`
+   - `onloadend`
+   - `onprogress`
+ - Params
+   - `EventObject` - File reader event object depending on the event type. This can be an `abort`, `error`, `load`, `loadstart`, `loadend`, or `progress` event object.
+   - `FileReader` - A singleton [File Reader](https://developer.mozilla.org/en-US/docs/Web/API/FileReader) instance used to read file blobs.
+   - `FileList` - Array of selected files.
+   - `FileObjects` - Array of base64 file objects that are done reading.
+   - `File` - Current file being read by the file reader.
 
-    <img base-sixty-four-image="yourModel" base-sixty-four-image-placeholder="placeholder.png">
+Example
+   ```
+   $scope.errorHandler = function (event, reader, fileList, fileObjs, file) {
+     console.log("An error occurred while reading file: "+file.name);
+     reader.abort();
+   };
+
+   <form>
+    <input type="file" base-sixty-four-input ng-model="myfile" onerror="errorHandler">
+   <form>
+   ```
 
 Server-Side
 ---------------
@@ -81,11 +126,38 @@ def decode_base64
   # set file properties
   data.content_type = params[:your_model][:filetype]
   data.original_filename = params[:your_model][:filename]
-  
+
   # return data to be used as the attachment file (paperclip)
   data
 end
 ```
+
+Changelog
+--------
+ V0.1.0
+ - Support for multiple file selection
+ - Support for file reader event handlers
+ - Added validations
+ - Removed `base-sixty-four-image` and `base-sixty-four-image-placeholder` directives
+
+Contribution
+------------
+ - using GRUNT as build tool
+ - `grunt build` to build the project
+
+Author
+-------
+[Adones Pitogo](http://adonespitogo.com)
+
+Contributors
+------------
+ - [@agibson-fl](https://github.com/agibson-fl)
+ - [@drola](https://github.com/drola)
+ - [@jamesharrington](https://github.com/jamesharrington)
+ - [@gbrennon](https://github.com/gbrennon)
+ - [@boxfrommars](https://github.com/boxfrommars)
+ - [@kermit666](https://github.com/kermit666)
+ - [@marksyzm](https://github.com/marksyzm)
 
 ## License
 
