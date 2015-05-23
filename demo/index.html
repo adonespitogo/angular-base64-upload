@@ -10,12 +10,22 @@
     angular.module('myApp', ['naif.base64'])
     .controller('ctrl', function($scope, $http, $window, $rootScope){
 
-      $scope.progressHandler = function (e, readerE, reader) {
-        console.log(e);
+      $scope.progressHandler = function (e, reader, file, rawFiles, fileObjects, fileObj) {
+        // console.log(e);
+        // console.log(reader);
+        // console.log(file);
+        // console.log(rawFiles);
+        // console.log(fileObjects);
+        // console.log(fileObj);
       };
 
-      $scope.onloadHandler = function () {
-        console.log('onload');
+      $scope.onloadHandler = function (e, reader, file, rawFiles, fileObjects, fileObj) {
+        console.log(e);
+        console.log(reader);
+        console.log(file);
+        console.log(rawFiles);
+        console.log(fileObjects);
+        console.log(fileObj);
       };
 
       var uploadedCount = 0;
