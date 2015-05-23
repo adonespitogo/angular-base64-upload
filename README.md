@@ -68,9 +68,7 @@ Validations
 Events
 ---------
 
-<b>FileReader Events</b>
-
-You can listen to all [FileReader events](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers) by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`.
+<b>FileReader Events</b> - You can listen to all [FileReader events](https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Event_handlers) by adding attributes to the input element using the format `event_name="handler"`. Ex: `onerror="errorHandlerFunc"`.
  - List of file reader event names:
    - `onabort`
    - `onerror`
@@ -86,9 +84,7 @@ You can listen to all [FileReader events](https://developer.mozilla.org/en-US/do
    - `FileObjects` - Array of base64 file objects that are done reading.
    - `Object` - Result of reading the file. In case of reading error, `object.base64` might be undefined.
 
-<b>`on-change`</b>
-
-Gets triggered when user changes the input. `<input on-change="onChangeHandlerFunc">`
+<b>on-change</b> - Gets triggered when user changes the input. `<input on-change="onChangeHandlerFunc">`
  - Params:
    - Event - Event object.
    - FileList - Array of selected files.
