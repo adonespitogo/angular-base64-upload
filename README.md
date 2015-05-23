@@ -147,6 +147,7 @@ v0.1.1
  - Remove the use of singleton file reader instance. Each file is read by respective file reader.
  - FileReader event handlers receive new set of arguments `(Event, FileReader, File, FileList, FileObjects, FileObject)`.
  - Added `on-change` event.
+ - Added sourcemap.
 
 
 V0.1.0
