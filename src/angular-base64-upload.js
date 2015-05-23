@@ -39,9 +39,8 @@
             return;
           }
 
-          if (attrs.required) {
-            ngModel.$setViewValue(null); // need set falsy to activate required state when user predefines value for model
-          }
+          // need set falsy to activate required state when user predefines value for model
+          ngModel.$setViewValue(null);
 
           var rawFiles = [];
           var fileObjects = [];
@@ -138,7 +137,7 @@
 
           function _maxnum (val) {
             if (attrs.maxnum && attrs.multiple) {
-              var valid = val.length? val.length <= parseInt(attrs.maxnum) : false;
+              var valid = val.length <= parseInt(attrs.maxnum);
               ngModel.$setValidity('maxnum', valid);
             }
             return val;
@@ -146,7 +145,7 @@
 
           function _minnum (val) {
             if (attrs.minnum && attrs.multiple) {
-              var valid = val.length? val.length >= parseInt(attrs.minnum) : false;
+              var valid = val.length >= parseInt(attrs.minnum);
               ngModel.$setValidity('minnum', valid);
             }
             return val;
@@ -157,11 +156,17 @@
               if (file.filesize > parseFloat(attrs.maxsize) * 1000) {
                 ngModel.$setValidity('maxsize', false);
               }
+              else {
+                ngModel.$setValidity('maxsize', true);
+              }
             }
 
             if (attrs.minsize) {
               if (file.filesize < parseFloat(attrs.minsize) * 1000) {
                 ngModel.$setValidity('minsize', false);
+              }
+              else {
+                ngModel.$setValidity('minsize', true);
               }
             }
           }

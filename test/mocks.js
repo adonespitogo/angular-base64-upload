@@ -49,7 +49,7 @@ var $windowMock = {
 FileMock = {
   type: 'image/jpeg',
   name: 'this-is-an-image-name.jpg',
-  size: 343434,
+  size: 500 * 1000, // 500kb
 };
 
 FileListMock = [];

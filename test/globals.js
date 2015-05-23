@@ -4,6 +4,7 @@ var template;
 var $compile;
 var $rootScope;
 var $scope;
+var isolateScope;
 var $window;
 var elem; // result of angular.element(template);
 var compiled; // result of $compile(scope)(elem);

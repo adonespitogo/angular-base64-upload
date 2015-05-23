@@ -5,7 +5,7 @@ function compileTemplate (opts) {
   opts = opts || {};
 
   opts = {
-    ngModel: opts.ngModel || 'model',
+    ngModel: opts.ngModel === false ? false: (opts.ngModel || 'model'),
     events: opts.events || [],
     multiple: opts.multiple || false,
     attrs: opts.attrs || []
@@ -15,7 +15,9 @@ function compileTemplate (opts) {
   $scope = $rootScope.$new();
   elem = angular.element(template);
 
-  elem.attr('ng-model', opts.ngModel);
+  if (opts.ngModel !== false) {
+    elem.attr('ng-model', opts.ngModel);
+  }
 
   // attach events
   for (var i = opts.events.length - 1; i >= 0; i--) {
@@ -33,6 +35,9 @@ function compileTemplate (opts) {
     elem.attr(attr['attr'], attr['val']);
   }
 
-  compiled = $compile(elem)($scope);
+  var form = angular.element('<form name="form"></form>');
+  form.append(elem);
+
+  compiled = $compile(form)($scope);
   $scope.$digest();
 }
