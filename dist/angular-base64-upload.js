@@ -11,6 +11,8 @@
   mod.directive('baseSixtyFourInput', [
     function () {
 
+      window.console.log('adf');
+
       var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
       var VALIDATORS = ['maxsize', 'minsize', 'maxnum', 'minnum', 'required'];
       var DEFAULT_VALIDITY_STATE = {

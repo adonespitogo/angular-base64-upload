@@ -19,12 +19,19 @@ module.exports = function(grunt) {
       ]
     },
     copy: {
-      dist: {
-        src: ['<%= config.src %>/<%= pkg.name %>.js'],
-        dest: './demo/<%= pkg.name %>.js'
+      distToDemo: {
+        expand: true,
+        src: '**',
+        cwd: '<%= config.dist %>/',
+        dest: '<%= config.demo %>/'
       }
     },
-    clean: ['<%= config.dist %>', '<%= config.demo %>/<%= pkg.name %>.js'],
+    clean: [
+      '<%= config.dist %>',
+      '<%= config.demo %>/<%= pkg.name %>.js',
+      '<%= config.demo %>/<%= pkg.name %>.min.js',
+      '<%= config.demo %>/<%= pkg.name %>.min.js.map'
+    ],
 
     // Task configuration.
     concat: {
@@ -39,7 +46,8 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        banner: '<%= banner %>'
+        banner: '<%= banner %>',
+        sourceMap: true
       },
       dist: {
         src: '<%= concat.dist.dest %>',

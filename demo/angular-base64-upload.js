@@ -1,3 +1,7 @@
+/*! angular-base64-upload - v0.1.1
+* https://github.com/adonespitogo/angular-base64-upload
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015;
+* Licensed MIT */
 (function (window) {
 
   'use strict';
@@ -6,6 +10,8 @@
 
   mod.directive('baseSixtyFourInput', [
     function () {
+
+      window.console.log('adf');
 
       var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
       var VALIDATORS = ['maxsize', 'minsize', 'maxnum', 'minnum', 'required'];
