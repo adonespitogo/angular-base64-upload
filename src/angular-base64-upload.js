@@ -151,43 +151,45 @@
             return val;
           }
 
-          function _checkFileSize (file) {
+          function _maxsize (val) {
+            var valid = true;
+
             if (attrs.maxsize) {
-              if (file.filesize > parseFloat(attrs.maxsize) * 1000) {
-                ngModel.$setValidity('maxsize', false);
+              for (var i = 0; i < val.length; i++) {
+                var file = val[i];
+                if (file.filesize > parseFloat(attrs.maxsize) * 1000) {
+                  valid = false;
+                  break;
+                }
               }
-              else {
-                ngModel.$setValidity('maxsize', true);
-              }
+              ngModel.$setValidity('maxsize', valid);
             }
 
-            if (attrs.minsize) {
-              if (file.filesize < parseFloat(attrs.minsize) * 1000) {
-                ngModel.$setValidity('minsize', false);
-              }
-              else {
-                ngModel.$setValidity('minsize', true);
-              }
-            }
+            return val;
           }
 
-          function _fileSize (val) {
-            if (val.length) {
-              for (var i = val.length - 1; i >= 0; i--) {
+          function _minsize (val) {
+            var valid = true;
+
+            if (attrs.minsize) {
+              for (var i = 0; i < val.length; i++) {
                 var file = val[i];
-                _checkFileSize(file);
+                if (file.filesize < parseFloat(attrs.minsize) * 1000) {
+                  valid = false;
+                  break;
+                }
               }
+              ngModel.$setValidity('minsize', valid);
             }
-            else {
-              _checkFileSize(val);
-            }
+
             return val;
           }
 
           ngModel.$parsers.push(_required);
           ngModel.$parsers.push(_maxnum);
           ngModel.$parsers.push(_minnum);
-          ngModel.$parsers.push(_fileSize);
+          ngModel.$parsers.push(_maxsize);
+          ngModel.$parsers.push(_minsize);
 
         }
       };

@@ -235,18 +235,22 @@ describe('angular-base64-upload', function(){
 
       expect($scope.form.myinput.$error.maxsize).not.toBeDefined();
 
-      var testSize = function (size, result) {
-        var f = fileMock;
-        f.size = size;
+      var testSize = function (size, size2, result) {
 
-        eventmock.target.files = [f, f];
+        var f1 = angular.copy(fileMock);
+        f1.size = size * 1000;
+        var f2 = angular.copy(fileMock);
+        f2.size = size2 * 1000;
+
+        eventmock.target.files = [f1, f2];
         elem.triggerHandler(eventmock);
         expect($scope.form.myinput.$error.maxsize).toBe(result);
       };
 
-      testSize(200 * 1000, false);
-      testSize(500 * 1000, false);
-      testSize(600 * 1000, true);
+      testSize(200, 100, false);
+      testSize(500, 123, false);
+      testSize(200, 600, true);
+      testSize(600, 100, true);
 
     });
 
@@ -262,18 +266,22 @@ describe('angular-base64-upload', function(){
 
       expect($scope.form.myinput.$error.minsize).not.toBeDefined();
 
-      var testSize = function (size, result) {
-        var f = fileMock;
-        f.size = size;
+      var testSize = function (size, size2, result) {
 
-        eventmock.target.files = [f, f];
+        var f1 = angular.copy(fileMock);
+        f1.size = size * 1000;
+        var f2 = angular.copy(fileMock);
+        f2.size = size2 * 1000;
+
+        eventmock.target.files = [f1, f2];
         elem.triggerHandler(eventmock);
         expect($scope.form.myinput.$error.minsize).toBe(result);
       };
 
-      testSize(200 * 1000, true);
-      testSize(500 * 1000, false);
-      testSize(600 * 1000, false);
+      testSize(200, 100, true);
+      testSize(500, 123, true);
+      testSize(500, 600, false);
+      testSize(600, 700, false);
 
     });
 
