@@ -144,7 +144,7 @@ def decode_base64
 end
 ```
 
-Changelog
+Change Log
 --------
 
 v0.1.1
