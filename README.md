@@ -84,7 +84,8 @@ Events
    - `FileObjects` - Array of base64 file objects that are done reading.
    - `Object` - Result of reading the file. In case of reading error, `object.base64` might be undefined.
 
-<b>on-change</b> - Unfortunately, Angular's `ng-change` directive doesn't work so well with input type file. This is the alternative way of binding to input's `onchange` event. `<input on-change="onChangeHandlerFunc">`
+<b>on-change</b> - Unfortunately, Angular's `ng-change` directive doesn't work so well with input type file. This is the alternative way of binding to input's `onchange` event.
+`<input on-change="onChangeHandlerFunc">`
  - Params:
    - Event - Event object.
    - FileList - Array of selected files.
