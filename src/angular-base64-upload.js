@@ -17,9 +17,13 @@
 
       return {
         restrict: 'A',
-        require: 'ngModel',
+        require: '?ngModel',
         scope: isolate,
         link: function (scope, elem, attrs, ngModel) {
+
+          if (!ngModel) {
+            return;
+          }
 
           var rawFiles = [];
           var fileObjects = [];
@@ -31,6 +35,26 @@
             return function (e) {
               handler_function(e, reader, rawFiles, fileObjects, rawFiles[readFileIndex]);
             };
+          }
+
+          function _readerOnLoad (e) {
+
+            if (typeof scope['onload'] === 'function') {
+              scope.onload(e, reader, rawFiles, fileObjects, rawFiles[readFileIndex]);
+            }
+
+            var base64 = _arrayBufferToBase64(e.target.result);
+            fileObject.base64 = base64;
+            fileObjects.push(fileObject);
+
+            readFileIndex ++;
+            // read the next file if there is
+            if (readFileIndex < rawFiles.length) {
+              _readFile();
+            }
+
+            _setViewValue();
+
           }
 
           function _attachEventHandlers () {
@@ -52,26 +76,6 @@
               var newVal = attrs.multiple ? fileObjects : (fileObjects[0] || []);
               ngModel.$setViewValue(angular.copy(newVal));
             });
-          }
-
-          function _readerOnLoad (e) {
-
-            if (typeof scope['onload'] === 'function') {
-              scope.onload(e, reader, rawFiles, fileObjects, rawFiles[readFileIndex]);
-            }
-
-            var base64 = _arrayBufferToBase64(e.target.result);
-            fileObject.base64 = base64;
-            fileObjects.push(fileObject);
-
-            readFileIndex ++;
-            // read the next file if there is
-            if (readFileIndex < rawFiles.length) {
-              _readFile();
-            }
-
-            _setViewValue();
-
           }
 
           function _readFile () {
