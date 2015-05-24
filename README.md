@@ -26,7 +26,7 @@ Installation
 
 Example
 --------------------------
-See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
+See [plunker] demo.
 
 Usage
 -------
