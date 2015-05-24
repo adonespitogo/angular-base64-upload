@@ -147,7 +147,7 @@ end
 
 Contribution
 ------------
- - using GRUNT as build tool
+ - Using [Grunt](http://gruntjs.com) as build tool
  - `grunt build` to build the project
  - `grunt test` to run unit tests
  - Uses [jasmine 1.3](http://jasmine.github.io/1.3/introduction.html) in writing unit test specs
