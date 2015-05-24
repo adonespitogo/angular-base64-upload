@@ -170,6 +170,9 @@ Tested with Angular versions:
 Change Log
 --------
 
+v0.1.4
+ - Fix bower.json
+
 v0.1.3
  - Refactor test config files
  - Test gainst number of angular versions, and fix errors for angular v1.2.10
