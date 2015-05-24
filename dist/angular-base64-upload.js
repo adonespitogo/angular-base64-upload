@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.1.2
+/*! angular-base64-upload - v0.1.3
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015;
 * Licensed MIT */
@@ -134,7 +134,7 @@
           // VALIDATIONS =========================================================
 
           function _required (val) {
-            var valid = val.length? (val.length > 0) : (val? true:false);
+            var valid = angular.isArray(val)? (val.length > 0) : (angular.isObject(val)? true:false);
             ngModel.$setValidity('required', valid);
             return val;
           }

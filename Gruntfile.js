@@ -73,6 +73,9 @@ module.exports = function(grunt) {
         }
       },
       gruntfile: {
+        options: {
+          undef: false
+        },
         src: 'Gruntfile.js'
       },
       'angular-base64-upload': {
@@ -80,21 +83,8 @@ module.exports = function(grunt) {
       },
       tests: {
         options: {
-          curly: true,
-          eqeqeq: true,
-          immed: true,
-          latedef: true,
-          newcap: true,
-          noarg: true,
-          sub: true,
           undef: false,
-          unused: false,
-          boss: true,
-          eqnull: true,
-          browser: true,
-          globals: {
-            angular: true
-          }
+          unused: false
         },
         src: 'test/**/*.spec.js'
       }
