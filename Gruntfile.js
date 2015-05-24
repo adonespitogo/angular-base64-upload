@@ -1,6 +1,8 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
+  var gruntKarmaConfig = require('./test/grunt-karma-config.js');
+
   // Project configuration.
   grunt.initConfig({
     // Metadata.
@@ -99,33 +101,7 @@ module.exports = function(grunt) {
         src: 'test/**/*.js'
       }
     },
-    karma: {
-      'v1.2.0': {
-        configFile: 'test/karma-config-ng-1.2.0.js',
-        background: false,
-        singleRun: true
-      },
-      'v1.2.1': {
-        configFile: 'test/karma-config-ng-1.2.1.js',
-        background: false,
-        singleRun: true
-      },
-      'v1.2.25': {
-        configFile: 'test/karma-config-ng-1.2.25.js',
-        background: false,
-        singleRun: true
-      },
-      'v1.2.28': {
-        configFile: 'test/karma-config-ng-1.2.28.js',
-        background: false,
-        singleRun: true
-      },
-      'v1.3.15': {
-        configFile: 'test/karma-config-ng-1.3.15.js',
-        background: false,
-        singleRun: true
-      }
-    },
+    karma: gruntKarmaConfig,
     watch: {
       src: {
         files: ['<%= config.src %>/<%= pkg.name %>.js'],

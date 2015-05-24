@@ -165,7 +165,7 @@ describe('angular-base64-upload', function(){
     it('should validate required', function () {
 
       var attrs = [
-        {attr: 'required', val: true},
+        {attr: 'required', val: 'required'},
         {attr: 'name', val: 'myinput'},
       ];
 
