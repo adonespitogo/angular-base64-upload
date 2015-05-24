@@ -173,7 +173,7 @@ describe('angular-base64-upload', function(){
 
       expect($scope.form.myinput.$error.required).toBe(true);
       elem.triggerHandler(eventmock);
-      expect($scope.form.myinput.$error.required).toBe(false);
+      expect($scope.form.myinput.$error.required).toBeFalsy();
 
     });
 
@@ -196,7 +196,7 @@ describe('angular-base64-upload', function(){
           eventmock.target.files.push(fileMock);
         }
         elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.maxnum).toBe(result);
+        expect($scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
       };
 
       testNumber(1, false);
@@ -224,7 +224,7 @@ describe('angular-base64-upload', function(){
           eventmock.target.files.push(fileMock);
         }
         elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.minnum).toBe(result);
+        expect($scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
       };
 
       testNumber(1, true);
@@ -254,7 +254,7 @@ describe('angular-base64-upload', function(){
 
         eventmock.target.files = [f1, f2];
         elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.maxsize).toBe(result);
+        expect($scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
       };
 
       testSize(200, 100, false);
@@ -285,7 +285,7 @@ describe('angular-base64-upload', function(){
 
         eventmock.target.files = [f1, f2];
         elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.minsize).toBe(result);
+        expect($scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
       };
 
       testSize(200, 100, true);
