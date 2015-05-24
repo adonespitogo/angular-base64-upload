@@ -21,14 +21,13 @@ module.exports = function(grunt) {
     copy: {
       distToDemo: {
         expand: true,
-        src: '**',
+        src: '**/*.min.js*',
         cwd: '<%= config.dist %>/',
         dest: '<%= config.demo %>/'
       }
     },
     clean: [
       '<%= config.dist %>',
-      '<%= config.demo %>/<%= pkg.name %>.js',
       '<%= config.demo %>/<%= pkg.name %>.min.js',
       '<%= config.demo %>/<%= pkg.name %>.min.js.map'
     ],
