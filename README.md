@@ -26,7 +26,7 @@ Installation
 
 Example
 --------------------------
-See [plunker](http://embed.plnkr.co/MTzfQASN8ZVeocAq7VcM/preview) demo.
+See [plunker](http://embed.plnkr.co/MTzfQASN8ZVeocAq7VcM/preview) or the [./demo] folder (https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
 
 Usage
 -------
