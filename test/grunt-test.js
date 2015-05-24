@@ -30,6 +30,9 @@ module.exports = function (grunt) {
 
     var files = fileLoader(ANGULAR_VERSIONS[testCounter]);
     grunt.config('karma.options.files', files);
+    grunt.config('karma.options.coverageReporter.subdir', function (browser) {
+      return browser+'/angular-v'+VERSION;
+    });
 
     console.log('\n\n\n\t\tRUNNING TEST AGAINST ANGULAR V-'+VERSION);
 
