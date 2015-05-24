@@ -12,7 +12,7 @@ module.exports = function (config) {
     },
     frameworks: [ 'jasmine' ],
     logLevel:  'WARN',
-    reporters: ['story', 'coverage'],
+    reporters: ['progress', 'coverage'],
 
     coverageReporter: {
       type : 'html',
