@@ -20,7 +20,6 @@
     "karma-coverage": "^0.2.6",
     "karma-jasmine": "^0.1.5",
     "karma-phantomjs-launcher": "^0.1.4",
-    "karma-story-reporter": "^0.3.1",
     "load-grunt-tasks": "^3.2.0"
   },
   "repository": {
