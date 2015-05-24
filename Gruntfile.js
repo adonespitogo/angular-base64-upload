@@ -112,8 +112,8 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
 
   grunt.registerTask('test', function () {
-    var testRunner = require('./test/config/grunt_test_runner.js');
-    var runner = new testRunner(grunt);
+    var TestRunner = require('./test/config/grunt_test_runner.js');
+    var runner = new TestRunner(grunt);
     runner.run();
   });
 
