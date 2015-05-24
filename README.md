@@ -5,7 +5,7 @@ angular-base64-upload
 
 Angular directive for uploading base64-encoded files that you can pass along with the resource model. This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file).
 
-Tested with angular 1.2.28
+Tested with angular versions `1.0.8`, `1.2.28`, `1.3.15`
 
 Installation
 -------------

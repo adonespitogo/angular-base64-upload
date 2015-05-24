@@ -13,7 +13,7 @@ function compileTemplate (opts) {
 
   template = "<input type='file' base-sixty-four-input>";
   $scope = $rootScope.$new();
-  elem = angular.element(template);
+  elem = $(template);
 
   if (opts.ngModel !== false) {
     elem.attr('ng-model', opts.ngModel);
@@ -35,7 +35,7 @@ function compileTemplate (opts) {
     elem.attr(attr['attr'], attr['val']);
   }
 
-  var form = angular.element('<form name="form"></form>');
+  var form = $('<form name="form"></form>');
   form.append(elem);
 
   compiled = $compile(form)($scope);

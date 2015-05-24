@@ -41,12 +41,11 @@ function FileReaderMock() {
 
 FileReaderMock.autoTriggerEvents = false;
 
-var $windowMock = {
-  _arrayBufferToBase64: function () {
-    return 'base64-mock-string';
-  },
-  FileReader: FileReaderMock
+window._arrayBufferToBase64 = function () {
+  return 'base64-mock-string';
 };
+window.FileReader = FileReaderMock;
+var $windowMock = window;
 
 FileMock = {
   type: 'image/jpeg',

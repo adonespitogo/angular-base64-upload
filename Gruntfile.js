@@ -100,8 +100,28 @@ module.exports = function(grunt) {
       }
     },
     karma: {
-      unit: {
-        configFile: 'test/karma-config.js',
+      'v1.2.0': {
+        configFile: 'test/karma-config-ng-1.2.0.js',
+        background: false,
+        singleRun: true
+      },
+      'v1.2.1': {
+        configFile: 'test/karma-config-ng-1.2.1.js',
+        background: false,
+        singleRun: true
+      },
+      'v1.2.25': {
+        configFile: 'test/karma-config-ng-1.2.25.js',
+        background: false,
+        singleRun: true
+      },
+      'v1.2.28': {
+        configFile: 'test/karma-config-ng-1.2.28.js',
+        background: false,
+        singleRun: true
+      },
+      'v1.3.15': {
+        configFile: 'test/karma-config-ng-1.3.15.js',
         background: false,
         singleRun: true
       }
@@ -124,7 +144,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
-  grunt.registerTask('test', ['jshint:angular-base64-upload', 'jshint:tests', 'karma:unit']);
+  grunt.registerTask('test', ['jshint:angular-base64-upload', 'jshint:tests', 'karma']);
   grunt.registerTask('default', ['build']);
 
 };
