@@ -1,7 +1,7 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
-  var gruntKarmaConfig = require('./test/grunt-karma-config.js');
+  var gruntKarmaConfig = require('./test/karma.conf.js');
 
   // Project configuration.
   grunt.initConfig({
