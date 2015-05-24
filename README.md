@@ -1,9 +1,23 @@
 angular-base64-upload
 =====================
 
-![alt tag](https://raw.github.com/adonespitogo/angular-base64-upload/master/banner.png)
+Converts files from file input into base64 encoded objects.
+This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file).
 
-Angular directive for uploading base64-encoded files that you can pass along with the resource model. This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file).
+
+```html
+  <input type="file" ng-model="myfile" base-sixty-four-input>
+```
+
+`$scope.myfile` :
+```json
+{
+  "filesize": 54836 (bytes),
+  "filetype": "image/jpeg",
+  "filename": "profile.jpg",
+  "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIcSUNDX1BST0ZJTEUAAQEAAAIMbGNtcwIQA..."
+}
+```
 
 Installation
 -------------
@@ -17,28 +31,17 @@ See the [demo folder](https://github.com/adonespitogo/angular-base64-upload/tree
 Usage
 -------
 
-Include `angular.js` and `angular-base64-upload.js` in your application and add `naif.base64` as dependency to your main module:
+Include `angular.js` and `angular-base64-upload.js` in your application and add `naif.base64` as dependency to your main module.
 
 ```
 angular.module('myApp', ['naif.base64']);
 ```
-
-Sigle File Selection
+Basic Usage
 ------------
 ```html
 <form>
   <input type='file' ng-model='yourModel' base-sixty-four-input>
 </form>
-```
-
-Sample `yourModel` value after selecting a file:
-```json
-{
-  "filesize": 54836 (bytes),
-  "filetype": "image/jpeg",
-  "filename": "profile.jpg",
-  "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIcSUNDX1BST0ZJTEUAAQEAAAIMbGNtcwIQA..."
-}
 ```
 
 Multiple File Selection
@@ -60,7 +63,7 @@ Validations
 
 ```html
 <form name="form">
-  <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*" maxsize="5000" required>
+  <input type="file" ng-model="files" name="files" multiple accept="image/*, .zip" maxsize="5000" required base-sixty-four-input>
   <span ng-show="form.files.$error.maxsize">Files must not exceed 5000 KB</span>
 </form>
 ```
