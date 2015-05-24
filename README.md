@@ -15,7 +15,7 @@ This directive is based from one of the answers in this [SO question](http://sta
     "filesize": 54836 (bytes),
     "filetype": "image/jpeg",
     "filename": "profile.jpg",
-    "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIcSUNDX1BST0ZJTEUAAQEAAAIMbGNtcwIQA..."
+    "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIctcwIQA..."
   }
 ```
 
