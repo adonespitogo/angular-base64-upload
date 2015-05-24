@@ -1,9 +1,11 @@
 var JASMINE = './node_modules/karma-jasmine/lib/jasmine.js';
 var ADAPTER = './node_modules/karma-jasmine/lib/adapter.js';
+var files = require('./file_loader.js')();
 
 module.exports = function (config) {
-  config.set({    basePath: './../',
-    files: require('./_loadFiles')(),
+  config.set({
+    basePath: './../../',
+    files: files,
     background: false,
     singleRun: true,
 

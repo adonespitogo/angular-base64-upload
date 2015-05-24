@@ -8,9 +8,9 @@ module.exports = function (ANGULAR_VERSION) {
       "bower_components/angular-v"+ANGULAR_VERSION+"/angular.js",
       "bower_components/angular-mocks-v"+ANGULAR_VERSION+"/angular-mocks.js",
       "src/angular-base64-upload.js",
-      "test/globals.spec.js",
-      "test/mocks.spec.js",
-      "test/helpers.spec.js",
+      "test/helpers/globals.spec.js",
+      "test/helpers/mocks.spec.js",
+      "test/helpers/helpers.spec.js",
       "test/angular-base64-upload.spec.js"
   ];
 };

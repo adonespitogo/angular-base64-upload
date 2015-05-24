@@ -91,7 +91,7 @@ module.exports = function(grunt) {
     },
     karma: {
       options: {
-        configFile: './test/karma.conf.js'
+        configFile: './test/config/karma.conf.js'
       },
       unit: {
         background: false
@@ -112,7 +112,9 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
 
   grunt.registerTask('test', function () {
-    require('./test/grunt-test.js')(grunt);
+    var testRunner = require('./test/config/grunt_test_runner.js');
+    var runner = new testRunner(grunt);
+    runner.run();
   });
 
 
