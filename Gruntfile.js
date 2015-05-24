@@ -98,7 +98,7 @@ module.exports = function(grunt) {
             angular: true
           }
         },
-        src: 'test/**/*.js'
+        src: 'test/**/*.spec.js'
       }
     },
     karma: gruntKarmaConfig,
