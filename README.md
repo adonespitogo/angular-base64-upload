@@ -36,8 +36,7 @@ Include `angular.js` and `angular-base64-upload.js` in your application and add 
 ```
 angular.module('myApp', ['naif.base64']);
 ```
-Basic Usage
-------------
+
 ```html
 <form>
   <input type='file' ng-model='yourModel' base-sixty-four-input>
