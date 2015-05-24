@@ -6,8 +6,10 @@
 
   'use strict';
 
-  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  // we don't need to test this function
+  /* istanbul ignore next */
   window._arrayBufferToBase64 = function ( buffer ) {
+  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
     var binary = '';
     var bytes = new Uint8Array( buffer );
     var len = bytes.byteLength;
@@ -133,12 +135,6 @@
 
           // VALIDATIONS =========================================================
 
-          function _required (val) {
-            var valid = angular.isArray(val)? (val.length > 0) : (angular.isObject(val)? true:false);
-            ngModel.$setValidity('required', valid);
-            return val;
-          }
-
           function _maxnum (val) {
             if (attrs.maxnum && attrs.multiple) {
               var valid = val.length <= parseInt(attrs.maxnum);
@@ -189,7 +185,6 @@
             return val;
           }
 
-          ngModel.$parsers.push(_required);
           ngModel.$parsers.push(_maxnum);
           ngModel.$parsers.push(_minnum);
           ngModel.$parsers.push(_maxsize);

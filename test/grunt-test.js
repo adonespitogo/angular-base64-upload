@@ -17,13 +17,13 @@ var fileLoader = require('./_loadFiles.js');
 
 module.exports = function (grunt) {
 
-  var testCounter = 0;
+  var version_index = 0;
 
   function _test () {
 
-    var VERSION = ANGULAR_VERSIONS[testCounter];
+    var VERSION = ANGULAR_VERSIONS[version_index];
 
-    var files = fileLoader(ANGULAR_VERSIONS[testCounter]);
+    var files = fileLoader(ANGULAR_VERSIONS[version_index]);
     grunt.config('karma.options.files', files);
     grunt.config('karma.options.coverageReporter.subdir', function (browser) {
       return browser+'/angular-v'+VERSION;
@@ -33,8 +33,8 @@ module.exports = function (grunt) {
 
     grunt.task.run('karma:unit')
     .then(function () {
-      testCounter ++;
-      if (ANGULAR_VERSIONS[testCounter]) {
+      version_index ++;
+      if (ANGULAR_VERSIONS[version_index]) {
         _test();
       }
     });

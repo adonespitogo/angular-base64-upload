@@ -171,6 +171,7 @@ Change Log
 v0.1.3
  - Refactor test config files
  - Test gainst number of angular versions, and fix errors for angular v1.2.10
+ - Removed custom `required` validator. Angular's default `require` validator works well
 
 v0.1.2
  - Move all validators to `ngModel.$parsers`, it's more angular way
