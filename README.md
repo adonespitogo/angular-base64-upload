@@ -26,7 +26,7 @@ Installation
 
 Example
 --------------------------
-See [plunker] demo.
+See [plunker](http://embed.plnkr.co/MTzfQASN8ZVeocAq7VcM/preview) demo.
 
 Usage
 -------
