@@ -1,12 +1,9 @@
+var JASMINE = './node_modules/karma-jasmine/lib/jasmine.js';
+var ADAPTER = './node_modules/karma-jasmine/lib/adapter.js';
 
-var ANGULAR_VERSIONS = ['1.2.0', '1.2.1', '1.2.25', '1.2.28', '1.3.7', '1.3.15'];
-
-var gruntKarmaConfig = {};
-
-for (var i = 0; i < ANGULAR_VERSIONS.length; i++) {
-  var VERSION = ANGULAR_VERSIONS[i];
-  gruntKarmaConfig['AngularJS-v'+VERSION] = {
-    configFile: 'test/'+VERSION+'.conf.js',
+module.exports = function (config) {
+  config.set({    basePath: './../',
+    files: require('./_loadFiles')(),
     background: false,
     singleRun: true,
 
@@ -25,7 +22,5 @@ for (var i = 0; i < ANGULAR_VERSIONS.length; i++) {
     urlRoot: '/',
     autoWatch: false,
     browsers: ['PhantomJS']
-  };
-}
-
-module.exports = gruntKarmaConfig;
+  });
+};

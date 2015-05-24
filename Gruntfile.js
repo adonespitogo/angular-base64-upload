@@ -1,8 +1,6 @@
 /*global module:false*/
 module.exports = function(grunt) {
 
-  var gruntKarmaConfig = require('./test/karma.conf.js');
-
   // Project configuration.
   grunt.initConfig({
     // Metadata.
@@ -101,7 +99,14 @@ module.exports = function(grunt) {
         src: 'test/**/*.spec.js'
       }
     },
-    karma: gruntKarmaConfig,
+    karma: {
+      options: {
+        configFile: './test/karma.conf.js'
+      },
+      unit: {
+        background: false
+      }
+    },
     watch: {
       src: {
         files: ['<%= config.src %>/<%= pkg.name %>.js'],
@@ -110,17 +115,16 @@ module.exports = function(grunt) {
     }
   });
 
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-karma');
+  // load plugins
+  require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
-  grunt.registerTask('test', ['jshint:angular-base64-upload', 'jshint:tests', 'karma']);
   grunt.registerTask('default', ['build']);
+  grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
+
+  grunt.registerTask('test', function () {
+    require('./test/grunt-test.js')(grunt);
+  });
+
+
 
 };

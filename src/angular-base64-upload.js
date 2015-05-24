@@ -130,7 +130,7 @@
           // VALIDATIONS =========================================================
 
           function _required (val) {
-            var valid = val.length? (val.length > 0) : (val? true:false);
+            var valid = angular.isArray(val)? (val.length > 0) : (angular.isObject(val)? true:false);
             ngModel.$setValidity('required', valid);
             return val;
           }
