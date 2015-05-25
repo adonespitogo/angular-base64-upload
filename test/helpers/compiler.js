@@ -1,6 +1,6 @@
 // helper functions
 
-function compileTemplate (opts) {
+function _compile (opts) {
 
   opts = opts || {};
 
@@ -11,9 +11,9 @@ function compileTemplate (opts) {
     attrs: opts.attrs || []
   };
 
-  template = "<input type='file' base-sixty-four-input>";
-  $scope = $rootScope.$new();
-  elem = $(template);
+  var template = "<input type='file' base-sixty-four-input>";
+  var $scope = $ROOTSCOPE.$new();
+  var elem = $(template);
 
   if (opts.ngModel !== false) {
     elem.attr('ng-model', opts.ngModel);
@@ -38,6 +38,13 @@ function compileTemplate (opts) {
   var form = $('<form name="form"></form>');
   form.append(elem);
 
-  compiled = $compile(form)($scope);
+  var compiled = $COMPILE(form)($scope);
   $scope.$digest();
+
+  return {
+    '$input': elem,
+    '$scope': $scope,
+    '$compiled': compiled
+  };
+
 }

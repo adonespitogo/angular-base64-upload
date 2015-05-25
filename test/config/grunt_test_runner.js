@@ -32,7 +32,7 @@ function TestRunner (grunt) {
   self.runTest = function () {
 
     var VERSION = ANGULAR_VERSIONS[self.version_index];
-    var files = fileLoader(ANGULAR_VERSIONS[self.version_index]);
+    var files = fileLoader(VERSION);
 
     grunt.config('karma.options.files', files);
     grunt.config('karma.options.coverageReporter.subdir', function (browser) {
@@ -52,6 +52,6 @@ function TestRunner (grunt) {
   };
 
 
-};
+}
 
 module.exports = TestRunner;

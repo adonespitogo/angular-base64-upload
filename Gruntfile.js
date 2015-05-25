@@ -85,7 +85,7 @@ module.exports = function(grunt) {
           undef: false,
           unused: false
         },
-        src: 'test/**/*.spec.js'
+        src: 'test/**/*.js'
       }
     },
     karma: {

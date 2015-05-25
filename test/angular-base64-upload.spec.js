@@ -1,57 +1,51 @@
 describe('angular-base64-upload', function(){
 
-  var fileMock;
-  var fileListMock;
-  var eventmock;
-  var fileObjectmock;
+  var event;
 
   beforeEach(function(){
 
     module(function ($provide) {
-      $provide.value('$window', $windowMock);
+      $provide.value('$window', window);
     });
 
     module('naif.base64');
 
     inject(function($injector){
-      $compile = $injector.get('$compile');
-      $rootScope = $injector.get('$rootScope');
 
-      fileMock = angular.copy(FileMock);
-      fileListMock = angular.copy(FileListMock);
-      eventmock = angular.copy(eventMock);
-      fileObjectmock = angular.copy(fileObjectMock);
+      $INJECTOR = $injector;
+      $COMPILE = $injector.get('$compile');
+      $ROOTSCOPE = $injector.get('$rootScope');
+
+      event = new Event();
+
     });
 
   });
 
-  afterEach(function() {
-    $scope.$destroy();
-  });
-
   it('should support single file selection', function () {
 
-    compileTemplate({ngModel: 'file'});
+    var file = new File();
+    var fileObj = new FileObject();
+    var event = new Event({files: [file]});
 
-    elem.triggerHandler(eventmock);
+    var directive = _compile({ngModel: 'file'});
 
-    expect($scope.file).toEqual(fileObjectmock);
+    directive.$input.triggerHandler(event);
+    expect(directive.$scope.file).toEqual(fileObj);
 
   });
 
   it('should support multi-select input', function () {
 
-    compileTemplate({ngModel: 'files', multiple: true});
+    var directive = _compile({ngModel: 'files', multiple: true});
 
-    var expectedFileList = eventmock.target.files;
-    var expectedFileObjects = _.map(expectedFileList, function () {
-      return fileObjectmock;
-    });
+    var expectedFileList = event.target.files;
+    var expectedFileObjects = new FileObjects(expectedFileList.length);
 
-    elem.triggerHandler(eventmock);
+    directive.$input.triggerHandler(event);
 
-    expect($scope.files).toEqual(expectedFileObjects);
-    expect($scope.files.length).toBe(expectedFileObjects.length);
+    expect(directive.$scope.files).toEqual(expectedFileObjects);
+    expect(directive.$scope.files.length).toBe(expectedFileObjects.length);
 
   });
 
@@ -59,39 +53,37 @@ describe('angular-base64-upload', function(){
 
     it('should trigger on-change handler', function () {
 
-      eventmock.target.files = [fileMock];
+      event.target.files = new FileList(1);
 
-      var event = {
+      var onChangeHandler = {
         name: 'on-change',
         handler: function (e, fileList) {
           expect(e.target.files).toBe(fileList);
-          expect(fileList).toBe(eventmock.target.files);
+          expect(fileList).toBe(event.target.files);
         },
         bindTo: 'onChangeHandler'
       };
 
-      compileTemplate({events: [event]});
+      var d = _compile({events: [onChangeHandler]});
 
-      var spy = spyOn($scope, 'onChangeHandler').andCallThrough();
+      var spy = spyOn(d.$scope, 'onChangeHandler').andCallThrough();
 
-      elem.triggerHandler(eventmock);
+      d.$input.triggerHandler(event);
       expect(spy).toHaveBeenCalled();
     });
 
     it('should trigger file reader event handlers', function () {
 
-      eventmock.target.files = [fileMock];
+      event.target.files = new FileList(1);
 
       var makeHandler = function (type) {
         return function (e, reader, file, fileList, fileObjects, fileObject) {
           expect(e.type).toBe(type);
-          expect(fileList).toEqual(eventmock.target.files);
+          expect(fileList).toEqual(event.target.files);
         };
       };
 
       var eventsOpt = [];
-
-      var handlerSpies = [];
 
       for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
         var evt = FILE_READER_EVENTS[i];
@@ -102,16 +94,18 @@ describe('angular-base64-upload', function(){
         };
       }
 
-      compileTemplate({events: eventsOpt});
+      var dir = _compile({events: eventsOpt});
+
+      var handlerSpies = [];
 
       for (var c = FILE_READER_EVENTS.length - 1; c >= 0; c--) {
         var e = FILE_READER_EVENTS[c];
-        var spy = spyOn($scope, e+'Handler').andCallThrough();
+        var spy = spyOn(dir.$scope, e+'Handler').andCallThrough();
         handlerSpies.push(spy);
       }
 
       FileReaderMock.autoTriggerEvents = true; // triggers all file reader event listeners on fileReder.readAsArrayBuffer(file)
-      elem.triggerHandler(eventmock);
+      dir.$input.triggerHandler(event);
       FileReaderMock.autoTriggerEvents = false;
 
       for (var a = handlerSpies.length - 1; a >= 0; a--) {
@@ -122,19 +116,19 @@ describe('angular-base64-upload', function(){
 
     it('should not trigger events when no file is selected', function () {
 
-      eventmock.target.files = [];
+      event.target.files = [];
 
-      var event = {
+      var e = {
         name: 'on-change',
         handler: function () {},
         bindTo: 'onChangeHandler'
       };
 
-      compileTemplate({events: [event]});
+      var d = _compile({events: [e]});
 
-      var spy = spyOn($scope, 'onChangeHandler').andCallThrough();
+      var spy = spyOn(d.$scope, 'onChangeHandler').andCallThrough();
 
-      elem.triggerHandler(eventmock);
+      d.$input.triggerHandler(event);
       expect(spy).not.toHaveBeenCalled();
     });
 
@@ -145,6 +139,7 @@ describe('angular-base64-upload', function(){
     describe('required', function () {
 
       var attrs;
+      var directive;
 
       beforeEach(function () {
         attrs = [
@@ -154,17 +149,17 @@ describe('angular-base64-upload', function(){
       });
 
       it('should validate required on single file selection', function () {
-        compileTemplate({ngModel: 'files', attrs: attrs});
+        directive = _compile({ngModel: 'files', attrs: attrs});
       });
 
       it('should validate required on multiple file selection', function () {
-        compileTemplate({ngModel: 'files', multiple:true, attrs: attrs});
+        directive = _compile({ngModel: 'files', multiple:true, attrs: attrs});
       });
 
       afterEach(function () {
-        expect($scope.form.myinput.$error.required).toBe(true);
-        elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.required).toBeFalsy();
+        expect(directive.$scope.form.myinput.$error.required).toBe(true);
+        directive.$input.triggerHandler(event);
+        expect(directive.$scope.form.myinput.$error.required).toBeFalsy();
       });
 
     });
@@ -185,18 +180,17 @@ describe('angular-base64-upload', function(){
 
       it('should validate maxsize on single file selection', function () {
 
-        compileTemplate({ngModel: 'files', attrs: attrs});
+        var d = _compile({ngModel: 'files', attrs: attrs});
 
-        expect($scope.form.myinput.$error.maxsize).not.toBeDefined();
+        expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
 
         var testSize = function (size, result) {
 
-          var f1 = angular.copy(fileMock);
-          f1.size = size * 1000;
+          var f1 = new File({size: size * 1000});
 
-          eventmock.target.files = [f1];
-          elem.triggerHandler(eventmock);
-          expect($scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
+          event.target.files = [f1];
+          d.$input.triggerHandler(event);
+          expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
         };
 
         testSize(200, false);
@@ -207,20 +201,18 @@ describe('angular-base64-upload', function(){
 
       it('should validate maxsize on multiple file selection', function () {
 
-        compileTemplate({ngModel: 'files', attrs: attrs, multiple: true});
+        var d = _compile({ngModel: 'files', attrs: attrs, multiple: true});
 
-        expect($scope.form.myinput.$error.maxsize).not.toBeDefined();
+        expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
 
         var testSize = function (size, size2, result) {
 
-          var f1 = angular.copy(fileMock);
-          f1.size = size * 1000;
-          var f2 = angular.copy(fileMock);
-          f2.size = size2 * 1000;
+          var f1 = new File({size: size * 1000});
+          var f2 = new File({size: size2 * 1000});
 
-          eventmock.target.files = [f1, f2];
-          elem.triggerHandler(eventmock);
-          expect($scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
+          event.target.files = [f1, f2];
+          d.$input.triggerHandler(event);
+          expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
         };
 
         testSize(200, 100, false);
@@ -248,18 +240,17 @@ describe('angular-base64-upload', function(){
       it('should validate minsize on single file selection', function () {
 
 
-        compileTemplate({ngModel: 'files', attrs: attrs});
+        var d = _compile({ngModel: 'files', attrs: attrs});
 
-        expect($scope.form.myinput.$error.minsize).not.toBeDefined();
+        expect(d.$scope.form.myinput.$error.minsize).not.toBeDefined();
 
         var testSize = function (size, result) {
 
-          var f1 = angular.copy(fileMock);
-          f1.size = size * 1000;
+          var f1 = new File({size: size * 1000});
 
-          eventmock.target.files = [f1];
-          elem.triggerHandler(eventmock);
-          expect($scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
+          event.target.files = [f1];
+          d.$input.triggerHandler(event);
+          expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
         };
 
         testSize(200, true);
@@ -270,20 +261,18 @@ describe('angular-base64-upload', function(){
 
       it('should validate minsize on multiple file selection', function () {
 
-        compileTemplate({ngModel: 'files', attrs: attrs, multiple: true});
+        var d = _compile({ngModel: 'files', attrs: attrs, multiple: true});
 
-        expect($scope.form.myinput.$error.minsize).not.toBeDefined();
+        expect(d.$scope.form.myinput.$error.minsize).not.toBeDefined();
 
         var testSize = function (size, size2, result) {
 
-          var f1 = angular.copy(fileMock);
-          f1.size = size * 1000;
-          var f2 = angular.copy(fileMock);
-          f2.size = size2 * 1000;
+          var f1 = new File({size: size * 1000});
+          var f2 = new File({size: size2 * 1000});
 
-          eventmock.target.files = [f1, f2];
-          elem.triggerHandler(eventmock);
-          expect($scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
+          event.target.files = [f1, f2];
+          d.$input.triggerHandler(event);
+          expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
         };
 
         testSize(200, 100, true);
@@ -307,17 +296,14 @@ describe('angular-base64-upload', function(){
         ];
 
 
-        compileTemplate({ngModel: 'files', multiple: true, attrs: attrs});
+        var d = _compile({ngModel: 'files', multiple: true, attrs: attrs});
 
-        expect($scope.form.myinput.$error.maxnum).not.toBeDefined();
+        expect(d.$scope.form.myinput.$error.maxnum).not.toBeDefined();
 
         var testNumber = function (num, result) {
-          eventmock.target.files = [];
-          for (var i = num; i > 0; i--) {
-            eventmock.target.files.push(fileMock);
-          }
-          elem.triggerHandler(eventmock);
-          expect($scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
+          event.target.files = new FileList(num);
+          d.$input.triggerHandler(event);
+          expect(d.$scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
         };
 
         testNumber(1, false);
@@ -335,17 +321,14 @@ describe('angular-base64-upload', function(){
         ];
 
 
-        compileTemplate({ngModel: 'files', multiple: true, attrs: attrs});
+        var dir = _compile({ngModel: 'files', multiple: true, attrs: attrs});
 
-        expect($scope.form.myinput.$error.minnum).not.toBeDefined();
+        expect(dir.$scope.form.myinput.$error.minnum).not.toBeDefined();
 
         var testNumber = function (num, result) {
-          eventmock.target.files = [];
-          for (var i = num; i > 0; i--) {
-            eventmock.target.files.push(fileMock);
-          }
-          elem.triggerHandler(eventmock);
-          expect($scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
+          event.target.files = new FileList(num);
+          dir.$input.triggerHandler(event);
+          expect(dir.$scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
         };
 
         testNumber(1, true);
@@ -353,7 +336,7 @@ describe('angular-base64-upload', function(){
         testNumber(3, false);
 
       });
-      
+
     });
 
   });
