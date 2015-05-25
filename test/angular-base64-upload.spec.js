@@ -87,11 +87,11 @@ describe('angular-base64-upload', function(){
 
       for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
         var evt = FILE_READER_EVENTS[i];
-        eventsOpt[i] = {
+        eventsOpt.push({
           name: evt,
           handler: makeHandler(evt),
           bindTo: evt + "Handler"
-        };
+        });
       }
 
       var dir = _compile({events: eventsOpt});
