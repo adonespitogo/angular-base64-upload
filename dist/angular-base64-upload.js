@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.1.4
+/*! angular-base64-upload - v0.1.5
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015;
 * Licensed MIT */
@@ -158,9 +158,7 @@
             if (attrs.maxsize) {
               var max = parseFloat(attrs.maxsize) * 1000;
 
-
               if (attrs.multiple) {
-                // $window.console.log(elem);
                 for (var i = 0; i < val.length; i++) {
                   var file = val[i];
                   if (file.filesize > max) {
@@ -171,7 +169,6 @@
               }
               else {
                 valid = val.filesize <= max;
-                $window.console.log(valid);
               }
               ngModel.$setValidity('maxsize', valid);
             }

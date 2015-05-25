@@ -154,9 +154,7 @@
             if (attrs.maxsize) {
               var max = parseFloat(attrs.maxsize) * 1000;
 
-
               if (attrs.multiple) {
-                // $window.console.log(elem);
                 for (var i = 0; i < val.length; i++) {
                   var file = val[i];
                   if (file.filesize > max) {
@@ -167,7 +165,6 @@
               }
               else {
                 valid = val.filesize <= max;
-                $window.console.log(valid);
               }
               ngModel.$setValidity('maxsize', valid);
             }

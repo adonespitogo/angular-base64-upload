@@ -39,7 +39,7 @@ function TestRunner (grunt) {
       return browser+'/angular-v'+VERSION;
     });
 
-    console.log('\n\n\n\t\tRUNNING TEST AGAINST ANGULAR V-'+VERSION);
+    console.log('\n\n\n\t\tRUNNING TEST AGAINST ANGULAR v'+VERSION);
 
     grunt.task.run('karma:unit')
     .then(function () {
