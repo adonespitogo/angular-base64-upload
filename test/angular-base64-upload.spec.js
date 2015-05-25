@@ -169,62 +169,6 @@ describe('angular-base64-upload', function(){
 
     });
 
-    it('should validate maxnum', function () {
-      var maxnum = 2;
-
-      var attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'maxnum', val: maxnum},
-      ];
-
-
-      compileTemplate({ngModel: 'files', multiple: true, attrs: attrs});
-
-      expect($scope.form.myinput.$error.maxnum).not.toBeDefined();
-
-      var testNumber = function (num, result) {
-        eventmock.target.files = [];
-        for (var i = num; i > 0; i--) {
-          eventmock.target.files.push(fileMock);
-        }
-        elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
-      };
-
-      testNumber(1, false);
-      testNumber(2, false);
-      testNumber(3, true);
-
-    });
-
-    it('should validate minnum', function () {
-      var minnum = 2;
-
-      var attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'minnum', val: minnum},
-      ];
-
-
-      compileTemplate({ngModel: 'files', multiple: true, attrs: attrs});
-
-      expect($scope.form.myinput.$error.minnum).not.toBeDefined();
-
-      var testNumber = function (num, result) {
-        eventmock.target.files = [];
-        for (var i = num; i > 0; i--) {
-          eventmock.target.files.push(fileMock);
-        }
-        elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
-      };
-
-      testNumber(1, true);
-      testNumber(2, false);
-      testNumber(3, false);
-
-    });
-
     describe('maxsize', function () {
 
       var maxsize = 500;//kb
@@ -289,13 +233,20 @@ describe('angular-base64-upload', function(){
 
     describe('minsize', function () {
 
-      it('should validate minsize on single file selection', function () {
-        var minsize = 500; //kb
+      var minsize;
+      var attrs;
 
-        var attrs = [
+      beforeEach(function () {
+        minsize = 500; //kb
+
+        attrs = [
           {attr: 'name', val: 'myinput'},
           {attr: 'minsize', val: minsize},
         ];
+      });
+
+      it('should validate minsize on single file selection', function () {
+
 
         compileTemplate({ngModel: 'files', attrs: attrs});
 
@@ -317,6 +268,92 @@ describe('angular-base64-upload', function(){
 
       });
 
+      it('should validate minsize on multiple file selection', function () {
+
+        compileTemplate({ngModel: 'files', attrs: attrs, multiple: true});
+
+        expect($scope.form.myinput.$error.minsize).not.toBeDefined();
+
+        var testSize = function (size, size2, result) {
+
+          var f1 = angular.copy(fileMock);
+          f1.size = size * 1000;
+          var f2 = angular.copy(fileMock);
+          f2.size = size2 * 1000;
+
+          eventmock.target.files = [f1, f2];
+          elem.triggerHandler(eventmock);
+          expect($scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
+        };
+
+        testSize(200, 100, true);
+        testSize(500, 100, true);
+        testSize(500, 500, false);
+        testSize(600, 500, false);
+        testSize(600, 700, false);
+
+      });
+
+    });
+
+    describe('maxnum and minnum', function () {
+
+      it('should validate maxnum', function () {
+        var maxnum = 2;
+
+        var attrs = [
+          {attr: 'name', val: 'myinput'},
+          {attr: 'maxnum', val: maxnum},
+        ];
+
+
+        compileTemplate({ngModel: 'files', multiple: true, attrs: attrs});
+
+        expect($scope.form.myinput.$error.maxnum).not.toBeDefined();
+
+        var testNumber = function (num, result) {
+          eventmock.target.files = [];
+          for (var i = num; i > 0; i--) {
+            eventmock.target.files.push(fileMock);
+          }
+          elem.triggerHandler(eventmock);
+          expect($scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
+        };
+
+        testNumber(1, false);
+        testNumber(2, false);
+        testNumber(3, true);
+
+      });
+
+      it('should validate minnum', function () {
+        var minnum = 2;
+
+        var attrs = [
+          {attr: 'name', val: 'myinput'},
+          {attr: 'minnum', val: minnum},
+        ];
+
+
+        compileTemplate({ngModel: 'files', multiple: true, attrs: attrs});
+
+        expect($scope.form.myinput.$error.minnum).not.toBeDefined();
+
+        var testNumber = function (num, result) {
+          eventmock.target.files = [];
+          for (var i = num; i > 0; i--) {
+            eventmock.target.files.push(fileMock);
+          }
+          elem.triggerHandler(eventmock);
+          expect($scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
+        };
+
+        testNumber(1, true);
+        testNumber(2, false);
+        testNumber(3, false);
+
+      });
+      
     });
 
   });
