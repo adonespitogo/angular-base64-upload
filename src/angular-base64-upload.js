@@ -37,6 +37,7 @@
         scope: isolateScope,
         link: function (scope, elem, attrs, ngModel) {
 
+          /* istanbul ignore if */
           if (!ngModel) {
             return;
           }
@@ -151,12 +152,22 @@
             var valid = true;
 
             if (attrs.maxsize) {
-              for (var i = 0; i < val.length; i++) {
-                var file = val[i];
-                if (file.filesize > parseFloat(attrs.maxsize) * 1000) {
-                  valid = false;
-                  break;
+              var max = parseFloat(attrs.maxsize) * 1000;
+
+
+              if (attrs.multiple) {
+                // $window.console.log(elem);
+                for (var i = 0; i < val.length; i++) {
+                  var file = val[i];
+                  if (file.filesize > max) {
+                    valid = false;
+                    break;
+                  }
                 }
+              }
+              else {
+                valid = val.filesize <= max;
+                $window.console.log(valid);
               }
               ngModel.$setValidity('maxsize', valid);
             }

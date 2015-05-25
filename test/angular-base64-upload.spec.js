@@ -55,26 +55,6 @@ describe('angular-base64-upload', function(){
 
   });
 
-  it('should do nothing when no ng-model', function () {
-
-    eventmock.target.files = [fileMock];
-
-    var event = {
-      name: 'on-change',
-      handler: function (e, fileList) {
-        expect(false).toBe(true); // should not be called when no ng-model
-      },
-      bindTo: 'onChangeHandler'
-    };
-
-    compileTemplate({events: [event], ngModel: false});
-
-    var spy = spyOn($scope, 'onChangeHandler').andCallThrough();
-
-    elem.triggerHandler(eventmock);
-    expect(spy).not.toHaveBeenCalled();
-  });
-
   describe('Events', function () {
 
     it('should trigger on-change handler', function () {
@@ -245,56 +225,70 @@ describe('angular-base64-upload', function(){
 
     });
 
-    describe('maxsize', function () {
 
-      var attrs;
-      var maxsize;
+    it('should validate maxsize on single file selection', function () {
 
-      beforeEach(function () {
-        maxsize = 500; //kb
+      var maxsize = 500; //kb
 
-        attrs = [
-          {attr: 'name', val: 'myinput'},
-          {attr: 'maxsize', val: maxsize},
-        ];
-      });
+      var attrs = [
+        {attr: 'name', val: 'myinput'},
+        {attr: 'maxsize', val: maxsize},
+      ];
 
-      it('should validate maxsize on single file selection', function () {
+      compileTemplate({ngModel: 'files', attrs: attrs});
 
-        compileTemplate({ngModel: 'files', attrs: attrs});
+      expect($scope.form.myinput.$error.maxsize).not.toBeDefined();
 
-      });
+      var testSize = function (size, size2, result) {
 
-      it('should validate maxsize on multiple file selection', function () {
+        var f1 = angular.copy(fileMock);
+        f1.size = size * 1000;
+        var f2 = angular.copy(fileMock);
+        f2.size = size2 * 1000;
 
-        compileTemplate({ngModel: 'files', attrs: attrs, multiple: true});
+        eventmock.target.files = [f1, f2];
+        elem.triggerHandler(eventmock);
+        expect($scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
+      };
 
-      });
-
-      afterEach(function () {
-
-        expect($scope.form.myinput.$error.maxsize).not.toBeDefined();
-
-        var testSize = function (size, size2, result) {
-
-          var f1 = angular.copy(fileMock);
-          f1.size = size * 1000;
-          var f2 = angular.copy(fileMock);
-          f2.size = size2 * 1000;
-
-          eventmock.target.files = [f1, f2];
-          elem.triggerHandler(eventmock);
-          expect($scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
-        };
-
-        testSize(200, 100, false);
-        testSize(500, 123, false);
-        testSize(200, 600, true);
-        testSize(600, 100, true);
-
-      });
+      testSize(200, 100, false);
+      testSize(500, 123, false);
+      testSize(200, 600, true);
+      testSize(600, 100, true);
 
     });
+
+    it('should validate maxsize on multiple file selection', function () {
+      var maxsize = 500; //kb
+
+      var attrs = [
+        {attr: 'name', val: 'myinput'},
+        {attr: 'maxsize', val: maxsize},
+      ];
+
+      compileTemplate({ngModel: 'files', attrs: attrs, multiple: true});
+
+      expect($scope.form.myinput.$error.maxsize).not.toBeDefined();
+
+      var testSize = function (size, size2, result) {
+
+        var f1 = angular.copy(fileMock);
+        f1.size = size * 1000;
+        var f2 = angular.copy(fileMock);
+        f2.size = size2 * 1000;
+
+        eventmock.target.files = [f1, f2];
+        elem.triggerHandler(eventmock);
+        expect($scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
+      };
+
+      testSize(200, 100, false);
+      testSize(500, 123, false);
+      testSize(200, 600, true);
+      testSize(600, 100, true);
+
+    });
+
 
 
     it('should validate minsize', function () {
