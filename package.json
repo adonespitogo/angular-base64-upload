@@ -3,6 +3,9 @@
   "version": "v0.1.5",
   "description": "Angular directive for uploading base64-encoded files that you can pass along with the resource model.",
   "main": "index.js",
+  "scripts": {
+      "test": "grunt test"
+  },
   "dependencies": {},
   "devDependencies": {
     "bower": "^1.3.12",
