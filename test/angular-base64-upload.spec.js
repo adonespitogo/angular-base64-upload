@@ -287,37 +287,35 @@ describe('angular-base64-upload', function(){
       });
     });
 
+    describe('minsize', function () {
 
+      it('should validate minsize on single file selection', function () {
+        var minsize = 500; //kb
 
+        var attrs = [
+          {attr: 'name', val: 'myinput'},
+          {attr: 'minsize', val: minsize},
+        ];
 
-    it('should validate minsize', function () {
-      var minsize = 500; //kb
+        compileTemplate({ngModel: 'files', attrs: attrs});
 
-      var attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'minsize', val: minsize},
-      ];
+        expect($scope.form.myinput.$error.minsize).not.toBeDefined();
 
-      compileTemplate({ngModel: 'files', multiple: true, attrs: attrs});
+        var testSize = function (size, result) {
 
-      expect($scope.form.myinput.$error.minsize).not.toBeDefined();
+          var f1 = angular.copy(fileMock);
+          f1.size = size * 1000;
 
-      var testSize = function (size, size2, result) {
+          eventmock.target.files = [f1];
+          elem.triggerHandler(eventmock);
+          expect($scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
+        };
 
-        var f1 = angular.copy(fileMock);
-        f1.size = size * 1000;
-        var f2 = angular.copy(fileMock);
-        f2.size = size2 * 1000;
+        testSize(200, true);
+        testSize(500, false);
+        testSize(600, false);
 
-        eventmock.target.files = [f1, f2];
-        elem.triggerHandler(eventmock);
-        expect($scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
-      };
-
-      testSize(200, 100, true);
-      testSize(500, 123, true);
-      testSize(500, 600, false);
-      testSize(600, 700, false);
+      });
 
     });
 

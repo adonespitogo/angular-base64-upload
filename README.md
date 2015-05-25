@@ -170,6 +170,9 @@ Tested with Angular versions:
 Change Log
 --------
 
+v0.1.5
+ - Fixed `maxsize` and `minsize` validator for single file selection
+
 v0.1.4
  - Fix bower.json
 

@@ -178,14 +178,20 @@
 
           function _minsize (val) {
             var valid = true;
+            var min = parseFloat(attrs.minsize) * 1000;
 
             if (attrs.minsize) {
-              for (var i = 0; i < val.length; i++) {
-                var file = val[i];
-                if (file.filesize < parseFloat(attrs.minsize) * 1000) {
-                  valid = false;
-                  break;
+              if (attrs.multiple) {
+                for (var i = 0; i < val.length; i++) {
+                  var file = val[i];
+                  if (file.filesize < min) {
+                    valid = false;
+                    break;
+                  }
                 }
+              }
+              else {
+                valid = val.filesize >= min;
               }
               ngModel.$setValidity('minsize', valid);
             }
