@@ -35,9 +35,7 @@ function TestRunner (grunt) {
     var files = fileLoader(VERSION);
 
     grunt.config('karma.options.files', files);
-    grunt.config('karma.options.coverageReporter.subdir', function (browser) {
-      return browser+'/angular-v'+VERSION;
-    });
+    grunt.config('karma.options.reporters', self.version_index === 0? ['story', 'coverage'] : ['story']);
 
     console.log('\n\n\n\t\tRUNNING TEST AGAINST ANGULAR v'+VERSION);
 
