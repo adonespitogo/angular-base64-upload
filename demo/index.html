@@ -67,7 +67,14 @@
     <h3>Single File Selection</h3>
       <div class="input-group">
         <label for="file">Select File</label>
-        <input type="file" ng-model="file" name="file" base-sixty-four-input required onloadend="loadEndHandler" on-change="onChange">
+        <input type="file" ng-model="file" name="file" base-sixty-four-input required onloadend="loadEndHandler" on-change="onChange" maxsize="500" accept="image/*">
+        <span class="help-block">
+          <ul>
+            <li>required</li>
+            <li>maxsize = 500</li>
+            <li>accept = image/*</li>
+          </ul>
+        </span>
       </div>
       <div class="alert" ng-class="{'alert-danger': form.file.$invalid, 'alert-success': form.file.$valid}">
         form.file.$error:
@@ -97,7 +104,15 @@
     <h3>Multiple Files Selection</h3>
       <div class="input-group">
         <label for="file">Select Files</label>
-        <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*, .zip" maxsize="500" required minnum="2">
+        <span class="help-block">
+          <ul>
+            <li>required</li>
+            <li>minsize = 500</li>
+            <li>accept = image/*, .zip</li>
+            <li>minnum = 2</li>
+          </ul>
+        </span>
+        <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*, .zip" minsize="500" required minnum="2" on-change="onChange">
       </div>
       <div class="alert" ng-class="{'alert-danger': form.files.$invalid, 'alert-success': form.files.$valid}">
         form.files.$error:
@@ -123,8 +138,8 @@
         </td>
       </tr>
     </table>
-    <button class="btn btn-success" ng-click="uploadFiles()" ng-class="{disabled: form.$invalid}">Upload Files</button>
     </form>
   </div>
 </body>
+
 </html>
