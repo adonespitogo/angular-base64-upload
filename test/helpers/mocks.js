@@ -3,11 +3,7 @@
 function FileReaderMock() {
   var self = this;
 
-  var event = {
-    target: {
-      result: null
-    }
-  };
+  var event = new Event();
 
   self.result = null;
 
