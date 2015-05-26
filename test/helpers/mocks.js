@@ -45,8 +45,6 @@ $windowMock = {
   FileReader: FileReaderMock
 };
 
-// window._arrayBufferToBase64 = $windowMock._arrayBufferToBase64;
-
 function File (opts) {
   opts = opts || {};
   this.name = opts.name || 'filename.txt';
@@ -75,7 +73,7 @@ function FileObject (file) {
   this.filename = file.name;
   this.filetype = file.type;
   this.filesize = file.size;
-  this.base64 = window._arrayBufferToBase64();
+  this.base64 = $windowMock._arrayBufferToBase64();
 }
 
 function FileObjects (num) {
@@ -89,7 +87,7 @@ function FileObjects (num) {
 
 var base64ConverterMock = {
   getBase64String: function () {
-    return window._arrayBufferToBase64();
+    return $windowMock._arrayBufferToBase64();
   },
   base64ToBlob: function () {
     return new File();
