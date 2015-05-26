@@ -218,7 +218,6 @@
 
   }]);
 
-  /* istanbul ignore next */
   mod.service('base64Converter', [
     '$window',
     '$q',
@@ -230,6 +229,7 @@
       };
 
       // http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
+      /* istanbul ignore next */
       this.base64ToBlob = function (base64, filetype) {
 
         var dataURI = "data:"+filetype+";base64,"+base64;
