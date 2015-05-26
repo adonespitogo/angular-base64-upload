@@ -37,11 +37,15 @@ function FileReaderMock() {
 
 FileReaderMock.autoTriggerEvents = false;
 
-window._arrayBufferToBase64 = function () {
-  return 'base64-mock-string';
+$windowMock = {
+  document: window.document,
+  _arrayBufferToBase64: function () {
+    return 'base64-mock-string';
+  },
+  FileReader: FileReaderMock
 };
-window.FileReader = FileReaderMock;
 
+// window._arrayBufferToBase64 = $windowMock._arrayBufferToBase64;
 
 function File (opts) {
   opts = opts || {};

@@ -1,10 +1,11 @@
+
+
 (function (window) {
 
   'use strict';
 
   /* istanbul ignore next */
-  window._arrayBufferToBase64 = function ( buffer ) {
-  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  window._arrayBufferToBase64 = function ( buffer ) { //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
     var binary = '';
     var bytes = new Uint8Array( buffer );
     var len = bytes.byteLength;
@@ -13,6 +14,7 @@
     }
     return window.btoa( binary );
   };
+
 
   var mod = window.angular.module('naif.base64', []);
 
@@ -210,15 +212,14 @@
 
   }]);
 
+  /* istanbul ignore next */
   mod.service('base64Converter', [
     '$window',
     function ($window) {
-      /* istanbul ignore next */
       this.getBase64String = function (buffer) {
         return $window._arrayBufferToBase64(buffer);
       };
 
-      /* istanbul ignore next */
       // http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
       this.base64ToBlob = function (base64, filetype) {
 
@@ -226,12 +227,7 @@
 
         // convert base64/URLEncoded data component to raw binary data held in a string
         var byteString;
-        if (dataURI.split(',')[0].indexOf('base64') >= 0) {
-          byteString = $window.atob(dataURI.split(',')[1]);
-        }
-        else {
-          byteString = $window.unescape(dataURI.split(',')[1]);
-        }
+        byteString = $window.atob(dataURI.split(',')[1]);
 
         // separate out the mime component
         var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];

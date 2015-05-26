@@ -1,15 +1,18 @@
-describe('angular-base64-upload', function(){
+describe('AngularBase64Upload', function(){
 
   var event;
 
   beforeEach(function(){
 
+    module('naif.base64');
+
     module(function ($provide) {
-      $provide.value('$window', window);
+      $provide.value('$window', $windowMock);
+
       $provide.value('base64Converter', base64ConverterMock);
+
     });
 
-    module('naif.base64');
 
     inject(function($injector){
 
@@ -52,36 +55,59 @@ describe('angular-base64-upload', function(){
 
   describe('Events', function () {
 
-    it('should trigger preprocessor', function () {
+    describe('Preprocessor', function () {
 
-      var file = new File();
+      var file, expectedModel, preprocessor, directive;
 
-      var expectedModel = {
-        filename: 'expected-name',
-        filetype: 'text/stylesheet',
-        filesize: 0
-      };
+      beforeEach(function () {
 
-      var preprocessor = function (file) {
-        expect(file).toBe(file);
-        return expectedModel;
-      };
+        file = new File();
 
-      var d = _compile({events: [{
-              name: 'preprocessor',
-              handler: preprocessor,
-              bindTo: 'preprocessorHandler'
-            }]});
+      });
 
+      it('should assign returned object', function () {
 
-      var spy = spyOn(d.$scope, 'preprocessorHandler').andCallThrough();
+        expectedModel = {
+          filename: 'expected-name',
+          filetype: 'text/stylesheet',
+          filesize: 0
+        };
 
-      d.$input.triggerHandler(event);
+        preprocessor = function (file) {
+          expect(file).toBe(file);
+          return expectedModel;
+        };
 
-      expect(spy).toHaveBeenCalled();
-      expect(d.$scope.model).toEqual(expectedModel);
+      });
+
+      it('should assign file object', function () {
+
+        expectedModel = new FileObject(file);
+
+        preprocessor = function (file) {
+          expect(file).toBe(file);
+        };
+
+      });
+
+      afterEach(function () {
+
+        directive = _compile({events: [{
+          name: 'preprocessor',
+          handler: preprocessor,
+          bindTo: 'preprocessorHandler'
+        }]});
+
+        var spy = spyOn(directive.$scope, 'preprocessorHandler').andCallThrough();
+
+        directive.$input.triggerHandler(event);
+
+        expect(spy).toHaveBeenCalled();
+        expect(directive.$scope.model).toEqual(expectedModel);
+      });
 
     });
+
 
     it('should trigger on-change handler', function () {
 
