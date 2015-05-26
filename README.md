@@ -98,7 +98,7 @@ app.controller('ctrl', function ($scope, base64Converter) {
 
 });
 
-<input type="file" base-sixty-four-input ng-model="file" preprocessor="resizeImage" multiple>
+<input type="file" base-sixty-four-input ng-model="images" preprocessor="resizeImage" multiple>
 
 ```
 
