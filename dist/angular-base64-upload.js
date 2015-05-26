@@ -222,7 +222,8 @@
   mod.service('base64Converter', [
     '$window',
     '$q',
-    function ($window, $q) {
+    '$rootScope',
+    function ($window, $q, $rootScope) {
 
       this.getBase64String = function (buffer) {
         return $window._arrayBufferToBase64(buffer);
@@ -263,7 +264,9 @@
         var reader = new $window.FileReader();
         reader.onload = function (e) {
           fileObject.base64 = self.getBase64String(e.target.result);
-          deferred.resolve(fileObject);
+          $rootScope.$apply(function () {
+            deferred.resolve(fileObject);
+          });
         };
 
         reader.readAsArrayBuffer(file);

@@ -434,12 +434,13 @@ describe('AngularBase64Upload', function(){
 
       var promise = converter.getBase64Object(file);
       promise.then(function (fileObj) {
-        console.log('promise');
         expect(fileObj.filename).toBe(file.name);
         expect(fileObj.filetype).toBe(file.type);
         expect(fileObj.filesize).toBe(file.size);
         expect(fileObj.base64).toBe($window._arrayBufferToBase64());
       });
+
+      $ROOTSCOPE.$apply();
 
     });
 
