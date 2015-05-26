@@ -78,7 +78,7 @@ Use case: You want images to be auto-resized after selecting files.
 ```
 app.controller('ctrl', function ($scope, base64Converter) {
 
-  $scope.resizeImage = function (e, file) {
+  $scope.resizeImage = function (file) {
 
     file = someResizeFunction(file);
 
