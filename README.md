@@ -84,8 +84,6 @@ app.controller('ctrl', function ($scope, base64Converter) {
 
     var base64 = base64Converter.getBase64String(file); // get base64 string
 
-    base64 = someOtherProcess(base64);
-
     var newFile = {
       filename: file.name,
       filetype: file.type,
