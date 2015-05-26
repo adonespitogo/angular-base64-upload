@@ -82,3 +82,12 @@ function FileObjects (num) {
   }
   return objs;
 }
+
+var base64ConverterMock = {
+  getBase64String: function () {
+    return window._arrayBufferToBase64();
+  },
+  base64ToBlob: function () {
+    return new File();
+  }
+};

@@ -6,6 +6,7 @@ describe('angular-base64-upload', function(){
 
     module(function ($provide) {
       $provide.value('$window', window);
+      $provide.value('base64Converter', base64ConverterMock);
     });
 
     module('naif.base64');
@@ -50,6 +51,37 @@ describe('angular-base64-upload', function(){
   });
 
   describe('Events', function () {
+
+    it('should trigger preprocessor', function () {
+
+      var file = new File();
+
+      var expectedModel = {
+        filename: 'expected-name',
+        filetype: 'text/stylesheet',
+        filesize: 0
+      };
+
+      var preprocessor = function (file) {
+        expect(file).toBe(file);
+        return expectedModel;
+      };
+
+      var d = _compile({events: [{
+              name: 'preprocessor',
+              handler: preprocessor,
+              bindTo: 'preprocessorHandler'
+            }]});
+
+
+      var spy = spyOn(d.$scope, 'preprocessorHandler').andCallThrough();
+
+      d.$input.triggerHandler(event);
+
+      expect(spy).toHaveBeenCalled();
+      expect(d.$scope.model).toEqual(expectedModel);
+
+    });
 
     it('should trigger on-change handler', function () {
 
