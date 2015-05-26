@@ -1,18 +1,15 @@
 
-var ANGULAR_VERSIONS = [
-  '1.2.0',
-  '1.2.5',
-  '1.2.10',
-  '1.2.15',
-  '1.2.20',
-  '1.2.25',
-  '1.2.28',
-  '1.3.0',
-  '1.3.5',
-  '1.3.10',
-  '1.3.15'
-];
+function _make_version_range (version, start, end) {
+  var versions = [];
+  for (var i = start; i <= end; i ++) {
+    versions.push(version + '.' + i);
+  }
+  return versions;
+}
 
+var v12 = _make_version_range('1.2', 0, 28);
+var v13 = _make_version_range('1.3', 0, 15);
+var ANGULAR_VERSIONS = v12.concat(v13);
 var fileLoader = require('./file_loader.js');
 
 function TestRunner (grunt) {
@@ -48,7 +45,6 @@ function TestRunner (grunt) {
     });
 
   };
-
 
 }
 
