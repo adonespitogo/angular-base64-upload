@@ -85,7 +85,7 @@ module.exports = function(grunt) {
           undef: false,
           unused: false
         },
-        src: ['test/**/*.js', '!test/helpers/Blob.js']
+        src: ['test/**/*.js']
       }
     },
     karma: {
