@@ -199,7 +199,7 @@ Change Log
 
 v0.1.7
  - Support preprocessor handlers
- - Added `base64ConverterService`
+ - Added `base64Converter` service
 
 v0.1.6
  - Fix for [browserify](http://browserify.org)
