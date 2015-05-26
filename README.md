@@ -145,8 +145,9 @@ Example event handler implementation:
 Converstions
 -------------
 `base64Converter` service has 2 methods for converting file to base64 and base64 to a Blob.
- - `base64Converter.getBase64String(file)` - returns base64 string
- - `base64Converter.base64ToBlob(base64, file_type)` - converts base64 string to a `Blob`.
+ - `base64Converter.getBase64String(buffer)` - Returns base64 string from a buffer.
+ - `base64Converter.base64ToBlob(base64, file_type)` - Converts base64 string to a `Blob`. Returns Blob object.
+ - `base64Converter.getBase64Object(file)` - Convert file to base64 object. Returns a promise object.
 
 Server-Side
 ---------------

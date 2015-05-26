@@ -2,7 +2,7 @@
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015;
 * Licensed MIT */
-(function (window) {
+(function (window, undefined) {
 
   'use strict';
 
@@ -66,7 +66,7 @@
               var buffer = e.target.result;
 
               if (attrs.preprocessor) {
-                fileObject = scope.preprocessor()(file, buffer) || null;
+                fileObject = scope.preprocessor()(file, buffer);
               }
               else {
                 fileObject.base64 = base64Converter.getBase64String(buffer);
@@ -221,7 +221,8 @@
   /* istanbul ignore next */
   mod.service('base64Converter', [
     '$window',
-    function ($window) {
+    '$q',
+    function ($window, $q) {
 
       this.getBase64String = function (buffer) {
         return $window._arrayBufferToBase64(buffer);
@@ -247,6 +248,30 @@
 
         return new Blob([ia], {type:mimeString});
       };
+
+      this.getBase64Object = function (file) {
+
+        var self = this;
+        var deferred = $q.defer();
+        var fileObject = {
+          filename: file.name,
+          filetype: file.type,
+          filesize: file.size,
+          base64: null
+        };
+
+        var reader = new $window.FileReader();
+        reader.onload = function (e) {
+          fileObject.base64 = self.getBase64String(e.target.result);
+          deferred.resolve(fileObject);
+        };
+
+        reader.readAsArrayBuffer(file);
+
+        return deferred.promise;
+
+      };
+
     }
   ]);
 
