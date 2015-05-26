@@ -3,11 +3,9 @@
 function FileReaderMock() {
   var self = this;
 
-  var event = new Event();
-
-  self.result = null;
 
   self.triggerEvent = function (eventName) {
+    var event = new Event();
     if (typeof self[eventName] === 'function') {
       event.target = self;
       event.type = eventName;
@@ -15,7 +13,9 @@ function FileReaderMock() {
     }
   };
 
-  self.readAsArrayBuffer = function () {
+  self.readAsArrayBuffer = function (file) {
+
+    self.file = file;
 
     if (FileReaderMock.autoTriggerEvents) {
       for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
@@ -24,6 +24,7 @@ function FileReaderMock() {
       }
     }
     else {
+      self.result = 'reader-result-buffer';
       self.triggerEvent('onload');
     }
 

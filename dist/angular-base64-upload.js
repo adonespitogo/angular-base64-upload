@@ -63,12 +63,15 @@
 
             return function (e) {
 
+              var buffer = e.target.result;
+
               if (attrs.preprocessor) {
-                fileObject = scope.preprocessor()(file) || fileObject;
+                fileObject = scope.preprocessor()(file, buffer) || null;
+              }
+              else {
+                fileObject.base64 = base64Converter.getBase64String(buffer);
               }
 
-              var base64 = fileObject.base64 || base64Converter.getBase64String(e.target.result);
-              fileObject.base64 = base64;
               fileObjects.push(fileObject);
 
               if (attrs.onload) {
@@ -115,6 +118,7 @@
               _attachEventHandlers(reader, file, fileObject);
 
               reader.readAsArrayBuffer(file);
+
             }
 
           }
@@ -218,6 +222,7 @@
   mod.service('base64Converter', [
     '$window',
     function ($window) {
+
       this.getBase64String = function (buffer) {
         return $window._arrayBufferToBase64(buffer);
       };

@@ -78,17 +78,20 @@ Use case: You want images to be auto-resized after selecting files.
 ```
 app.controller('ctrl', function ($scope, base64Converter) {
 
-  $scope.resizeImage = function (file) {
+  $scope.resizeImage = function ( file, buffer ) {
 
-    file = someResizeFunction(file);
+    // file is a File object
+    // buffer is result of reading the file by file reader
 
-    var base64 = base64Converter.getBase64String(file); // get base64 string
+    var base64 = base64Converter.getBase64String(buffer); // get base64 string
 
-    var newFile = {
+    var newFile = someResizeFunction(base64);
+
+    newFile = {
       filename: file.name,
-      filetype: file.type,
-      filesize: file.size,
-      base64: base64,
+      filetype: newFile.type,
+      filesize: newFile.size,
+      base64: newFile.base64,
     };
 
     return newFile; // append to model

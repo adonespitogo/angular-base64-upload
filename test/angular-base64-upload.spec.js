@@ -62,10 +62,11 @@ describe('AngularBase64Upload', function(){
       beforeEach(function () {
 
         file = new File();
+        event = new Event();
 
       });
 
-      it('should assign returned object', function () {
+      it('should append returned object to model', function () {
 
         expectedModel = {
           filename: 'expected-name',
@@ -73,19 +74,18 @@ describe('AngularBase64Upload', function(){
           filesize: 0
         };
 
-        preprocessor = function (file) {
-          expect(file).toBe(file);
+        preprocessor = function (file, buffer) {
           return expectedModel;
         };
 
       });
 
-      it('should assign file object', function () {
+      it('should append null to model', function () {
 
-        expectedModel = new FileObject(file);
+        expectedModel = null;
 
-        preprocessor = function (file) {
-          expect(file).toBe(file);
+        preprocessor = function (file, buffer) {
+          return false;
         };
 
       });
