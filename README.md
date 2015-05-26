@@ -69,6 +69,34 @@ Validations
 </form>
 ```
 
+Pre-processing files
+-------------------
+You can pre-process files before the file the data gets added into the model. For example you want all images to be of exact size before sending it to your server. Applies to all files when `multiple` attribute is present.
+
+```
+$scope.resizeImage = function (e, file, base64Converter) {
+  function resize(file) {
+    // your resize logic here
+    return file;
+  }
+
+  var newFile = base64Converter.convert(file); //converts file to base64 encoded object
+
+  //newFile =
+  // {
+  //   "filesize": 54836 (bytes),
+  //   "filetype": "image/jpeg",
+  //   "filename": "profile.jpg",
+  //   "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIctcwIQA..."
+  // }
+
+  return newFile; // get's assigned to the model
+};
+
+<input type="file" base-sixty-four-input ng-model="file" preprocessor="resizeImage">
+
+```
+
 Events
 ---------
 
@@ -108,6 +136,22 @@ Example event handler implementation:
    <form>
    ```
 
+Converstions
+-------------
+`base64Converter` service has 2 methods for converting file to base64 object and base64 object to a Blob.
+ - `base64Converter.convert(file)` - converts file to base64 object
+ - `base64Converter.revert(base64Obj)` - converts base64 object to a `Blob`.
+
+ `base64 object` is in the form of:
+
+ ```json
+  {
+    "filesize": 54836 (bytes),
+    "filetype": "image/jpeg",
+    "filename": "profile.jpg",
+    "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIctcwIQA..."
+  }
+ ```
 
 Server-Side
 ---------------
