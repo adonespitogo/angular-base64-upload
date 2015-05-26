@@ -82,10 +82,10 @@ describe('AngularBase64Upload', function(){
 
       it('should append null to model', function () {
 
-        expectedModel = null;
+        expectedModel = undefined;
 
         preprocessor = function (file, buffer) {
-          return false;
+
         };
 
       });

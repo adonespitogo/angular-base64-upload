@@ -1,4 +1,4 @@
-(function (window) {
+(function (window, undefined) {
 
   'use strict';
 
@@ -62,7 +62,7 @@
               var buffer = e.target.result;
 
               if (attrs.preprocessor) {
-                fileObject = scope.preprocessor()(file, buffer) || null;
+                fileObject = scope.preprocessor()(file, buffer);
               }
               else {
                 fileObject.base64 = base64Converter.getBase64String(buffer);
