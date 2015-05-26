@@ -147,7 +147,7 @@ Converstions
 -------------
 `base64Converter` service has 2 methods for converting file to base64 and base64 to a Blob.
  - `base64Converter.getBase64String(file)` - returns base64 string
- - `base64Converter.revert(base64, file_type)` - converts base64 string to a `Blob`.
+ - `base64Converter.base64ToBlob(base64, file_type)` - converts base64 string to a `Blob`.
 
 Server-Side
 ---------------
@@ -196,6 +196,10 @@ Contribution
 
 Change Log
 --------
+
+v0.1.7
+ - Support preprocessor handlers
+ - Added `base64ConverterService`
 
 v0.1.6
  - Fix for [browserify](http://browserify.org)
