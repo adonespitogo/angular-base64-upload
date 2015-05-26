@@ -73,16 +73,14 @@ Pre-processing files
 -------------------
 You can pre-process files before the data gets added into the model.
 
-Use case:  You want all images to be of exact size before the model gets updated. Applies to all files when `multiple` attribute is present.
+Use case: You want images to be auto-resized after selecting files.
 
 ```
 app.controller('ctrl', function ($scope, base64Converter) {
 
   $scope.resizeImage = function (e, file) {
-    function resize(file) {
-      // your resize logic here
-      return file;
-    }
+
+    file = someResizeFunction(file);
 
     var base64 = base64Converter.getBase64String(file); // get base64 string
 
@@ -95,12 +93,12 @@ app.controller('ctrl', function ($scope, base64Converter) {
       base64: base64,
     };
 
-    return newFile; // get's assigned to the model
+    return newFile; // append to model
   };
 
 });
 
-<input type="file" base-sixty-four-input ng-model="file" preprocessor="resizeImage">
+<input type="file" base-sixty-four-input ng-model="file" preprocessor="resizeImage" multiple>
 
 ```
 
