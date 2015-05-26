@@ -157,6 +157,9 @@ Contribution
 Change Log
 --------
 
+v0.1.6
+ - Fix for [browserify](http://browserify.org)
+
 v0.1.5
  - Fixed `maxsize` and `minsize` validator for single file selection
 
