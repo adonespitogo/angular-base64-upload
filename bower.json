@@ -30,8 +30,8 @@
     "tests"
   ],
   "devDependencies": {
-    "jquery": "~2.1.4",
-    "lodash": "~3.9.0",
+    "jquery": "jquery#2.1.4",
+    "lodash": "lodash#3.9.0",
     "angular-v1.2.0": "angular#1.2.0",
     "angular-v1.2.1": "angular#1.2.1",
     "angular-v1.2.2": "angular#1.2.2",
