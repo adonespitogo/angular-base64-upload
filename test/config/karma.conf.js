@@ -1,5 +1,4 @@
-var JASMINE = './node_modules/karma-jasmine/lib/jasmine.js';
-var ADAPTER = './node_modules/karma-jasmine/lib/adapter.js';
+
 var files = require('./file_loader.js')();
 
 module.exports = function (config) {

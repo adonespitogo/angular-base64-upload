@@ -4,7 +4,7 @@ angular-base64-upload
 ![Alt text](https://travis-ci.org/adonespitogo/angular-base64-upload.svg?branch=master "Travis-CI build status")
 
 Converts files from file input into base64 encoded objects.
-This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file).
+This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file). Tested on Angular versions `v1.2.0` through `v1.3.15`.
 
 
 ```html
@@ -153,21 +153,6 @@ Contribution
  - `grunt build` to build the project
  - `grunt test` to run unit tests
  - Uses [jasmine 1.3](http://jasmine.github.io/1.3/introduction.html) in writing unit test specs
-
-Tested with Angular versions:
-
- - `1.2.0`
- - `1.2.5`
- - `1.2.10`
- - `1.2.15`
- - `1.2.20`
- - `1.2.25`
- - `1.2.28`
- - `1.3.0`
- - `1.3.5`
- - `1.3.10`
- - `1.3.15`
-
 
 Change Log
 --------
