@@ -1,10 +1,10 @@
 {
   "name": "angular-base64-upload",
-  "version": "v0.1.6",
+  "version": "v0.1.7",
   "description": "Angular directive for uploading base64-encoded files that you can pass along with the resource model.",
   "main": "index.js",
   "scripts": {
-      "test": "grunt test"
+    "test": "grunt test"
   },
   "dependencies": {},
   "devDependencies": {

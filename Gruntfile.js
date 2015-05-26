@@ -85,7 +85,7 @@ module.exports = function(grunt) {
           undef: false,
           unused: false
         },
-        src: 'test/**/*.js'
+        src: ['test/**/*.js']
       }
     },
     karma: {
@@ -93,7 +93,6 @@ module.exports = function(grunt) {
         configFile: './test/config/karma.conf.js'
       },
       unit: {
-        background: false
       }
     },
     watch: {

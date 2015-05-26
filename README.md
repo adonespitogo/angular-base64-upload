@@ -69,6 +69,40 @@ Validations
 </form>
 ```
 
+Pre-processing files
+-------------------
+You can pre-process files before the data gets added into the model.
+
+Use case: You want images to be auto-resized after selecting files.
+
+```
+app.controller('ctrl', function ($scope, base64Converter) {
+
+  $scope.resizeImage = function ( file, buffer ) {
+
+    // file is a File object
+    // buffer is result of reading the file by file reader
+
+    var base64 = base64Converter.getBase64String(buffer); // get base64 string
+
+    var newFile = someResizeFunction(base64);
+
+    newFile = {
+      filename: file.name,
+      filetype: newFile.type,
+      filesize: newFile.size,
+      base64: newFile.base64,
+    };
+
+    return newFile; // append to model
+  };
+
+});
+
+<input type="file" base-sixty-four-input ng-model="images" preprocessor="resizeImage" multiple>
+
+```
+
 Events
 ---------
 
@@ -108,6 +142,12 @@ Example event handler implementation:
    <form>
    ```
 
+Converstions
+-------------
+`base64Converter` service has 2 methods for converting file to base64 and base64 to a Blob.
+ - `base64Converter.getBase64String(buffer)` - Returns base64 string from a buffer.
+ - `base64Converter.base64ToBlob(base64, file_type)` - Converts base64 string to a `Blob`. Returns Blob object.
+ - `base64Converter.getBase64Object(file)` - Convert file to base64 object. Returns a promise object.
 
 Server-Side
 ---------------
@@ -156,6 +196,10 @@ Contribution
 
 Change Log
 --------
+
+v0.1.7
+ - Support preprocessor handlers
+ - Added `base64Converter` service
 
 v0.1.6
  - Fix for [browserify](http://browserify.org)

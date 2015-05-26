@@ -1,11 +1,9 @@
-(function (window) {
+(function (window, undefined) {
 
   'use strict';
 
-  // we don't need to test this function
   /* istanbul ignore next */
-  window._arrayBufferToBase64 = function ( buffer ) {
-  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  window._arrayBufferToBase64 = function ( buffer ) { //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
     var binary = '';
     var bytes = new Uint8Array( buffer );
     var len = bytes.byteLength;
@@ -15,17 +13,20 @@
     return window.btoa( binary );
   };
 
+
   var mod = window.angular.module('naif.base64', []);
 
   mod.directive('baseSixtyFourInput', [
     '$window',
-    function ($window) {
+    'base64Converter',
+    function ($window, base64Converter) {
 
-      var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
       var isolateScope = {
-        onChange: '&'
+        onChange: '&',
+        preprocessor: '&'
       };
 
+      var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
       for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
         var e = FILE_READER_EVENTS[i];
         isolateScope[e] = '&';
@@ -58,8 +59,15 @@
 
             return function (e) {
 
-              var base64 = $window._arrayBufferToBase64(e.target.result);
-              fileObject.base64 = base64;
+              var buffer = e.target.result;
+
+              if (attrs.preprocessor) {
+                fileObject = scope.preprocessor()(file, buffer);
+              }
+              else {
+                fileObject.base64 = base64Converter.getBase64String(buffer);
+              }
+
               fileObjects.push(fileObject);
 
               if (attrs.onload) {
@@ -106,6 +114,7 @@
               _attachEventHandlers(reader, file, fileObject);
 
               reader.readAsArrayBuffer(file);
+
             }
 
           }
@@ -204,6 +213,66 @@
       };
 
   }]);
+
+  mod.service('base64Converter', [
+    '$window',
+    '$q',
+    '$rootScope',
+    function ($window, $q, $rootScope) {
+
+      this.getBase64String = function (buffer) {
+        return $window._arrayBufferToBase64(buffer);
+      };
+
+      // http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
+      /* istanbul ignore next */
+      this.base64ToBlob = function (base64, filetype) {
+
+        var dataURI = "data:"+filetype+";base64,"+base64;
+
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        byteString = $window.atob(dataURI.split(',')[1]);
+
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        return new Blob([ia], {type:mimeString});
+      };
+
+      this.getBase64Object = function (file) {
+
+        var self = this;
+        var deferred = $q.defer();
+        var fileObject = {
+          filename: file.name,
+          filetype: file.type,
+          filesize: file.size,
+          base64: null
+        };
+
+        var reader = new $window.FileReader();
+        reader.onload = function (e) {
+          fileObject.base64 = self.getBase64String(e.target.result);
+          $rootScope.$apply(function () {
+            deferred.resolve(fileObject);
+          });
+        };
+
+        reader.readAsArrayBuffer(file);
+
+        return deferred.promise;
+
+      };
+
+    }
+  ]);
 
 })(this);
 

@@ -3,11 +3,9 @@
 function FileReaderMock() {
   var self = this;
 
-  var event = new Event();
-
-  self.result = null;
 
   self.triggerEvent = function (eventName) {
+    var event = new Event();
     if (typeof self[eventName] === 'function') {
       event.target = self;
       event.type = eventName;
@@ -15,7 +13,9 @@ function FileReaderMock() {
     }
   };
 
-  self.readAsArrayBuffer = function () {
+  self.readAsArrayBuffer = function (file) {
+
+    self.file = file;
 
     if (FileReaderMock.autoTriggerEvents) {
       for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
@@ -24,6 +24,7 @@ function FileReaderMock() {
       }
     }
     else {
+      self.result = 'reader-result-buffer';
       self.triggerEvent('onload');
     }
 
@@ -37,11 +38,13 @@ function FileReaderMock() {
 
 FileReaderMock.autoTriggerEvents = false;
 
-window._arrayBufferToBase64 = function () {
-  return 'base64-mock-string';
+$windowMock = {
+  document: window.document,
+  _arrayBufferToBase64: function () {
+    return 'base64-mock-string';
+  },
+  FileReader: FileReaderMock
 };
-window.FileReader = FileReaderMock;
-
 
 function File (opts) {
   opts = opts || {};
@@ -71,7 +74,7 @@ function FileObject (file) {
   this.filename = file.name;
   this.filetype = file.type;
   this.filesize = file.size;
-  this.base64 = window._arrayBufferToBase64();
+  this.base64 = $windowMock._arrayBufferToBase64();
 }
 
 function FileObjects (num) {
@@ -82,3 +85,12 @@ function FileObjects (num) {
   }
   return objs;
 }
+
+var base64ConverterMock = {
+  getBase64String: function () {
+    return $windowMock._arrayBufferToBase64();
+  },
+  base64ToBlob: function () {
+    return new File();
+  }
+};
