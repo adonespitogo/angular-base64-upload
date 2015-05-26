@@ -2,8 +2,6 @@
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015;
 * Licensed MIT */
-
-
 (function (window) {
 
   'use strict';
