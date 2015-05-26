@@ -71,7 +71,9 @@ Validations
 
 Pre-processing files
 -------------------
-You can pre-process files before the file the data gets added into the model. For example you want all images to be of exact size before sending it to your server. Applies to all files when `multiple` attribute is present.
+You can pre-process files before the data gets added into the model.
+
+Use case:  You want all images to be of exact size before the model gets updated. Applies to all files when `multiple` attribute is present.
 
 ```
 $scope.resizeImage = function (e, file, base64Converter) {
