@@ -22,8 +22,9 @@
 
   mod.directive('baseSixtyFourInput', [
     '$window',
+    '$q',
     'base64Converter',
-    function ($window, base64Converter) {
+    function ($window, $q, base64Converter) {
 
       var isolateScope = {
         onChange: '&',
@@ -64,21 +65,25 @@
             return function (e) {
 
               var buffer = e.target.result;
+              var promise;
 
               if (attrs.preprocessor) {
-                fileObject = scope.preprocessor()(file, buffer);
+                promise = $q.when(scope.preprocessor()(file, buffer));
               }
               else {
                 fileObject.base64 = base64Converter.getBase64String(buffer);
+                promise = $q.when(fileObject);
               }
 
-              fileObjects.push(fileObject);
+              promise.then(function (fileObj) {
+                fileObjects.push(fileObj);
+                _setViewValue();
+              });
+
 
               if (attrs.onload) {
                 scope.onload()(e, fReader,  file, rawFiles, fileObjects, fileObject);
               }
-
-              _setViewValue();
 
             };
 
@@ -97,10 +102,10 @@
           }
 
           function _setViewValue () {
-            scope.$apply(function(){
+            // scope.$apply(function(){
               var newVal = attrs.multiple ? fileObjects : (fileObjects[0]);
               ngModel.$setViewValue(newVal);
-            });
+            // });
           }
 
           function _readFiles () {
@@ -136,6 +141,7 @@
             }
 
             fileObjects = [];
+            fileObjects = angular.copy(fileObjects);
             rawFiles = e.target.files; // use event target so we can mock the files from test
             _readFiles();
 

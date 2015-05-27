@@ -195,7 +195,7 @@ Change Log
 --------
 
 v0.1.9
- - Not making a copy of new model value when doing `ngModel.$setViewValue()` since fileObject is already a new identity. This also allows preprocessor to modify the fileObject in case of promises and callbacks.
+ - preprocessor can return promises
 
 v0.1.8
  - To update premature npm publish. Will deprecate `v0.1.7`

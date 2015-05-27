@@ -19,7 +19,6 @@ describe('AngularBase64Upload', function(){
 
       });
 
-
       inject(function($injector){
 
         $INJECTOR = $injector;
@@ -41,6 +40,7 @@ describe('AngularBase64Upload', function(){
       var directive = _compile({ngModel: 'file'});
 
       directive.$input.triggerHandler(event);
+      $ROOTSCOPE.$apply();
       expect(directive.$scope.file).toEqual(fileObj);
 
     });
@@ -54,6 +54,7 @@ describe('AngularBase64Upload', function(){
 
       directive.$input.triggerHandler(event);
 
+      $ROOTSCOPE.$apply();
       expect(directive.$scope.files).toEqual(expectedFileObjects);
       expect(directive.$scope.files.length).toBe(expectedFileObjects.length);
 
@@ -86,7 +87,7 @@ describe('AngularBase64Upload', function(){
 
         });
 
-        it('should update model', function () {
+        it('should update model when return value is a promise', function () {
 
           expectedModel = {
             filename: 'expected-name',
@@ -97,14 +98,12 @@ describe('AngularBase64Upload', function(){
           var converter = $INJECTOR.get('base64Converter');
 
           preprocessor = function (file, buffer) {
-            var newVal = {};
+            var $q = $INJECTOR.get('$q');
+            var d = $q.defer();
             converter.getBase64Object(file).then(function (o) {
-              newVal.filename = expectedModel.filename;
-              newVal.filetype = expectedModel.filetype;
-              newVal.filesize = expectedModel.filesize;
-              newVal.base64 = expectedModel.base64;
+              d.resolve(expectedModel);
             });
-            return newVal;
+            return d.promise;
           };
 
 
@@ -132,6 +131,7 @@ describe('AngularBase64Upload', function(){
 
           directive.$input.triggerHandler(event);
 
+          $ROOTSCOPE.$apply();
           expect(spy).toHaveBeenCalled();
           expect(directive.$scope.model).toEqual(expectedModel);
         });
@@ -157,6 +157,7 @@ describe('AngularBase64Upload', function(){
         var spy = spyOn(d.$scope, 'onChangeHandler').andCallThrough();
 
         d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
         expect(spy).toHaveBeenCalled();
       });
 
@@ -195,6 +196,7 @@ describe('AngularBase64Upload', function(){
         FileReaderMock.autoTriggerEvents = true; // triggers all file reader event listeners on fileReder.readAsArrayBuffer(file)
         dir.$input.triggerHandler(event);
         FileReaderMock.autoTriggerEvents = false;
+        $ROOTSCOPE.$apply();
 
         for (var a = handlerSpies.length - 1; a >= 0; a--) {
           expect(handlerSpies[a]).toHaveBeenCalled();
@@ -245,8 +247,10 @@ describe('AngularBase64Upload', function(){
         });
 
         afterEach(function () {
+          $ROOTSCOPE.$apply();
           expect(directive.$scope.form.myinput.$error.required).toBe(true);
           directive.$input.triggerHandler(event);
+          $ROOTSCOPE.$apply();
           expect(directive.$scope.form.myinput.$error.required).toBeFalsy();
         });
 
@@ -278,6 +282,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -300,6 +305,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1, f2];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -338,6 +344,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -360,6 +367,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1, f2];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -391,6 +399,7 @@ describe('AngularBase64Upload', function(){
           var testNumber = function (num, result) {
             event.target.files = new FileList(num);
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -416,6 +425,7 @@ describe('AngularBase64Upload', function(){
           var testNumber = function (num, result) {
             event.target.files = new FileList(num);
             dir.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(dir.$scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
