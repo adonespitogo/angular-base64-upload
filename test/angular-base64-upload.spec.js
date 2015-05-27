@@ -11,7 +11,11 @@ describe('AngularBase64Upload', function(){
       module(function ($provide) {
         $provide.value('$window', $windowMock);
 
-        $provide.value('base64Converter', base64ConverterMock);
+        $provide.decorator('base64Converter', function($delegate){
+          $delegate.getBase64String = base64ConverterMock.getBase64String;
+          $delegate.base64ToBlob = base64ConverterMock.base64ToBlob;
+          return $delegate;
+        });
 
       });
 
@@ -79,6 +83,30 @@ describe('AngularBase64Upload', function(){
           preprocessor = function (file, buffer) {
             return expectedModel;
           };
+
+        });
+
+        it('should update model', function () {
+
+          expectedModel = {
+            filename: 'expected-name',
+            filetype: 'text/stylesheet',
+            filesize: 0
+          };
+
+          var converter = $INJECTOR.get('base64Converter');
+
+          preprocessor = function (file, buffer) {
+            var newVal = {};
+            converter.getBase64Object(file).then(function (o) {
+              newVal.filename = expectedModel.filename;
+              newVal.filetype = expectedModel.filetype;
+              newVal.filesize = expectedModel.filesize;
+              newVal.base64 = expectedModel.base64;
+            });
+            return newVal;
+          };
+
 
         });
 

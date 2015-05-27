@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.1.8
+/*! angular-base64-upload - v0.1.9
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> 2015;
 * Licensed MIT */
@@ -99,7 +99,7 @@
           function _setViewValue () {
             scope.$apply(function(){
               var newVal = attrs.multiple ? fileObjects : (fileObjects[0]);
-              ngModel.$setViewValue(angular.copy(newVal));
+              ngModel.$setViewValue(newVal);
             });
           }
 

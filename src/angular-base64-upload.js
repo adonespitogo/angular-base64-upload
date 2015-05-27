@@ -95,7 +95,7 @@
           function _setViewValue () {
             scope.$apply(function(){
               var newVal = attrs.multiple ? fileObjects : (fileObjects[0]);
-              ngModel.$setViewValue(angular.copy(newVal));
+              ngModel.$setViewValue(newVal);
             });
           }
 
