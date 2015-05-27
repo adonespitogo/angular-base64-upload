@@ -197,6 +197,9 @@ Contribution
 Change Log
 --------
 
+v0.1.8
+ - To update premature npm publish. Will deprecate `v0.1.7`
+
 v0.1.7
  - Support preprocessor handlers
  - Added `base64Converter` service
