@@ -76,25 +76,22 @@ You can pre-process files before the data gets added into the model.
 Use case: You want images to be auto-resized after selecting files.
 
 ```
-app.controller('ctrl', function ($scope, base64Converter) {
+app.controller('ctrl', function ($scope, imageProcessor) {
 
   $scope.resizeImage = function ( file, buffer ) {
 
     // file is a File object
     // buffer is result of reading the file by file reader
 
-    var base64 = base64Converter.getBase64String(buffer); // get base64 string
+    var newVal = {};
 
-    var newFile = someResizeFunction(base64);
+    imageProcessor.run(file).then(function (f) {
+      // update newVal properties
+      newVal.filename = "newfilename.jpg";
+      newVal.base64 = f.base64;
+    });
 
-    newFile = {
-      filename: file.name,
-      filetype: newFile.type,
-      filesize: newFile.size,
-      base64: newFile.base64,
-    };
-
-    return newFile; // append to model
+    return newVal; // append to model
   };
 
 });
@@ -196,6 +193,9 @@ Contribution
 
 Change Log
 --------
+
+v0.1.9
+ - Not making a copy of new model value when doing `ngModel.$setViewValue()` since fileObject is already a new identity. This also allows preprocessor to modify the fileObject in case of promises and callbacks.
 
 v0.1.8
  - To update premature npm publish. Will deprecate `v0.1.7`
