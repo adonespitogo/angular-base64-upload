@@ -24,7 +24,7 @@
 
       var isolateScope = {
         onChange: '&',
-        preprocessor: '&'
+        parser: '&'
       };
 
       var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
@@ -63,8 +63,8 @@
               var buffer = e.target.result;
               var promise;
 
-              if (attrs.preprocessor) {
-                promise = $q.when(scope.preprocessor()(file, buffer));
+              if (attrs.parser) {
+                promise = $q.when(scope.parser()(file));
               }
               else {
                 fileObject.base64 = base64Converter.getBase64String(buffer);
@@ -75,7 +75,6 @@
                 fileObjects.push(fileObj);
                 _setViewValue();
               });
-
 
               if (attrs.onload) {
                 scope.onload()(e, fReader,  file, rawFiles, fileObjects, fileObject);
@@ -98,10 +97,8 @@
           }
 
           function _setViewValue () {
-            // scope.$apply(function(){
               var newVal = attrs.multiple ? fileObjects : (fileObjects[0]);
               ngModel.$setViewValue(newVal);
-            // });
           }
 
           function _readFiles () {

@@ -60,83 +60,84 @@ describe('AngularBase64Upload', function(){
 
     });
 
-    describe('Events', function () {
 
-      describe('Preprocessor', function () {
+    describe('Custom Parser', function () {
 
-        var file, expectedModel, preprocessor, directive;
+      var file, expectedModel, parser, directive;
 
-        beforeEach(function () {
+      beforeEach(function () {
 
-          file = new File();
-          event = new Event();
-
-        });
-
-        it('should append returned object to model', function () {
-
-          expectedModel = {
-            filename: 'expected-name',
-            filetype: 'text/stylesheet',
-            filesize: 0
-          };
-
-          preprocessor = function (file, buffer) {
-            return expectedModel;
-          };
-
-        });
-
-        it('should update model when return value is a promise', function () {
-
-          expectedModel = {
-            filename: 'expected-name',
-            filetype: 'text/stylesheet',
-            filesize: 0
-          };
-
-          var converter = $INJECTOR.get('base64Converter');
-
-          preprocessor = function (file, buffer) {
-            var $q = $INJECTOR.get('$q');
-            var d = $q.defer();
-            converter.getBase64Object(file).then(function (o) {
-              d.resolve(expectedModel);
-            });
-            return d.promise;
-          };
-
-
-        });
-
-        it('should append null to model', function () {
-
-          expectedModel = undefined;
-
-          preprocessor = function (file, buffer) {
-
-          };
-
-        });
-
-        afterEach(function () {
-
-          directive = _compile({events: [{
-            name: 'preprocessor',
-            handler: preprocessor,
-            bindTo: 'preprocessorHandler'
-          }]});
-
-          var spy = spyOn(directive.$scope, 'preprocessorHandler').andCallThrough();
-
-          directive.$input.triggerHandler(event);
-
-          $ROOTSCOPE.$apply();
-          expect(spy).toHaveBeenCalled();
-          expect(directive.$scope.model).toEqual(expectedModel);
-        });
+        file = new File();
+        event = new Event();
 
       });
+
+      it('should append returned object to model', function () {
+
+        expectedModel = {
+          filename: 'expected-name',
+          filetype: 'text/stylesheet',
+          filesize: 0
+        };
+
+        parser = function (file) {
+          return expectedModel;
+        };
+
+      });
+
+      it('should update model when return value is a promise', function () {
+
+        expectedModel = {
+          filename: 'expected-name',
+          filetype: 'text/stylesheet',
+          filesize: 0
+        };
+
+        var converter = $INJECTOR.get('base64Converter');
+
+        parser = function (file) {
+          var $q = $INJECTOR.get('$q');
+          var d = $q.defer();
+          converter.getBase64Object(file).then(function (o) {
+            d.resolve(expectedModel);
+          });
+          return d.promise;
+        };
+
+
+      });
+
+      it('should append null to model', function () {
+
+        expectedModel = undefined;
+
+        parser = function (file) {
+
+        };
+
+      });
+
+      afterEach(function () {
+
+        directive = _compile({events: [{
+          name: 'parser',
+          handler: parser,
+          bindTo: 'parserHandler'
+        }]});
+
+        var spy = spyOn(directive.$scope, 'parserHandler').andCallThrough();
+
+        directive.$input.triggerHandler(event);
+
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
+        expect(directive.$scope.model).toEqual(expectedModel);
+      });
+
+    });
+
+    describe('Events', function () {
 
 
       it('should trigger on-change handler', function () {

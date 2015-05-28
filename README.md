@@ -69,36 +69,39 @@ Validations
 </form>
 ```
 
-Pre-processing files
+Custom Parser
 -------------------
-You can pre-process files before the data gets added into the model.
+You can implement your own parsing logic before the data gets added into the model.
 
-Use case: You want images to be auto-resized after selecting files.
+Use case: You want images to be auto-resized after selecting files and add custom model attributes.
 
 ```
-app.controller('ctrl', function ($scope, imageProcessor) {
+app.controller('ctrl', function ($scope, $q, imageProcessor) {
 
-  $scope.resizeImage = function ( file, buffer ) {
+  $scope.resizeImage = function ( file ) {
 
     // file is a File object
-    // buffer is result of reading the file by file reader
 
-    var newVal = {};
+    var deferred = $q.defer();
 
-    imageProcessor.run(file).then(function (f) {
-      // update newVal properties
-      newVal.filename = "newfilename.jpg";
-      newVal.base64 = f.base64;
+    imageProcessor.run(file).then(function (resized) {
+      var modelVal = {
+        file: file,
+        resized: resized
+      };
+      deferred.resolve(modelVal);
     });
 
-    return newVal; // append to model
+    return deferred.promise; // resolved value is appended to the model
   };
 
 });
 
-<input type="file" base-sixty-four-input ng-model="images" preprocessor="resizeImage" multiple>
+<input type="file" base-sixty-four-input ng-model="images" parser="resizeImage" multiple>
 
 ```
+
+Note: The parser handler can return a value or a promise. In case of a promise, it's resolved value will be appended to the model.
 
 Events
 ---------
@@ -195,7 +198,8 @@ Change Log
 --------
 
 v0.1.9
- - preprocessor can return promises
+ - Rename preprocessor to parser
+ - Custom parser can return a promise
 
 v0.1.8
  - To update premature npm publish. Will deprecate `v0.1.7`
