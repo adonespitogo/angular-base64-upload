@@ -259,7 +259,7 @@ describe('AngularBase64Upload', function(){
 
       describe('maxsize', function () {
 
-        var maxsize = 500;//kb
+        var maxsize;
         var attrs;
 
         beforeEach(function () {

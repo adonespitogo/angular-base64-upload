@@ -99,6 +99,7 @@
           function _setViewValue () {
               var newVal = attrs.multiple ? fileObjects : (fileObjects[0]);
               ngModel.$setViewValue(newVal);
+              ngModel.$validate();
           }
 
           function _readFiles () {
@@ -137,7 +138,6 @@
             fileObjects = angular.copy(fileObjects);
             rawFiles = e.target.files; // use event target so we can mock the files from test
             _readFiles();
-
             _onChange(e);
 
           });
