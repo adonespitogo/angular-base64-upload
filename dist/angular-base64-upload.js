@@ -101,9 +101,22 @@
           }
 
           function _setViewValue () {
-              var newVal = attrs.multiple ? fileObjects : (fileObjects[0]);
+              var newVal = attrs.multiple ? fileObjects : fileObjects[0];
               ngModel.$setViewValue(newVal);
-              ngModel.$validate();
+              if (angular.isFunction(ngModel.$validate)) {
+                ngModel.$validate();
+              }
+
+              var v = angular.version.full.split('.');
+
+              // manually run parsers for angular versions >= 1.3.4 since they are not triggered automatically on ngModel.$setViewValue
+              if (v[0] === '1' && v[1] === '3' && parseInt(v[2]) >= 4) {
+                var val = ngModel.$viewValue;
+                _maxsize(val);
+                _minsize(val);
+                _maxnum(val);
+                _minnum(val);
+              }
           }
 
           function _readFiles () {
@@ -149,7 +162,7 @@
           // VALIDATIONS =========================================================
 
           function _maxnum (val) {
-            if (attrs.maxnum && attrs.multiple) {
+            if (attrs.maxnum && attrs.multiple && val) {
               var valid = val.length <= parseInt(attrs.maxnum);
               ngModel.$setValidity('maxnum', valid);
             }
@@ -157,7 +170,7 @@
           }
 
           function _minnum (val) {
-            if (attrs.minnum && attrs.multiple) {
+            if (attrs.minnum && attrs.multiple && val) {
               var valid = val.length >= parseInt(attrs.minnum);
               ngModel.$setValidity('minnum', valid);
             }
@@ -167,7 +180,7 @@
           function _maxsize (val) {
             var valid = true;
 
-            if (attrs.maxsize) {
+            if (attrs.maxsize && val) {
               var max = parseFloat(attrs.maxsize) * 1000;
 
               if (attrs.multiple) {
@@ -192,7 +205,7 @@
             var valid = true;
             var min = parseFloat(attrs.minsize) * 1000;
 
-            if (attrs.minsize) {
+            if (attrs.minsize && val) {
               if (attrs.multiple) {
                 for (var i = 0; i < val.length; i++) {
                   var file = val[i];
