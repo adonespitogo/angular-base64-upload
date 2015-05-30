@@ -89,10 +89,10 @@ app.controller('ctrl', function ($scope, $q, imageProcessor) {
         file: file,
         resized: resized
       };
-      deferred.resolve(modelVal);
+      deferred.resolve(modelVal); // resolved value is appended to the model
     });
 
-    return deferred.promise; // resolved value is appended to the model
+    return deferred.promise;
   };
 
 });
@@ -141,13 +141,6 @@ Example event handler implementation:
     <input type="file" base-sixty-four-input ng-model="myfile" onerror="errorHandler">
    <form>
    ```
-
-Converstions
--------------
-`base64Converter` service contains methods for converting file to base64 and base64 to a Blob.
- - `base64Converter.getBase64String(buffer)` - Returns base64 string from a buffer.
- - `base64Converter.base64ToBlob(base64, file_type)` - Converts base64 string to a `Blob`. Returns Blob object.
- - `base64Converter.getBase64Object(file)` - Convert file to base64 object. Returns a promise object.
 
 Server-Side
 ---------------
@@ -200,6 +193,7 @@ Change Log
 v0.1.9
  - Rename preprocessor to parser
  - Custom parser can return a promise
+ - Removed `base64Converter` service. There are better base64 libraries already available for base64 conversion
 
 v0.1.8
  - To update premature npm publish. Will deprecate `v0.1.7`

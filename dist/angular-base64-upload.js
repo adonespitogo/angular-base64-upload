@@ -23,8 +23,7 @@
   mod.directive('baseSixtyFourInput', [
     '$window',
     '$q',
-    'base64Converter',
-    function ($window, $q, base64Converter) {
+    function ($window, $q) {
 
       var isolateScope = {
         onChange: '&',
@@ -71,7 +70,7 @@
                 promise = $q.when(scope.parser()(file));
               }
               else {
-                fileObject.base64 = base64Converter.getBase64String(buffer);
+                fileObject.base64 = $window._arrayBufferToBase64(buffer);
                 promise = $q.when(fileObject);
               }
 
@@ -233,66 +232,6 @@
       };
 
   }]);
-
-  mod.service('base64Converter', [
-    '$window',
-    '$q',
-    '$rootScope',
-    function ($window, $q, $rootScope) {
-
-      this.getBase64String = function (buffer) {
-        return $window._arrayBufferToBase64(buffer);
-      };
-
-      // http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
-      /* istanbul ignore next */
-      this.base64ToBlob = function (base64, filetype) {
-
-        var dataURI = "data:"+filetype+";base64,"+base64;
-
-        // convert base64/URLEncoded data component to raw binary data held in a string
-        var byteString;
-        byteString = $window.atob(dataURI.split(',')[1]);
-
-        // separate out the mime component
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-        // write the bytes of the string to a typed array
-        var ia = new Uint8Array(byteString.length);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-
-        return new Blob([ia], {type:mimeString});
-      };
-
-      this.getBase64Object = function (file) {
-
-        var self = this;
-        var deferred = $q.defer();
-        var fileObject = {
-          filename: file.name,
-          filetype: file.type,
-          filesize: file.size,
-          base64: null
-        };
-
-        var reader = new $window.FileReader();
-        reader.onload = function (e) {
-          fileObject.base64 = self.getBase64String(e.target.result);
-          $rootScope.$apply(function () {
-            deferred.resolve(fileObject);
-          });
-        };
-
-        reader.readAsArrayBuffer(file);
-
-        return deferred.promise;
-
-      };
-
-    }
-  ]);
 
 })(window);
 

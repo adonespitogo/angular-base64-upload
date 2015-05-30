@@ -10,13 +10,6 @@ describe('AngularBase64Upload', function(){
 
       module(function ($provide) {
         $provide.value('$window', $windowMock);
-
-        $provide.decorator('base64Converter', function($delegate){
-          $delegate.getBase64String = base64ConverterMock.getBase64String;
-          $delegate.base64ToBlob = base64ConverterMock.base64ToBlob;
-          return $delegate;
-        });
-
       });
 
       inject(function($injector){
@@ -94,14 +87,10 @@ describe('AngularBase64Upload', function(){
           filesize: 0
         };
 
-        var converter = $INJECTOR.get('base64Converter');
-
         parser = function (file) {
           var $q = $INJECTOR.get('$q');
           var d = $q.defer();
-          converter.getBase64Object(file).then(function (o) {
-            d.resolve(expectedModel);
-          });
+          d.resolve(expectedModel);
           return d.promise;
         };
 
@@ -441,49 +430,5 @@ describe('AngularBase64Upload', function(){
     });
 
   });
-
-  describe('Base64Converter Service', function () {
-
-    beforeEach(function(){
-
-      module('naif.base64');
-
-      module(function ($provide) {
-        $provide.value('$window', $windowMock);
-      });
-
-
-      inject(function($injector){
-
-        $INJECTOR = $injector;
-        $COMPILE = $injector.get('$compile');
-        $ROOTSCOPE = $injector.get('$rootScope');
-
-      });
-
-    });
-
-
-    it('should return base64 object', function () {
-
-      var converter = $INJECTOR.get('base64Converter');
-      var $window = $INJECTOR.get('$window');
-
-      var file = new File();
-
-      var promise = converter.getBase64Object(file);
-      promise.then(function (fileObj) {
-        expect(fileObj.filename).toBe(file.name);
-        expect(fileObj.filetype).toBe(file.type);
-        expect(fileObj.filesize).toBe(file.size);
-        expect(fileObj.base64).toBe($window._arrayBufferToBase64());
-      });
-
-      $ROOTSCOPE.$apply();
-
-    });
-
-  });
-
 
 });
