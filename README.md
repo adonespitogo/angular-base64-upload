@@ -80,15 +80,6 @@ app.controller('ctrl', function ($scope, $q, imageProcessor) {
 
   $scope.resizeImage = function ( file, base64_object ) {
 
-    // file is a File object
-    // base64_object is in the form of
-    //  {
-    //    "filesize": 54836 (bytes),
-    //    "filetype": "image/jpeg",
-    //    "filename": "profile.jpg",
-    //    "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIctcwIQA..."
-    //  }
-
     var deferred = $q.defer();
 
     imageProcessor.run(file).then(function (resized) {
@@ -107,6 +98,10 @@ app.controller('ctrl', function ($scope, $q, imageProcessor) {
 <input type="file" base-sixty-four-input ng-model="images" parser="resizeImage" multiple>
 
 ```
+
+Params:
+ - `File` - File object
+ - `Object` - base64 encoded representation of file
 
 Note: The parser handler can return a value or a promise. In case of a promise, it's resolved value will be appended to the model.
 
