@@ -56,12 +56,13 @@ describe('AngularBase64Upload', function(){
 
     describe('Custom Parser', function () {
 
-      var file, expectedModel, parser, directive;
+      var file, expectedModel, parser, directive, $window;
 
       beforeEach(function () {
 
         file = new File();
         event = new Event();
+        $window = $INJECTOR.get('$window');
 
       });
 
@@ -73,7 +74,13 @@ describe('AngularBase64Upload', function(){
           filesize: 0
         };
 
-        parser = function (file) {
+        parser = function (file, base64_object) {
+          expect(base64_object).toEqual({
+            filename: file.name,
+            filesize: file.size,
+            filetype: file.type,
+            base64: $window._arrayBufferToBase64()
+          });
           return expectedModel;
         };
 
@@ -87,7 +94,14 @@ describe('AngularBase64Upload', function(){
           filesize: 0
         };
 
-        parser = function (file) {
+        parser = function (file, base64_object) {
+          expect(base64_object).toEqual({
+            filename: file.name,
+            filesize: file.size,
+            filetype: file.type,
+            base64: $window._arrayBufferToBase64()
+          });
+
           var $q = $INJECTOR.get('$q');
           var d = $q.defer();
           d.resolve(expectedModel);
@@ -101,7 +115,14 @@ describe('AngularBase64Upload', function(){
 
         expectedModel = undefined;
 
-        parser = function (file) {
+        parser = function (file, base64_object) {
+
+          expect(base64_object).toEqual({
+            filename: file.name,
+            filesize: file.size,
+            filetype: file.type,
+            base64: $window._arrayBufferToBase64()
+          });
 
         };
 

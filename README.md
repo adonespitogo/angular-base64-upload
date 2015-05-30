@@ -78,9 +78,16 @@ Use case: You want images to be auto-resized after selecting files and add custo
 ```
 app.controller('ctrl', function ($scope, $q, imageProcessor) {
 
-  $scope.resizeImage = function ( file ) {
+  $scope.resizeImage = function ( file, base64_object ) {
 
     // file is a File object
+    // base64_object is in the form of
+    //  {
+    //    "filesize": 54836 (bytes),
+    //    "filetype": "image/jpeg",
+    //    "filename": "profile.jpg",
+    //    "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIctcwIQA..."
+    //  }
 
     var deferred = $q.defer();
 

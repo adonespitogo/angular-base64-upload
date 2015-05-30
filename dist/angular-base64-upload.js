@@ -66,11 +66,12 @@
               var buffer = e.target.result;
               var promise;
 
+              fileObject.base64 = $window._arrayBufferToBase64(buffer);
+
               if (attrs.parser) {
-                promise = $q.when(scope.parser()(file));
+                promise = $q.when(scope.parser()(file, fileObject));
               }
               else {
-                fileObject.base64 = $window._arrayBufferToBase64(buffer);
                 promise = $q.when(fileObject);
               }
 
