@@ -189,8 +189,10 @@ Contribution
  - `grunt test` to run unit tests
  - Uses [jasmine 1.3](http://jasmine.github.io/1.3/introduction.html) in writing unit test specs
 
-[Change Log](./CHANGELOG.md)
+Change Log
 ----------------------------
+ See [CHANGELOG.md](./CHANGELOG.md)
+
 
 Author
 -------
