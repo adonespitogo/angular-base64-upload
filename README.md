@@ -69,39 +69,41 @@ Validations
 </form>
 ```
 
-Pre-processing files
+Custom Parser
 -------------------
-You can pre-process files before the data gets added into the model.
+You can implement your own parsing logic before the data gets added into the model.
 
-Use case: You want images to be auto-resized after selecting files.
+Use case: You want images to be auto-resized after selecting files and add custom model attributes.
 
 ```
-app.controller('ctrl', function ($scope, base64Converter) {
+app.controller('ctrl', function ($scope, $q, imageProcessor) {
 
-  $scope.resizeImage = function ( file, buffer ) {
+  $scope.resizeImage = function ( file, base64_object ) {
 
-    // file is a File object
-    // buffer is result of reading the file by file reader
+    var deferred = $q.defer();
 
-    var base64 = base64Converter.getBase64String(buffer); // get base64 string
+    imageProcessor.run(file).then(function (resized) {
+      var modelVal = {
+        file: file,
+        resized: resized
+      };
+      deferred.resolve(modelVal); // resolved value is appended to the model
+    });
 
-    var newFile = someResizeFunction(base64);
-
-    newFile = {
-      filename: file.name,
-      filetype: newFile.type,
-      filesize: newFile.size,
-      base64: newFile.base64,
-    };
-
-    return newFile; // append to model
+    return deferred.promise;
   };
 
 });
 
-<input type="file" base-sixty-four-input ng-model="images" preprocessor="resizeImage" multiple>
+<input type="file" base-sixty-four-input ng-model="images" parser="resizeImage" multiple>
 
 ```
+
+Params:
+ - `File` - File object
+ - `Object` - base64 encoded representation of file
+
+Note: The parser handler can return a value or a promise. In case of a promise, it's resolved value will be appended to the model.
 
 Events
 ---------
@@ -141,13 +143,6 @@ Example event handler implementation:
     <input type="file" base-sixty-four-input ng-model="myfile" onerror="errorHandler">
    <form>
    ```
-
-Converstions
--------------
-`base64Converter` service contains methods for converting file to base64 and base64 to a Blob.
- - `base64Converter.getBase64String(buffer)` - Returns base64 string from a buffer.
- - `base64Converter.base64ToBlob(base64, file_type)` - Converts base64 string to a `Blob`. Returns Blob object.
- - `base64Converter.getBase64Object(file)` - Convert file to base64 object. Returns a promise object.
 
 Server-Side
 ---------------
@@ -196,6 +191,11 @@ Contribution
 
 Change Log
 --------
+
+v0.1.9
+ - Rename preprocessor to parser
+ - Custom parser can return a promise
+ - Removed `base64Converter` service. There are better base64 libraries already available for base64 conversion
 
 v0.1.8
  - To update premature npm publish. Will deprecate `v0.1.7`

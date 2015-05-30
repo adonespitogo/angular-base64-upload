@@ -10,11 +10,7 @@ describe('AngularBase64Upload', function(){
 
       module(function ($provide) {
         $provide.value('$window', $windowMock);
-
-        $provide.value('base64Converter', base64ConverterMock);
-
       });
-
 
       inject(function($injector){
 
@@ -37,6 +33,7 @@ describe('AngularBase64Upload', function(){
       var directive = _compile({ngModel: 'file'});
 
       directive.$input.triggerHandler(event);
+      $ROOTSCOPE.$apply();
       expect(directive.$scope.file).toEqual(fileObj);
 
     });
@@ -50,65 +47,107 @@ describe('AngularBase64Upload', function(){
 
       directive.$input.triggerHandler(event);
 
+      $ROOTSCOPE.$apply();
       expect(directive.$scope.files).toEqual(expectedFileObjects);
       expect(directive.$scope.files.length).toBe(expectedFileObjects.length);
 
     });
 
-    describe('Events', function () {
 
-      describe('Preprocessor', function () {
+    describe('Custom Parser', function () {
 
-        var file, expectedModel, preprocessor, directive;
+      var file, expectedModel, parser, directive, $window;
 
-        beforeEach(function () {
+      beforeEach(function () {
 
-          file = new File();
-          event = new Event();
-
-        });
-
-        it('should append returned object to model', function () {
-
-          expectedModel = {
-            filename: 'expected-name',
-            filetype: 'text/stylesheet',
-            filesize: 0
-          };
-
-          preprocessor = function (file, buffer) {
-            return expectedModel;
-          };
-
-        });
-
-        it('should append null to model', function () {
-
-          expectedModel = undefined;
-
-          preprocessor = function (file, buffer) {
-
-          };
-
-        });
-
-        afterEach(function () {
-
-          directive = _compile({events: [{
-            name: 'preprocessor',
-            handler: preprocessor,
-            bindTo: 'preprocessorHandler'
-          }]});
-
-          var spy = spyOn(directive.$scope, 'preprocessorHandler').andCallThrough();
-
-          directive.$input.triggerHandler(event);
-
-          expect(spy).toHaveBeenCalled();
-          expect(directive.$scope.model).toEqual(expectedModel);
-        });
+        file = new File();
+        event = new Event();
+        $window = $INJECTOR.get('$window');
 
       });
+
+      it('should append returned object to model', function () {
+
+        expectedModel = {
+          filename: 'expected-name',
+          filetype: 'text/stylesheet',
+          filesize: 0
+        };
+
+        parser = function (file, base64_object) {
+          expect(base64_object).toEqual({
+            filename: file.name,
+            filesize: file.size,
+            filetype: file.type,
+            base64: $window._arrayBufferToBase64()
+          });
+          return expectedModel;
+        };
+
+      });
+
+      it('should update model when return value is a promise', function () {
+
+        expectedModel = {
+          filename: 'expected-name',
+          filetype: 'text/stylesheet',
+          filesize: 0
+        };
+
+        parser = function (file, base64_object) {
+          expect(base64_object).toEqual({
+            filename: file.name,
+            filesize: file.size,
+            filetype: file.type,
+            base64: $window._arrayBufferToBase64()
+          });
+
+          var $q = $INJECTOR.get('$q');
+          var d = $q.defer();
+          d.resolve(expectedModel);
+          return d.promise;
+        };
+
+
+      });
+
+      it('should append null to model', function () {
+
+        expectedModel = undefined;
+
+        parser = function (file, base64_object) {
+
+          expect(base64_object).toEqual({
+            filename: file.name,
+            filesize: file.size,
+            filetype: file.type,
+            base64: $window._arrayBufferToBase64()
+          });
+
+        };
+
+      });
+
+      afterEach(function () {
+
+        directive = _compile({events: [{
+          name: 'parser',
+          handler: parser,
+          bindTo: 'parserHandler'
+        }]});
+
+        var spy = spyOn(directive.$scope, 'parserHandler').andCallThrough();
+
+        directive.$input.triggerHandler(event);
+
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
+        expect(directive.$scope.model).toEqual(expectedModel);
+      });
+
+    });
+
+    describe('Events', function () {
 
 
       it('should trigger on-change handler', function () {
@@ -129,6 +168,7 @@ describe('AngularBase64Upload', function(){
         var spy = spyOn(d.$scope, 'onChangeHandler').andCallThrough();
 
         d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
         expect(spy).toHaveBeenCalled();
       });
 
@@ -167,6 +207,7 @@ describe('AngularBase64Upload', function(){
         FileReaderMock.autoTriggerEvents = true; // triggers all file reader event listeners on fileReder.readAsArrayBuffer(file)
         dir.$input.triggerHandler(event);
         FileReaderMock.autoTriggerEvents = false;
+        $ROOTSCOPE.$apply();
 
         for (var a = handlerSpies.length - 1; a >= 0; a--) {
           expect(handlerSpies[a]).toHaveBeenCalled();
@@ -217,8 +258,10 @@ describe('AngularBase64Upload', function(){
         });
 
         afterEach(function () {
+          $ROOTSCOPE.$apply();
           expect(directive.$scope.form.myinput.$error.required).toBe(true);
           directive.$input.triggerHandler(event);
+          $ROOTSCOPE.$apply();
           expect(directive.$scope.form.myinput.$error.required).toBeFalsy();
         });
 
@@ -226,7 +269,7 @@ describe('AngularBase64Upload', function(){
 
       describe('maxsize', function () {
 
-        var maxsize = 500;//kb
+        var maxsize;
         var attrs;
 
         beforeEach(function () {
@@ -250,6 +293,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -272,6 +316,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1, f2];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -310,6 +355,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -332,6 +378,7 @@ describe('AngularBase64Upload', function(){
 
             event.target.files = [f1, f2];
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -363,6 +410,7 @@ describe('AngularBase64Upload', function(){
           var testNumber = function (num, result) {
             event.target.files = new FileList(num);
             d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(d.$scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -388,6 +436,7 @@ describe('AngularBase64Upload', function(){
           var testNumber = function (num, result) {
             event.target.files = new FileList(num);
             dir.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
             expect(dir.$scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
@@ -402,49 +451,5 @@ describe('AngularBase64Upload', function(){
     });
 
   });
-
-  describe('Base64Converter Service', function () {
-
-    beforeEach(function(){
-
-      module('naif.base64');
-
-      module(function ($provide) {
-        $provide.value('$window', $windowMock);
-      });
-
-
-      inject(function($injector){
-
-        $INJECTOR = $injector;
-        $COMPILE = $injector.get('$compile');
-        $ROOTSCOPE = $injector.get('$rootScope');
-
-      });
-
-    });
-
-
-    it('should return base64 object', function () {
-
-      var converter = $INJECTOR.get('base64Converter');
-      var $window = $INJECTOR.get('$window');
-
-      var file = new File();
-
-      var promise = converter.getBase64Object(file);
-      promise.then(function (fileObj) {
-        expect(fileObj.filename).toBe(file.name);
-        expect(fileObj.filetype).toBe(file.type);
-        expect(fileObj.filesize).toBe(file.size);
-        expect(fileObj.base64).toBe($window._arrayBufferToBase64());
-      });
-
-      $ROOTSCOPE.$apply();
-
-    });
-
-  });
-
 
 });
