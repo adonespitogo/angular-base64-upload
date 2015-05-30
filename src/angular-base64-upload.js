@@ -18,12 +18,12 @@
 
   mod.directive('baseSixtyFourInput', [
     '$window',
-    'base64Converter',
-    function ($window, base64Converter) {
+    '$q',
+    function ($window, $q) {
 
       var isolateScope = {
         onChange: '&',
-        preprocessor: '&'
+        parser: '&'
       };
 
       var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
@@ -60,21 +60,25 @@
             return function (e) {
 
               var buffer = e.target.result;
+              var promise;
 
-              if (attrs.preprocessor) {
-                fileObject = scope.preprocessor()(file, buffer);
+              fileObject.base64 = $window._arrayBufferToBase64(buffer);
+
+              if (attrs.parser) {
+                promise = $q.when(scope.parser()(file, fileObject));
               }
               else {
-                fileObject.base64 = base64Converter.getBase64String(buffer);
+                promise = $q.when(fileObject);
               }
 
-              fileObjects.push(fileObject);
+              promise.then(function (fileObj) {
+                fileObjects.push(fileObj);
+                _setViewValue();
+              });
 
               if (attrs.onload) {
                 scope.onload()(e, fReader,  file, rawFiles, fileObjects, fileObject);
               }
-
-              _setViewValue();
 
             };
 
@@ -93,10 +97,22 @@
           }
 
           function _setViewValue () {
-            scope.$apply(function(){
-              var newVal = attrs.multiple ? fileObjects : (fileObjects[0]);
-              ngModel.$setViewValue(angular.copy(newVal));
-            });
+              var newVal = attrs.multiple ? fileObjects : fileObjects[0];
+              ngModel.$setViewValue(newVal);
+              if (angular.isFunction(ngModel.$validate)) {
+                ngModel.$validate();
+              }
+
+              var v = angular.version.full.split('.');
+
+              // manually run parsers for angular versions >= 1.3.4 since they are not triggered automatically on ngModel.$setViewValue
+              if (v[0] === '1' && v[1] === '3' && parseInt(v[2]) >= 4) {
+                var val = ngModel.$viewValue;
+                _maxsize(val);
+                _minsize(val);
+                _maxnum(val);
+                _minnum(val);
+              }
           }
 
           function _readFiles () {
@@ -132,9 +148,9 @@
             }
 
             fileObjects = [];
+            fileObjects = angular.copy(fileObjects);
             rawFiles = e.target.files; // use event target so we can mock the files from test
             _readFiles();
-
             _onChange(e);
 
           });
@@ -142,7 +158,7 @@
           // VALIDATIONS =========================================================
 
           function _maxnum (val) {
-            if (attrs.maxnum && attrs.multiple) {
+            if (attrs.maxnum && attrs.multiple && val) {
               var valid = val.length <= parseInt(attrs.maxnum);
               ngModel.$setValidity('maxnum', valid);
             }
@@ -150,7 +166,7 @@
           }
 
           function _minnum (val) {
-            if (attrs.minnum && attrs.multiple) {
+            if (attrs.minnum && attrs.multiple && val) {
               var valid = val.length >= parseInt(attrs.minnum);
               ngModel.$setValidity('minnum', valid);
             }
@@ -160,7 +176,7 @@
           function _maxsize (val) {
             var valid = true;
 
-            if (attrs.maxsize) {
+            if (attrs.maxsize && val) {
               var max = parseFloat(attrs.maxsize) * 1000;
 
               if (attrs.multiple) {
@@ -185,7 +201,7 @@
             var valid = true;
             var min = parseFloat(attrs.minsize) * 1000;
 
-            if (attrs.minsize) {
+            if (attrs.minsize && val) {
               if (attrs.multiple) {
                 for (var i = 0; i < val.length; i++) {
                   var file = val[i];
@@ -213,66 +229,6 @@
       };
 
   }]);
-
-  mod.service('base64Converter', [
-    '$window',
-    '$q',
-    '$rootScope',
-    function ($window, $q, $rootScope) {
-
-      this.getBase64String = function (buffer) {
-        return $window._arrayBufferToBase64(buffer);
-      };
-
-      // http://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
-      /* istanbul ignore next */
-      this.base64ToBlob = function (base64, filetype) {
-
-        var dataURI = "data:"+filetype+";base64,"+base64;
-
-        // convert base64/URLEncoded data component to raw binary data held in a string
-        var byteString;
-        byteString = $window.atob(dataURI.split(',')[1]);
-
-        // separate out the mime component
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-        // write the bytes of the string to a typed array
-        var ia = new Uint8Array(byteString.length);
-        for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-
-        return new Blob([ia], {type:mimeString});
-      };
-
-      this.getBase64Object = function (file) {
-
-        var self = this;
-        var deferred = $q.defer();
-        var fileObject = {
-          filename: file.name,
-          filetype: file.type,
-          filesize: file.size,
-          base64: null
-        };
-
-        var reader = new $window.FileReader();
-        reader.onload = function (e) {
-          fileObject.base64 = self.getBase64String(e.target.result);
-          $rootScope.$apply(function () {
-            deferred.resolve(fileObject);
-          });
-        };
-
-        reader.readAsArrayBuffer(file);
-
-        return deferred.promise;
-
-      };
-
-    }
-  ]);
 
 })(window);
 
