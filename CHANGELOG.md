@@ -1,6 +1,9 @@
 Change Log
 --------
 
+v0.1.10
+ - Update bower and npm keywords for better search visibility
+
 v0.1.9
  - Rename preprocessor to parser
  - Custom parser can return a promise
