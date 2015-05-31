@@ -6,7 +6,7 @@
   "authors": [
     "Adones Pitogo <pitogo.adones@gmail.com>"
   ],
-  "description": "Angular directive for uploading base64-encoded files that you can pass along with the resource model.",
+  "description": "Converts files from file input into base64 encoded models.",
   "moduleType": [
     "globals"
   ],
