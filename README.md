@@ -6,7 +6,7 @@ angular-base64-upload
 Converts files from file input into base64 encoded models.
 This directive is based from one of the answers in this [SO question](http://stackoverflow.com/questions/20521366/rails-4-angularjs-paperclip-how-to-upload-file).
 
-Requires angular version `1.2.0` and above. Tested on angular versions `1.2.0` through `1.3.15`.
+Requires angular version greater than or equal to `1.2.0`. Tested on angular versions `1.2.0` through `1.3.15`.
 
 
 ```html
@@ -52,7 +52,7 @@ Multiple File Selection
 Just add `multiple` attribute to the input element. `yourModel` will be an array of base64 file objects.
 ```html
   <form>
-    <input type="file" ng-model="yourModel" multiple>
+    <input  type="file" ng-model="yourModel" multiple base-sixty-four-input>
   </form>
 ```
 Validations
