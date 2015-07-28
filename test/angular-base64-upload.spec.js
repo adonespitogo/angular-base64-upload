@@ -447,6 +447,20 @@ describe('AngularBase64Upload', function(){
         });
 
       });
+      describe('Input ngModel controller', function () {
+
+          it('should is not dirty and is pristine when init with required', function () {
+              var attrs =  [
+                  {attr: 'name', val: 'myinput'},
+                  {attr: 'required'}
+              ];
+
+              var d = _compile({ngModel: 'files', multiple: true, attrs: attrs});
+
+              expect(d.$scope.form.myinput.$dirty).toBe(false);
+              expect(d.$scope.form.myinput.$pristine).toBe(true);
+          });
+      });
 
     });
 

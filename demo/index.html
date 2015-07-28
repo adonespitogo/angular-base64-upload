@@ -28,7 +28,7 @@
 
       $scope.files = [];
 
-      $scope.uploadFiles = function(){
+      $scope.uploadFiles = function() {
 
         var files = angular.copy($scope.files);
 
@@ -39,7 +39,7 @@
         if (files.length === 0) {
           $window.alert('Please select files!');
           return false;
-        };
+        }
 
         for (var i = files.length - 1; i >= 0; i--) {
           var file = files[i];
@@ -52,9 +52,8 @@
             }
           });
         }
-
-      }
-    })
+      };
+    });
   </script>
   <style>
     body{padding-bottom: 50px;}
@@ -77,8 +76,9 @@
         </span>
       </div>
       <div class="alert" ng-class="{'alert-danger': form.file.$invalid, 'alert-success': form.file.$valid}">
-        form.file.$error:
-        {{form.file.$error}}
+        form.file.$error: {{form.file.$error}}<br>
+        form.file.$dirty: {{form.file.$dirty}}<br>
+        form.file.$pristine: {{form.file.$pristine}}<br>
       </div>
     <b>Model Value:</b>
     <table class="table table-bordered table-striped">
@@ -115,8 +115,9 @@
         <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*, .zip" minsize="500" required minnum="2" on-change="onChange">
       </div>
       <div class="alert" ng-class="{'alert-danger': form.files.$invalid, 'alert-success': form.files.$valid}">
-        form.files.$error:
-        {{form.files.$error}}
+        form.files.$error: {{form.files.$error}}<br>
+        form.files.$dirty: {{form.files.$dirty}}<br>
+        form.files.$pristine: {{form.files.$pristine}}<br>
       </div>
     <b>Model Value:</b>
     <table class="table table-bordered table-striped">
