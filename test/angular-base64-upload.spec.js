@@ -462,6 +462,17 @@ describe('AngularBase64Upload', function(){
           });
       });
 
+      describe('Input ngModel controller', function () {
+
+        it('should not tamper with dirty or pristine flags of his parent form', function () {
+
+          var d = _compile({ngModel: 'files'});
+
+          expect(d.$scope.form.$dirty).toBe(false);
+          expect(d.$scope.form.$pristine).toBe(true);
+        });
+      });
+
     });
 
   });
