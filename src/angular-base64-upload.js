@@ -43,10 +43,6 @@
             return;
           }
 
-          // need set falsy to activate required state when user predefines value for model
-          ngModel.$setViewValue(null);
-          ngModel.$setPristine();
-
           var rawFiles = [];
           var fileObjects = [];
 
