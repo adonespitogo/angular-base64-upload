@@ -241,25 +241,31 @@ describe('AngularBase64Upload', function(){
 
         var attrs;
         var directive;
+        var scope;
 
         beforeEach(function () {
           attrs = [
             {attr: 'required', val: 'required'},
             {attr: 'name', val: 'myinput'},
           ];
+          scope = $ROOTSCOPE.$new();
         });
 
         it('should validate required on single file selection', function () {
-          directive = _compile({ngModel: 'files', attrs: attrs});
+          scope.file = {};
+          directive = _compile({ngModel: 'files', attrs: attrs, scope: scope});
         });
 
         it('should validate required on multiple file selection', function () {
-          directive = _compile({ngModel: 'files', multiple:true, attrs: attrs});
+          scope.files = [];
+          directive = _compile({ngModel: 'files', multiple:true, attrs: attrs, scope: scope});
         });
 
         afterEach(function () {
           $ROOTSCOPE.$apply();
           expect(directive.$scope.form.myinput.$error.required).toBe(true);
+          expect(directive.$scope.form.myinput.$dirty).toBeFalsy();
+          expect(directive.$scope.form.myinput.$pristine).toBe(true);
           directive.$input.triggerHandler(event);
           $ROOTSCOPE.$apply();
           expect(directive.$scope.form.myinput.$error.required).toBeFalsy();
@@ -284,7 +290,6 @@ describe('AngularBase64Upload', function(){
         it('should validate maxsize on single file selection', function () {
 
           var d = _compile({ngModel: 'files', attrs: attrs});
-
           expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
 
           var testSize = function (size, result) {
@@ -446,20 +451,6 @@ describe('AngularBase64Upload', function(){
 
         });
 
-      });
-      describe('Input ngModel controller', function () {
-
-          it('should is not dirty and is pristine when init with required', function () {
-              var attrs =  [
-                  {attr: 'name', val: 'myinput'},
-                  {attr: 'required'}
-              ];
-
-              var d = _compile({ngModel: 'files', multiple: true, attrs: attrs});
-
-              expect(d.$scope.form.myinput.$dirty).toBe(false);
-              expect(d.$scope.form.myinput.$pristine).toBe(true);
-          });
       });
 
     });

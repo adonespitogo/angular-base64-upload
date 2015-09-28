@@ -8,11 +8,12 @@ function _compile (opts) {
     ngModel: opts.ngModel === false ? false: (opts.ngModel || 'model'),
     events: opts.events || [],
     multiple: opts.multiple || false,
-    attrs: opts.attrs || []
+    attrs: opts.attrs || [],
+    scope: opts.scope || $ROOTSCOPE.$new()
   };
 
   var template = "<input type='file' base-sixty-four-input>";
-  var $scope = $ROOTSCOPE.$new();
+  var $scope = opts.scope;
   var elem = $(template);
 
   if (opts.ngModel !== false) {

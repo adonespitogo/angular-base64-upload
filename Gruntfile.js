@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     banner:
       '/*! <%= pkg.title || pkg.name %> - <%= pkg.version %>\n' +
       '* <%= pkg.homepage %>\n' +
-      '* Copyright (c) <%= pkg.author %> <%= grunt.template.today("yyyy") %>;\n' +
+      '* Copyright (c) <%= pkg.author %> [<%= grunt.template.today("mmmm dd, yyyy") %>]\n' +
       '* Licensed <%= pkg.license %> */\n',
     config: {
       dist:'./dist',
@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     copy: {
       distToDemo: {
         expand: true,
-        src: '**/*.min.js*',
+        src: '**/angular-base64-upload.js*',
         cwd: '<%= config.dist %>/',
         dest: '<%= config.demo %>/'
       }

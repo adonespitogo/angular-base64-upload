@@ -1,6 +1,6 @@
 {
   "name": "angular-base64-upload",
-  "version": "v0.1.12",
+  "version": "v0.1.13",
   "description": "Converts files from file input into base64 encoded models.",
   "main": "index.js",
   "scripts": {
