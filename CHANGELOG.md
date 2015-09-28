@@ -1,6 +1,9 @@
 Change Log
 --------
 
+v0.1.13
+ - Fix test for $pristine state
+
 v0.1.12
  - Fix ngModel setPristine call when $setViewValue(null) in init
 
