@@ -63,7 +63,7 @@
               var buffer = e.target.result;
               var promise;
 
-              fileObject.base64 = $window._arrayBufferToBase64(buffer);
+              fileObject.base64 = buffer;
 
               if (attrs.parser) {
                 promise = $q.when(scope.parser()(file, fileObject));
@@ -130,7 +130,10 @@
 
               _attachEventHandlers(reader, file, fileObject);
 
-              reader.readAsArrayBuffer(file);
+                if(reader.type = 'application/pdf')
+                    reader.readAsDataURL(file);
+                else
+                  reader.readAsArrayBuffer(file);
 
             }
 
