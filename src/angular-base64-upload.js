@@ -130,7 +130,7 @@
 
               _attachEventHandlers(reader, file, fileObject);
 
-                if(reader.type.indexOf('pdf') >= 0)
+                if(file.type.indexOf('pdf') >= 0)
                     reader.readAsDataURL(file);
                 else
                   reader.readAsArrayBuffer(file);
