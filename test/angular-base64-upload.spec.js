@@ -452,7 +452,7 @@ describe('AngularBase64Upload', function(){
         });
 
       });
-      
+
       describe('accept', function () {
         /*
           All possible file types:
@@ -468,12 +468,13 @@ describe('AngularBase64Upload', function(){
         var attrs;
 
         beforeEach(function () {
-          accept = "image/*"; // all images
+          accept = "image/*, .amr"; // all images
 
           attrs = [
             {attr: 'name', val: 'myinput'},
             {attr: 'accept', val: accept},
           ];
+          // default filename: "filename.txt"
         });
 
         it('should validate accept on single file selection', function () {
@@ -483,9 +484,9 @@ describe('AngularBase64Upload', function(){
 
           expect(d.$scope.form.myinput.$error.accept).not.toBeDefined();
 
-          var testType = function (type, result) {
-
-            var f1 = new File({type: type});
+          var testType = function (isFileNameAMR, type, result) {
+            var fileName = "Maid with the Flaxen Hair.amr";
+            var f1 = new File({name: isFileNameAMR ? fileName : "filename.txt", type: type});
 
             event.target.files = [f1];
             d.$input.triggerHandler(event);
@@ -493,9 +494,14 @@ describe('AngularBase64Upload', function(){
             expect(d.$scope.form.myinput.$error.accept)[ result? 'toBe' : 'toBeFalsy'](result);
           };
 
-          testType("image/jpg", false);
-          testType("audio/mp3", true);
-          testType("image/png", false);
+          testType(false, "image/jpg", false);
+          testType(true, "audio/mp3", false);
+          testType(false, "image/png", false);
+          // when type is set to empty, it defaults to image/jpeg...
+          // But in production, it is set to "" (empty string)
+          // for files of unknown type eg. zip files, amr/mp2 sound files, etc.
+          // i set this type to test an empty/unknown type
+          testType(true, "", false);
         });
 
         it('should validate accept on multiple file selection', function () {
@@ -519,9 +525,11 @@ describe('AngularBase64Upload', function(){
           testType("image/gif", "image/tiff", false);
           testType("audio/mpeg4", "image/jpg", true);
           testType("video/mov", "image/jpg", true);
-          // browsers set type to null for files it cannot determine
-          // eg. zip files, amr sound files, bat files, etc.
-          testType("null", "image/jpg", true);
+          // when type is set to empty, it defaults to image/jpeg...
+          // But in production, it is set to "" (empty string)
+          // for files of unknown type eg. zip files, amr/mp2 sound files, etc.
+          // i set this type to test an empty/unknown type
+          testType("n/a", "image/jpg", true);
 
         });
 

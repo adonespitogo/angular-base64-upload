@@ -226,7 +226,7 @@
             var valid = true;
             var regExp, exp, fileExt;
             if(attrs.accept){
-              exp = attrs.accept.trim().replace(/[,\s]+/gi, "|").replace(/\./g, "\\.").replace("/*", "/.*");
+              exp = attrs.accept.trim().replace(/[,\s]+/gi, "|").replace(/\./g, "\\.").replace(/\/\*/g, "/.*");
               regExp = new RegExp(exp);
             }
 
