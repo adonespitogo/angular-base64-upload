@@ -228,10 +228,9 @@
 
           function _accept (val) {
             var valid = true;
-            var regExp;
+            var regExp, exp, fileExt;
             if(attrs.accept){
-              var exp = attrs.accept.trim().replace(/[,\s]+/gi, "|").replace("/*", "/.*");
-              console.log(exp);
+              exp = attrs.accept.trim().replace(/[,\s]+/gi, "|").replace(/\./g, "\\.").replace(/\/\*/g, "/.*");
               regExp = new RegExp(exp);
             }
 
@@ -239,15 +238,14 @@
               if (attrs.multiple) {
                 for (var i = 0; i < val.length; i++) {
                   var file = val[i];
-                  valid = regExp.test(file.filetype) ||
-                    (!file.filetype && regExp.test("." + file.filename.split('.').pop()));
-                    console.info("--------multiple", valid);
+                  fileExt = "." + file.filename.split('.').pop();
+                  valid = regExp.test(file.filetype) || regExp.test(fileExt);
+
                   if(!valid){ break; }
                 }
               } else {
-                valid = regExp.test(val.filetype) ||
-                  (!val.filetype && regExp.test("." + val.filename.split('.').pop()));
-                console.info(valid);
+                fileExt = "." + val.filename.split('.').pop();
+                valid = regExp.test(val.filetype) || regExp.test(fileExt);
               }
               ngModel.$setValidity('accept', valid);
             }
