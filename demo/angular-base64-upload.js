@@ -1,6 +1,6 @@
 /*! angular-base64-upload - v0.1.13
 * https://github.com/adonespitogo/angular-base64-upload
-* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [September 28, 2015]
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 16, 2016]
 * Licensed MIT */
 (function (window, undefined) {
 
@@ -117,6 +117,7 @@
                 _minsize(val);
                 _maxnum(val);
                 _minnum(val);
+                _accept(val);
               }
           }
 
@@ -225,10 +226,40 @@
             return val;
           }
 
+          function _accept (val) {
+            var valid = true;
+            var regExp;
+            if(attrs.accept){
+              var exp = attrs.accept.trim().replace(/[,\s]+/gi, "|").replace("/*", "/.*");
+              console.log(exp);
+              regExp = new RegExp(exp);
+            }
+
+            if (attrs.accept && val) {
+              if (attrs.multiple) {
+                for (var i = 0; i < val.length; i++) {
+                  var file = val[i];
+                  valid = regExp.test(file.filetype) ||
+                    (!file.filetype && regExp.test("." + file.filename.split('.').pop()));
+                    console.info("--------multiple", valid);
+                  if(!valid){ break; }
+                }
+              } else {
+                valid = regExp.test(val.filetype) ||
+                  (!val.filetype && regExp.test("." + val.filename.split('.').pop()));
+                console.info(valid);
+              }
+              ngModel.$setValidity('accept', valid);
+            }
+
+            return val;
+          }
+
           ngModel.$parsers.push(_maxnum);
           ngModel.$parsers.push(_minnum);
           ngModel.$parsers.push(_maxsize);
           ngModel.$parsers.push(_minsize);
+          ngModel.$parsers.push(_accept);
 
         }
       };
@@ -236,4 +267,3 @@
   }]);
 
 })(window);
-

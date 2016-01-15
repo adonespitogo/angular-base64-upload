@@ -452,7 +452,111 @@ describe('AngularBase64Upload', function(){
         });
 
       });
+      
+      describe('accept', function () {
+        /*
+          All possible file types:
+          - file_extension	A file extension starting with the STOP character.
+              e.g: .gif, .jpg, .png, .doc
+          - audio/*	All sound files are accepted
+          - video/*	All video files are accepted
+          - image/*	All image files are accepted
+          - media_type	A valid media type, with no parameters. Look at IANA
+              Media Types for a complete list of standard media types
+        */
+        var accept;
+        var attrs;
 
+        beforeEach(function () {
+          accept = "image/*"; // all images
+
+          attrs = [
+            {attr: 'name', val: 'myinput'},
+            {attr: 'accept', val: accept},
+          ];
+        });
+
+        it('should validate accept on single file selection', function () {
+
+
+          var d = _compile({ngModel: 'files', attrs: attrs});
+
+          expect(d.$scope.form.myinput.$error.accept).not.toBeDefined();
+
+          var testType = function (type, result) {
+
+            var f1 = new File({type: type});
+
+            event.target.files = [f1];
+            d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
+            expect(d.$scope.form.myinput.$error.accept)[ result? 'toBe' : 'toBeFalsy'](result);
+          };
+
+          testType("image/jpg", false);
+          testType("audio/mp3", true);
+          testType("image/png", false);
+        });
+
+        it('should validate accept on multiple file selection', function () {
+
+          var d = _compile({ngModel: 'files', attrs: attrs, multiple: true});
+
+          expect(d.$scope.form.myinput.$error.accept).not.toBeDefined();
+
+          var testType = function (type, type2, result) {
+
+            var f1 = new File({type: type});
+            var f2 = new File({type: type2});
+
+            event.target.files = [f1, f2];
+            d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
+            expect(d.$scope.form.myinput.$error.accept)[ result? 'toBe' : 'toBeFalsy'](result);
+          };
+
+          testType("image/jpeg", "image/png", false);
+          testType("image/gif", "image/tiff", false);
+          testType("audio/mpeg4", "image/jpg", true);
+          testType("video/mov", "image/jpg", true);
+          // browsers set type to null for files it cannot determine
+          // eg. zip files, amr sound files, bat files, etc.
+          testType("null", "image/jpg", true);
+
+        });
+
+        it('should validate accept on multiple file selection with custom extentions', function () {
+
+          var customAttrs = [
+            {attr: 'name', val: 'myinput'},
+            {attr: 'accept', val: "image/*, .zip"},
+          ];
+          var d = _compile({ngModel: 'files', attrs: customAttrs, multiple: true});
+
+          expect(d.$scope.form.myinput.$error.accept).not.toBeDefined();
+
+          var testType = function (type, type2, result) {
+
+            //setting f1 to .zip to check custom accept values
+            var f1 = new File({name: "dont-download-git-repos-as.zip", type: type});
+            var f2 = new File({name: "clone-them:)", type: type2});
+
+            event.target.files = [f1, f2];
+            d.$input.triggerHandler(event);
+            $ROOTSCOPE.$apply();
+            expect(d.$scope.form.myinput.$error.accept)[ result? 'toBe' : 'toBeFalsy'](result);
+          };
+
+          testType("image/jpeg1", "image/png2", false);
+          testType("image/gif3", "image/tiff4", false);
+          testType("audio/mpeg44", "image/jpg5", false);
+          testType("video/mov6", "image/jpg7", false);
+          // type is set to empty for files of unknown type
+          // eg. zip files, amr/mp2 sound files, bat files, etc.
+          testType("", "image/jpg", false);
+
+        });
+      });
     });
 
   });

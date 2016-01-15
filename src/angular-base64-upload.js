@@ -113,6 +113,7 @@
                 _minsize(val);
                 _maxnum(val);
                 _minnum(val);
+                _accept(val);
               }
           }
 
@@ -221,10 +222,38 @@
             return val;
           }
 
+          function _accept (val) {
+            var valid = true;
+            var regExp, exp, fileExt;
+            if(attrs.accept){
+              exp = attrs.accept.trim().replace(/[,\s]+/gi, "|").replace(/\./g, "\\.").replace("/*", "/.*");
+              regExp = new RegExp(exp);
+            }
+
+            if (attrs.accept && val) {
+              if (attrs.multiple) {
+                for (var i = 0; i < val.length; i++) {
+                  var file = val[i];
+                  fileExt = "." + file.filename.split('.').pop();
+                  valid = regExp.test(file.filetype) || regExp.test(fileExt);
+
+                  if(!valid){ break; }
+                }
+              } else {
+                fileExt = "." + val.filename.split('.').pop();
+                valid = regExp.test(val.filetype) || regExp.test(fileExt);
+              }
+              ngModel.$setValidity('accept', valid);
+            }
+
+            return val;
+          }
+
           ngModel.$parsers.push(_maxnum);
           ngModel.$parsers.push(_minnum);
           ngModel.$parsers.push(_maxsize);
           ngModel.$parsers.push(_minsize);
+          ngModel.$parsers.push(_accept);
 
         }
       };
@@ -232,4 +261,3 @@
   }]);
 
 })(window);
-
