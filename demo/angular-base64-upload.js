@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.1.13
+/*! angular-base64-upload - v0.1.14
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 16, 2016]
 * Licensed MIT */
@@ -50,6 +50,9 @@
           // need set falsy to activate required state when user predefines value for model
           ngModel.$setViewValue(null);
           ngModel.$setPristine();
+          if(angular.isFunction(ngModel.$setUntouched)) {
+            ngModel.$setUntouched();
+          }
 
           var rawFiles = [];
           var fileObjects = [];

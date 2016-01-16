@@ -1,6 +1,9 @@
 Change Log
 --------
 
+v0.1.14
+ - Implement accept validation
+
 v0.1.13
  - Fix test for $pristine state
 

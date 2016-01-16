@@ -46,6 +46,9 @@
           // need set falsy to activate required state when user predefines value for model
           ngModel.$setViewValue(null);
           ngModel.$setPristine();
+          if(angular.isFunction(ngModel.$setUntouched)) {
+            ngModel.$setUntouched();
+          }
 
           var rawFiles = [];
           var fileObjects = [];

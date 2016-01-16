@@ -210,6 +210,7 @@ Contributors
  - [@kermit666](https://github.com/kermit666)
  - [@marksyzm](https://github.com/marksyzm)
  - [@arturgspb](https://github.com/arturgspb)
+ - [@pegasuspect](https://github.com/pegasuspect)
 
 ## License
 
