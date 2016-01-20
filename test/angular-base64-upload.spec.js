@@ -195,40 +195,81 @@ describe('AngularBase64Upload', function(){
       });
 
       it('should validate for errors on-after-validate handler', function () {
+        var allErrorTypes = ["maxsize", "minsize", "maxnum", "minnum"];
 
-        var d;
-        var f1 = new File({size: 600 * 1000});
-        event.target.files = [f1];
+        var testForErrors = function(files, expectedErrorTypes){
+          var d;
+          var onAfterValidateHandler = {
+            name: 'on-after-validate',
+            handler: function (e, fileList) {
+              expect(e.target.files).toBe(fileList);
+              expect(fileList).toBe(event.target.files);
+              for (var i = 0; i < 4; i++) {
+                var expectation = allErrorTypes.indexOf(expectedErrorTypes[i]) > -1 ? "toBeTruthy" : "toBeFalsy";
+                expect(d.$scope.form.myinput.$error[expectedErrorTypes[i]])[expectation]();
+              }
+            },
+            bindTo: 'onAfterValidateHandler'
+          };
 
-        var onAfterValidateHandler = {
-          name: 'on-after-validate',
-          handler: function (e, fileList) {
-            expect(e.target.files).toBe(fileList);
-            expect(fileList).toBe(event.target.files);
-            expect(d.$scope.form.myinput.$error.maxsize)['toBe'](true);
-          },
-          bindTo: 'onAfterValidateHandler'
+          // define element with attributes
+          d = _compile({
+            ngModel: 'files',
+            attrs: [
+              { attr: 'maxsize', val: 600 },
+              { attr: 'multiple', val: true },
+              { attr: 'minsize', val: 300 },
+              { attr: 'maxnum', val: 3 },
+              { attr: 'minnum', val: 2 },
+              { attr: 'name', val: 'myinput' }
+            ],
+            scope: $ROOTSCOPE.$new(),
+            // bind event handler
+            events: [onAfterValidateHandler]
+          });
+
+          event.target.files = files;
+
+          var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+
+          for (var i = 0; i < expectedErrorTypes.length; i++) {
+            expect(d.$scope.form.myinput.$error[expectedErrorTypes[i]]).not.toBeDefined();
+          }
+
+          d.$input.triggerHandler(event);
+          $ROOTSCOPE.$apply();
+          expect(spy).toHaveBeenCalled();
         };
 
-        d = _compile({
-          ngModel: 'files',
-          attrs: [
-            // set maxsize to 500 to test?
-            // if error is being set to true
-            { attr: 'maxsize', val: 500 },
-            { attr: 'name', val: 'myinput' }
-          ],
-          scope: $ROOTSCOPE.$new(),
-          events: [onAfterValidateHandler]
-        });
 
-        var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+        // Tests
+        // min 2 max 3, at least 300, at most 500
+        var f1 = new File({size: 200 * 1000});
+        var f2 = new File({size: 700 * 1000});
 
-        expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
+        var files = [new File()];
+        testForErrors(files, ["minnum"]);
 
-        d.$input.triggerHandler(event);
-        $ROOTSCOPE.$apply();
-        expect(spy).toHaveBeenCalled();
+        files.push(new File());
+        testForErrors(files, []); // 2 files, no error
+
+        files.push(new File());
+        files.push(new File());
+        testForErrors(files, ["maxnum"]);
+
+        files.push(f1);
+        files.push(f2);
+        testForErrors(files, ["maxnum", "minsize", "maxsize"]);
+
+        files = [f1];
+        testForErrors(files, ["minnum", "minsize"]);
+
+        files = [f2];
+        testForErrors(files, ["minnum", "maxsize"]);
+
+        files = files.concat(files).concat(files);
+        testForErrors(files, ["maxsize"]);
+
       });
 
       it('should trigger file reader event handlers', function () {
