@@ -149,7 +149,7 @@
           function _onAfterValidate (e) {
             if (attrs.onAfterValidate) {
               $q.all(filePromises).then(function(){
-                scope.onAfterValidate()(e, rawFiles);
+                scope.onAfterValidate()(e, fileObjects, rawFiles);
               });
             }
           }

@@ -178,7 +178,7 @@ describe('AngularBase64Upload', function(){
 
         var onAfterValidateHandler = {
           name: 'on-after-validate',
-          handler: function (e, fileList) {
+          handler: function (e, _, fileList) {
             expect(e.target.files).toBe(fileList);
             expect(fileList).toBe(event.target.files);
           },
@@ -201,7 +201,7 @@ describe('AngularBase64Upload', function(){
           var d;
           var onAfterValidateHandler = {
             name: 'on-after-validate',
-            handler: function (e, fileList) {
+            handler: function (e, _, fileList) {
               expect(e.target.files).toBe(fileList);
               expect(fileList).toBe(event.target.files);
               for (var i = 0; i < 4; i++) {
@@ -269,7 +269,33 @@ describe('AngularBase64Upload', function(){
 
         files = files.concat(files).concat(files);
         testForErrors(files, ["maxsize"]);
+      });
 
+      it('should validate for base64 on-after-validate handler', function () {
+        var d;
+        var onAfterValidateHandler = {
+          name: 'on-after-validate',
+          handler: function (e, fileObjects) {
+            expect(fileObjects[0].base64).not.toBe(undefined);
+          },
+          bindTo: 'onAfterValidateHandler'
+        };
+
+        // define element with attributes
+        d = _compile({
+          ngModel: 'files',
+          scope: $ROOTSCOPE.$new(),
+          // bind event handler
+          events: [onAfterValidateHandler]
+        });
+
+        event.target.files = new FileList(1);
+
+        var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
       });
 
       it('should trigger file reader event handlers', function () {
