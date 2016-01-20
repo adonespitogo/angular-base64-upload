@@ -105,6 +105,7 @@ module.exports = function(grunt) {
 
   // load plugins
   require('load-grunt-tasks')(grunt);
+  var fileLoader = require('./test/config/file_loader.js');
 
   grunt.registerTask('default', ['build']);
   grunt.registerTask('build', ['clean', 'jshint', 'concat', 'uglify', 'copy']);
@@ -113,6 +114,23 @@ module.exports = function(grunt) {
     var TestRunner = require('./test/config/grunt_test_runner.js');
     var runner = new TestRunner(grunt);
     runner.run();
+  });
+
+  grunt.registerTask('test1s', function () {
+    var preTestCallback = function(){
+        var VERSION = "1.2.3";
+        var files = fileLoader(VERSION);
+
+        grunt.config('karma.options.files', files);
+        grunt.config('karma.options.reporters', ['story', 'coverage']);
+
+        console.log('\n\n\n\t\tRUNNING TEST AGAINST ANGULAR v'+VERSION);
+
+        grunt.task.run('karma:unit');
+    };
+
+    grunt.registerTask('pre-test', ['jshint:angular-base64-upload', 'jshint:tests']);
+    grunt.task.run('pre-test').then(preTestCallback);
   });
 
 
