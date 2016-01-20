@@ -1,6 +1,6 @@
 /*! angular-base64-upload - v0.1.13
 * https://github.com/adonespitogo/angular-base64-upload
-* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 16, 2016]
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 20, 2016]
 * Licensed MIT */
 (function (window, undefined) {
 
@@ -27,6 +27,7 @@
 
       var isolateScope = {
         onChange: '&',
+        onAfterValidate: '&',
         parser: '&'
       };
 
@@ -53,6 +54,7 @@
 
           var rawFiles = [];
           var fileObjects = [];
+          var filePromises = [];
 
           function _attachHandlerForEvent (eventName, handler, fReader, file, fileObject) {
             fReader[eventName] =  function (e) {
@@ -71,15 +73,16 @@
 
               if (attrs.parser) {
                 promise = $q.when(scope.parser()(file, fileObject));
-              }
-              else {
+              } else {
                 promise = $q.when(fileObject);
               }
 
-              promise.then(function (fileObj) {
+              var res = promise.then(function (fileObj) {
                 fileObjects.push(fileObj);
                 _setViewValue();
               });
+
+              filePromises.push(res);
 
               if (attrs.onload) {
                 scope.onload()(e, fReader,  file, rawFiles, fileObjects, fileObject);
@@ -147,17 +150,28 @@
             }
           }
 
+          function _onAfterValidate (e) {
+            if (attrs.onAfterValidate) {
+              $q.all(filePromises).then(function(){
+                scope.onAfterValidate()(e, rawFiles);
+              });
+            }
+          }
+
           elem.on('change', function(e) {
 
             if(!e.target.files.length) {
               return;
             }
 
+            filePromises = [];
+            filePromises = angular.copy(filePromises);
             fileObjects = [];
             fileObjects = angular.copy(fileObjects);
             rawFiles = e.target.files; // use event target so we can mock the files from test
             _readFiles();
             _onChange(e);
+            _onAfterValidate (e);
 
           });
 
