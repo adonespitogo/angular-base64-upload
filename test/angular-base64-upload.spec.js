@@ -172,6 +172,65 @@ describe('AngularBase64Upload', function(){
         expect(spy).toHaveBeenCalled();
       });
 
+      it('should trigger on-after-validate handler', function () {
+
+        event.target.files = new FileList(1);
+
+        var onAfterValidateHandler = {
+          name: 'on-after-validate',
+          handler: function (e, fileList) {
+            expect(e.target.files).toBe(fileList);
+            expect(fileList).toBe(event.target.files);
+          },
+          bindTo: 'onAfterValidateHandler'
+        };
+
+        var d = _compile({events: [onAfterValidateHandler]});
+
+        var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
+      });
+
+      it('should validate for errors on-after-validate handler', function () {
+
+        var d;
+        var f1 = new File({size: 600 * 1000});
+        event.target.files = [f1];
+
+        var onAfterValidateHandler = {
+          name: 'on-after-validate',
+          handler: function (e, fileList) {
+            expect(e.target.files).toBe(fileList);
+            expect(fileList).toBe(event.target.files);
+            expect(d.$scope.form.myinput.$error.maxsize)['toBe'](true);
+          },
+          bindTo: 'onAfterValidateHandler'
+        };
+
+        d = _compile({
+          ngModel: 'files',
+          attrs: [
+            // set maxsize to 500 to test?
+            // if error is being set to true
+            { attr: 'maxsize', val: 500 },
+            { attr: 'name', val: 'myinput' }
+          ],
+          scope: $ROOTSCOPE.$new(),
+          events: [onAfterValidateHandler]
+        });
+
+        var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+
+        expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
+
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
+      });
+
       it('should trigger file reader event handlers', function () {
 
         event.target.files = new FileList(1);
@@ -392,7 +451,6 @@ describe('AngularBase64Upload', function(){
           testSize(500, 500, false);
           testSize(600, 500, false);
           testSize(600, 700, false);
-
         });
 
       });
