@@ -276,7 +276,10 @@ describe('AngularBase64Upload', function(){
         var onAfterValidateHandler = {
           name: 'on-after-validate',
           handler: function (e, fileObjects) {
-            expect(fileObjects[0].base64).not.toBe(undefined);
+            expect(fileObjects.length > 0).toBeTruthy();
+            // console.log(fileObjects);
+            // console.log(new FileList(1));
+            expect(fileObjects[0].base64).toBeTruthy();
           },
           bindTo: 'onAfterValidateHandler'
         };
