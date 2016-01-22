@@ -54,7 +54,6 @@
 
           var rawFiles = [];
           var fileObjects = [];
-          // var filePromises = [];
 
           elem.on('change', function(e) {
 
@@ -62,8 +61,6 @@
               return;
             }
 
-            // filePromises = [];
-            // filePromises = angular.copy(filePromises);
             fileObjects = [];
             fileObjects = angular.copy(fileObjects);
             rawFiles = e.target.files; // use event target so we can mock the files from test
@@ -73,21 +70,6 @@
           });
 
           function _readFiles () {
-            // var waitUntilDone = function(index) {
-            //   var deferred = $q.defer();
-            //
-            //   setTimeout(function() {
-            //     console.log("rawFiles[index].processing: ", rawFiles[index].processing);
-            //     if(!rawFiles[index].processing){
-            //       deferred.resolve();
-            //     } else {
-            //       waitUntilDone(index);
-            //     }
-            //   }, 400);
-            //
-            //   return deferred.promise;
-            // };
-
             for (var i = rawFiles.length - 1; i >= 0; i--) {
               var reader = new $window.FileReader();
               var file = rawFiles[i];
@@ -97,9 +79,8 @@
               fileObject.filename = file.name;
               fileObject.filesize = file.size;
 
-              // TODO: append file a new promise, that waits forever
-              // rawFiles[i].processing = true;
-              rawFiles[i]["deferredObj"] = $q.defer();
+              // append file a new promise, that waits until resolved
+              rawFiles[i].deferredObj = $q.defer();
 
               _attachEventHandlers(reader, file, fileObject);
 
@@ -115,11 +96,11 @@
 
           function _onAfterValidate (e) {
             if (attrs.onAfterValidate) {
-              // TODO: wait for all promises in rawFiles,
+              // wait for all promises, in rawFiles,
               //   then call onAfterValidate
               var promises = [];
               for (var i = rawFiles.length - 1; i >= 0; i--) {
-                promises.push(rawFiles[i]["deferredObj"].promise);
+                promises.push(rawFiles[i].deferredObj.promise);
               }
               $q.all(promises).then(function(){
                 scope.onAfterValidate()(e, fileObjects, rawFiles);
@@ -160,12 +141,12 @@
                 promise = $q.when(fileObject);
               }
 
-              // TODO: fulfill the promise here.
-              // file.promise -> finish.
               promise.then(function (fileObj) {
                 fileObjects.push(fileObj);
                 _setViewValue();
-                file["deferredObj"].resolve();
+
+                // fulfill the promise here.
+                file.deferredObj.resolve();
               });
 
               if (attrs.onload) {
