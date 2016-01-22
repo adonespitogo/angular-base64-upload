@@ -1,6 +1,6 @@
 /*! angular-base64-upload - v0.1.13
 * https://github.com/adonespitogo/angular-base64-upload
-* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 20, 2016]
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 22, 2016]
 * Licensed MIT */
 (function (window, undefined) {
 
@@ -54,7 +54,90 @@
 
           var rawFiles = [];
           var fileObjects = [];
-          var filePromises = [];
+          // var filePromises = [];
+
+          elem.on('change', function(e) {
+
+            if(!e.target.files.length) {
+              return;
+            }
+
+            // filePromises = [];
+            // filePromises = angular.copy(filePromises);
+            fileObjects = [];
+            fileObjects = angular.copy(fileObjects);
+            rawFiles = e.target.files; // use event target so we can mock the files from test
+            _readFiles();
+            _onChange(e);
+            _onAfterValidate(e);
+          });
+
+          function _readFiles () {
+            // var waitUntilDone = function(index) {
+            //   var deferred = $q.defer();
+            //
+            //   setTimeout(function() {
+            //     console.log("rawFiles[index].processing: ", rawFiles[index].processing);
+            //     if(!rawFiles[index].processing){
+            //       deferred.resolve();
+            //     } else {
+            //       waitUntilDone(index);
+            //     }
+            //   }, 400);
+            //
+            //   return deferred.promise;
+            // };
+
+            for (var i = rawFiles.length - 1; i >= 0; i--) {
+              var reader = new $window.FileReader();
+              var file = rawFiles[i];
+              var fileObject = {};
+
+              fileObject.filetype = file.type;
+              fileObject.filename = file.name;
+              fileObject.filesize = file.size;
+
+              // TODO: append file a new promise, that waits forever
+              // rawFiles[i].processing = true;
+              rawFiles[i]["deferredObj"] = $q.defer();
+
+              _attachEventHandlers(reader, file, fileObject);
+
+              reader.readAsArrayBuffer(file);
+            }
+          }
+
+          function _onChange (e) {
+            if (attrs.onChange) {
+              scope.onChange()(e, rawFiles);
+            }
+          }
+
+          function _onAfterValidate (e) {
+            if (attrs.onAfterValidate) {
+              // TODO: wait for all promises in rawFiles,
+              //   then call onAfterValidate
+              var promises = [];
+              for (var i = rawFiles.length - 1; i >= 0; i--) {
+                promises.push(rawFiles[i]["deferredObj"].promise);
+              }
+              $q.all(promises).then(function(){
+                scope.onAfterValidate()(e, fileObjects, rawFiles);
+              });
+            }
+          }
+
+          function _attachEventHandlers (fReader, file, fileObject) {
+
+            for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
+              var e = FILE_READER_EVENTS[i];
+              if (attrs[e] && e !== 'onload') { // don't attach handler to onload yet
+                _attachHandlerForEvent(e, scope[e], fReader, file, fileObject);
+              }
+            }
+
+            fReader.onload = _readerOnLoad(fReader, file, fileObject);
+          }
 
           function _attachHandlerForEvent (eventName, handler, fReader, file, fileObject) {
             fReader[eventName] =  function (e) {
@@ -77,12 +160,13 @@
                 promise = $q.when(fileObject);
               }
 
-              var res = promise.then(function (fileObj) {
+              // TODO: fulfill the promise here.
+              // file.promise -> finish.
+              promise.then(function (fileObj) {
                 fileObjects.push(fileObj);
                 _setViewValue();
+                file["deferredObj"].resolve();
               });
-
-              filePromises.push(res);
 
               if (attrs.onload) {
                 scope.onload()(e, fReader,  file, rawFiles, fileObjects, fileObject);
@@ -90,18 +174,6 @@
 
             };
 
-          }
-
-          function _attachEventHandlers (fReader, file, fileObject) {
-
-            for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
-              var e = FILE_READER_EVENTS[i];
-              if (attrs[e] && e !== 'onload') { // don't attach handler to onload yet
-                _attachHandlerForEvent(e, scope[e], fReader, file, fileObject);
-              }
-            }
-
-            fReader.onload = _readerOnLoad(fReader, file, fileObject);
           }
 
           function _setViewValue () {
@@ -123,57 +195,6 @@
                 _accept(val);
               }
           }
-
-          function _readFiles () {
-
-            for (var i = rawFiles.length - 1; i >= 0; i--) {
-
-              var reader = new $window.FileReader();
-              var file = rawFiles[i];
-              var fileObject = {};
-
-              fileObject.filetype = file.type;
-              fileObject.filename = file.name;
-              fileObject.filesize = file.size;
-
-              _attachEventHandlers(reader, file, fileObject);
-
-              reader.readAsArrayBuffer(file);
-
-            }
-
-          }
-
-          function _onChange (e) {
-            if (attrs.onChange) {
-              scope.onChange()(e, rawFiles);
-            }
-          }
-
-          function _onAfterValidate (e) {
-            if (attrs.onAfterValidate) {
-              $q.all(filePromises).then(function(){
-                scope.onAfterValidate()(e, fileObjects, rawFiles);
-              });
-            }
-          }
-
-          elem.on('change', function(e) {
-
-            if(!e.target.files.length) {
-              return;
-            }
-
-            filePromises = [];
-            filePromises = angular.copy(filePromises);
-            fileObjects = [];
-            fileObjects = angular.copy(fileObjects);
-            rawFiles = e.target.files; // use event target so we can mock the files from test
-            _readFiles();
-            _onChange(e);
-            _onAfterValidate (e);
-
-          });
 
           // VALIDATIONS =========================================================
 
