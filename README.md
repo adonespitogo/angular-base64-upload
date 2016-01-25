@@ -203,7 +203,7 @@ Contribution
  - Uses [jasmine 1.3](http://jasmine.github.io/1.3/introduction.html) in writing unit test specs
  - `grunt test` to run unit tests
  - `grunt build` to build the project
- - Update README.md and CHANGELOG.md to reflect new changes
+ - Update README.md and CHANGELOG.md to reflect the new changes
 
 Change Log
 ----------------------------
