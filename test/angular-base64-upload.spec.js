@@ -172,6 +172,133 @@ describe('AngularBase64Upload', function(){
         expect(spy).toHaveBeenCalled();
       });
 
+      it('should trigger on-after-validate handler', function () {
+
+        event.target.files = new FileList(1);
+
+        var onAfterValidateHandler = {
+          name: 'on-after-validate',
+          handler: function (e, _, fileList) {
+            expect(e.target.files).toBe(fileList);
+            expect(fileList).toBe(event.target.files);
+          },
+          bindTo: 'onAfterValidateHandler'
+        };
+
+        var d = _compile({events: [onAfterValidateHandler]});
+
+        var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
+      });
+
+      it('should validate for errors on-after-validate handler', function () {
+        var allErrorTypes = ["maxsize", "minsize", "maxnum", "minnum"];
+
+        var testForErrors = function(files, expectedErrorTypes){
+          var d;
+          var onAfterValidateHandler = {
+            name: 'on-after-validate',
+            handler: function (e, _, fileList) {
+              expect(e.target.files).toBe(fileList);
+              expect(fileList).toBe(event.target.files);
+              for (var i = 0; i < 4; i++) {
+                var expectation = allErrorTypes.indexOf(expectedErrorTypes[i]) > -1 ? "toBeTruthy" : "toBeFalsy";
+                expect(d.$scope.form.myinput.$error[expectedErrorTypes[i]])[expectation]();
+              }
+            },
+            bindTo: 'onAfterValidateHandler'
+          };
+
+          // define element with attributes
+          d = _compile({
+            ngModel: 'files',
+            attrs: [
+              { attr: 'maxsize', val: 600 },
+              { attr: 'multiple', val: true },
+              { attr: 'minsize', val: 300 },
+              { attr: 'maxnum', val: 3 },
+              { attr: 'minnum', val: 2 },
+              { attr: 'name', val: 'myinput' }
+            ],
+            scope: $ROOTSCOPE.$new(),
+            // bind event handler
+            events: [onAfterValidateHandler]
+          });
+
+          event.target.files = files;
+
+          var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+
+          for (var i = 0; i < expectedErrorTypes.length; i++) {
+            expect(d.$scope.form.myinput.$error[expectedErrorTypes[i]]).not.toBeDefined();
+          }
+
+          d.$input.triggerHandler(event);
+          $ROOTSCOPE.$apply();
+          expect(spy).toHaveBeenCalled();
+        };
+
+
+        // Tests
+        // min 2 max 3, at least 300, at most 500
+        var f1 = new File({size: 200 * 1000});
+        var f2 = new File({size: 700 * 1000});
+
+        var files = [new File()];
+        testForErrors(files, ["minnum"]);
+
+        files.push(new File());
+        testForErrors(files, []); // 2 files, no error
+
+        files.push(new File());
+        files.push(new File());
+        testForErrors(files, ["maxnum"]);
+
+        files.push(f1);
+        files.push(f2);
+        testForErrors(files, ["maxnum", "minsize", "maxsize"]);
+
+        files = [f1];
+        testForErrors(files, ["minnum", "minsize"]);
+
+        files = [f2];
+        testForErrors(files, ["minnum", "maxsize"]);
+
+        files = files.concat(files).concat(files);
+        testForErrors(files, ["maxsize"]);
+      });
+
+      it('should validate for base64 on-after-validate handler', function () {
+        var d;
+        var onAfterValidateHandler = {
+          name: 'on-after-validate',
+          handler: function (e, fileObjects) {
+            expect(fileObjects.length > 0).toBeTruthy();
+            expect(fileObjects[0].base64).toBeTruthy();
+          },
+          bindTo: 'onAfterValidateHandler'
+        };
+
+        // define element with attributes
+        d = _compile({
+          ngModel: 'files',
+          scope: $ROOTSCOPE.$new(),
+          // bind event handler
+          events: [onAfterValidateHandler]
+        });
+
+        event.target.files = new FileList(1);
+
+        var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
+
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
+      });
+
       it('should trigger file reader event handlers', function () {
 
         event.target.files = new FileList(1);
@@ -236,42 +363,6 @@ describe('AngularBase64Upload', function(){
     });
 
     describe('Validations', function () {
-
-      describe('required', function () {
-
-        var attrs;
-        var directive;
-        var scope;
-
-        beforeEach(function () {
-          attrs = [
-            {attr: 'required', val: 'required'},
-            {attr: 'name', val: 'myinput'},
-          ];
-          scope = $ROOTSCOPE.$new();
-        });
-
-        it('should validate required on single file selection', function () {
-          scope.file = {};
-          directive = _compile({ngModel: 'files', attrs: attrs, scope: scope});
-        });
-
-        it('should validate required on multiple file selection', function () {
-          scope.files = [];
-          directive = _compile({ngModel: 'files', multiple:true, attrs: attrs, scope: scope});
-        });
-
-        afterEach(function () {
-          $ROOTSCOPE.$apply();
-          expect(directive.$scope.form.myinput.$error.required).toBe(true);
-          expect(directive.$scope.form.myinput.$dirty).toBeFalsy();
-          expect(directive.$scope.form.myinput.$pristine).toBe(true);
-          directive.$input.triggerHandler(event);
-          $ROOTSCOPE.$apply();
-          expect(directive.$scope.form.myinput.$error.required).toBeFalsy();
-        });
-
-      });
 
       describe('maxsize', function () {
 
@@ -392,7 +483,6 @@ describe('AngularBase64Upload', function(){
           testSize(500, 500, false);
           testSize(600, 500, false);
           testSize(600, 700, false);
-
         });
 
       });

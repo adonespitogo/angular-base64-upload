@@ -1,6 +1,6 @@
-/*! angular-base64-upload - v0.1.14
+/*! angular-base64-upload - v0.1.15
 * https://github.com/adonespitogo/angular-base64-upload
-* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 16, 2016]
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 26, 2016]
 * Licensed MIT */
 (function (window, undefined) {
 
@@ -27,6 +27,7 @@
 
       var isolateScope = {
         onChange: '&',
+        onAfterValidate: '&',
         parser: '&'
       };
 
@@ -47,15 +48,73 @@
             return;
           }
 
-          // need set falsy to activate required state when user predefines value for model
-          ngModel.$setViewValue(null);
-          ngModel.$setPristine();
-          if(angular.isFunction(ngModel.$setUntouched)) {
-            ngModel.$setUntouched();
-          }
-
           var rawFiles = [];
           var fileObjects = [];
+
+          elem.on('change', function(e) {
+
+            if(!e.target.files.length) {
+              return;
+            }
+
+            fileObjects = [];
+            fileObjects = angular.copy(fileObjects);
+            rawFiles = e.target.files; // use event target so we can mock the files from test
+            _readFiles();
+            _onChange(e);
+            _onAfterValidate(e);
+          });
+
+          function _readFiles () {
+            for (var i = rawFiles.length - 1; i >= 0; i--) {
+              var reader = new $window.FileReader();
+              var file = rawFiles[i];
+              var fileObject = {};
+
+              fileObject.filetype = file.type;
+              fileObject.filename = file.name;
+              fileObject.filesize = file.size;
+
+              // append file a new promise, that waits until resolved
+              rawFiles[i].deferredObj = $q.defer();
+
+              _attachEventHandlers(reader, file, fileObject);
+
+              reader.readAsArrayBuffer(file);
+            }
+          }
+
+          function _onChange (e) {
+            if (attrs.onChange) {
+              scope.onChange()(e, rawFiles);
+            }
+          }
+
+          function _onAfterValidate (e) {
+            if (attrs.onAfterValidate) {
+              // wait for all promises, in rawFiles,
+              //   then call onAfterValidate
+              var promises = [];
+              for (var i = rawFiles.length - 1; i >= 0; i--) {
+                promises.push(rawFiles[i].deferredObj.promise);
+              }
+              $q.all(promises).then(function(){
+                scope.onAfterValidate()(e, fileObjects, rawFiles);
+              });
+            }
+          }
+
+          function _attachEventHandlers (fReader, file, fileObject) {
+
+            for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
+              var e = FILE_READER_EVENTS[i];
+              if (attrs[e] && e !== 'onload') { // don't attach handler to onload yet
+                _attachHandlerForEvent(e, scope[e], fReader, file, fileObject);
+              }
+            }
+
+            fReader.onload = _readerOnLoad(fReader, file, fileObject);
+          }
 
           function _attachHandlerForEvent (eventName, handler, fReader, file, fileObject) {
             fReader[eventName] =  function (e) {
@@ -74,14 +133,16 @@
 
               if (attrs.parser) {
                 promise = $q.when(scope.parser()(file, fileObject));
-              }
-              else {
+              } else {
                 promise = $q.when(fileObject);
               }
 
               promise.then(function (fileObj) {
                 fileObjects.push(fileObj);
                 _setViewValue();
+
+                // fulfill the promise here.
+                file.deferredObj.resolve();
               });
 
               if (attrs.onload) {
@@ -92,18 +153,6 @@
 
           }
 
-          function _attachEventHandlers (fReader, file, fileObject) {
-
-            for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
-              var e = FILE_READER_EVENTS[i];
-              if (attrs[e] && e !== 'onload') { // don't attach handler to onload yet
-                _attachHandlerForEvent(e, scope[e], fReader, file, fileObject);
-              }
-            }
-
-            fReader.onload = _readerOnLoad(fReader, file, fileObject);
-          }
-
           function _setViewValue () {
               var newVal = attrs.multiple ? fileObjects : fileObjects[0];
               ngModel.$setViewValue(newVal);
@@ -111,9 +160,9 @@
                 ngModel.$validate();
               }
 
+              // manually run parsers for angular versions >= 1.3.4 since they are not triggered automatically on ngModel.$setViewValue
               var v = angular.version.full.split('.');
 
-              // manually run parsers for angular versions >= 1.3.4 since they are not triggered automatically on ngModel.$setViewValue
               if (v[0] === '1' && v[1] === '3' && parseInt(v[2]) >= 4) {
                 var val = ngModel.$viewValue;
                 _maxsize(val);
@@ -123,46 +172,6 @@
                 _accept(val);
               }
           }
-
-          function _readFiles () {
-
-            for (var i = rawFiles.length - 1; i >= 0; i--) {
-
-              var reader = new $window.FileReader();
-              var file = rawFiles[i];
-              var fileObject = {};
-
-              fileObject.filetype = file.type;
-              fileObject.filename = file.name;
-              fileObject.filesize = file.size;
-
-              _attachEventHandlers(reader, file, fileObject);
-
-              reader.readAsArrayBuffer(file);
-
-            }
-
-          }
-
-          function _onChange (e) {
-            if (attrs.onChange) {
-              scope.onChange()(e, rawFiles);
-            }
-          }
-
-          elem.on('change', function(e) {
-
-            if(!e.target.files.length) {
-              return;
-            }
-
-            fileObjects = [];
-            fileObjects = angular.copy(fileObjects);
-            rawFiles = e.target.files; // use event target so we can mock the files from test
-            _readFiles();
-            _onChange(e);
-
-          });
 
           // VALIDATIONS =========================================================
 

@@ -62,7 +62,6 @@ Validations
  - `maxnum` = Maximum number of items to select (applicable only for multi-select)
  - `minnum` = Minimum number of items to select (applicable only for multi-select)
  - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type` comma separated
- - `required` = required
 
 ```html
 <form name="form">
@@ -132,6 +131,15 @@ Events
 
  - Params:
    - Event - Event object.
+   - FileList - Array of selected files.
+
+<b>on-after-validate</b> - Ran after the validations are executed and after file object(s) are added to the model.
+
+`<input on-after-validate="onAfterValidateFunc">`
+
+ - Params:
+   - Event - Event object.
+   - FileObjects - Array of base64-encoded files.
    - FileList - Array of selected files.
 
 Example event handler implementation:
