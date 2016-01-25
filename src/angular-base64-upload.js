@@ -47,6 +47,10 @@
           var rawFiles = [];
           var fileObjects = [];
 
+          ngModel.$isEmpty = function (val) {
+            return !val || (angular.isArray(val)? val.length>0 : !val.base64);
+          };
+
           elem.on('change', function(e) {
 
             if(!e.target.files.length) {
