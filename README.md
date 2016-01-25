@@ -62,6 +62,7 @@ Validations
  - `maxnum` = Maximum number of items to select (applicable only for multi-select)
  - `minnum` = Minimum number of items to select (applicable only for multi-select)
  - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type` comma separated
+ - `required` = Checks if the model value is `null`, empty array `[]` or empty object `{}`
 
 ```html
 <form name="form">
@@ -153,6 +154,10 @@ Example event handler implementation:
     <input type="file" base-sixty-four-input ng-model="myfile" onerror="errorHandler">
    <form>
    ```
+
+Clearing the input element
+--------------------------
+Just assign your model with `null`, `{}` or `[]` and it will automatically clear the input element
 
 Server-Side
 ---------------

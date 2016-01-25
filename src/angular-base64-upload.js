@@ -44,10 +44,14 @@
             return;
           }
 
+          ngModel.$isEmpty = function (val) {
+            return !val || (val.length? val.length>0 : !val.base64);
+          };
+
           var rawFiles = [];
           var fileObjects = [];
 
-          elem.on('change', function(e) {
+          function _onChange (e) {
 
             if(!e.target.files.length) {
               return;
@@ -57,9 +61,23 @@
             fileObjects = angular.copy(fileObjects);
             rawFiles = e.target.files; // use event target so we can mock the files from test
             _readFiles();
-            _onChange(e);
             _onAfterValidate(e);
-          });
+            if (attrs.onChange) {
+              scope.onChange()(e, rawFiles);
+            }
+          }
+
+          elem.on('change', _onChange);
+
+          // clear input when model is assigned with empty value
+          // scope.$watch(function () {
+          //   return ngModel.$viewValue;
+          // }, function (val, oldVal) {
+          //   if (ngModel.$isEmpty(oldVal)){return;}
+          //   if (ngModel.$isEmpty(val)) {
+          //     scope._clearInput();
+          //   }
+          // });
 
           function _readFiles () {
             for (var i = rawFiles.length - 1; i >= 0; i--) {
@@ -77,12 +95,6 @@
               _attachEventHandlers(reader, file, fileObject);
 
               reader.readAsArrayBuffer(file);
-            }
-          }
-
-          function _onChange (e) {
-            if (attrs.onChange) {
-              scope.onChange()(e, rawFiles);
             }
           }
 
@@ -168,6 +180,15 @@
                 _accept(val);
               }
           }
+
+          // http://stackoverflow.com/questions/1703228/how-can-i-clear-an-html-file-input-with-javascript
+          scope._clearInput = function () {
+            try { //for IE11, latest Chrome/Firefox/Opera...
+              elem.value = '';
+            }catch (err) { //for IE5 ~ IE10
+              elem.replaceWith(elem.clone(true));
+            }
+          };
 
           // VALIDATIONS =========================================================
 
