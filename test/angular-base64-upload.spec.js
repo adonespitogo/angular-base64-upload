@@ -693,6 +693,35 @@ describe('AngularBase64Upload', function(){
       });
     });
 
+    describe('Clear input', function () {
+      var scope, directive, spy;
+      beforeEach(function () {
+        scope = $ROOTSCOPE.$new();
+        directive = _compile({ngModel: 'file'});
+        directive.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        spy = spyOn(directive.$input.isolateScope(), '_clearInput').andCallThrough();
+        expect(directive.$scope.file).toBeTruthy();
+      });
+
+      it('should clear input when $viewValue is null', function () {
+        directive.$scope.file = null;
+      });
+
+      it('should clear input when $viewValue is empty object', function () {
+        directive.$scope.file = {};
+      });
+
+      it('should clear input when $viewValue is empty array', function () {
+        directive.$scope.file = [];
+      });
+
+      afterEach(function () {
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
+      });
+    });
+
   });
 
 });
