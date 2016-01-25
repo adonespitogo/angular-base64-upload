@@ -204,6 +204,7 @@ Contribution
  - `grunt test` to run unit tests
  - `grunt build` to build the project
  - Update README.md and CHANGELOG.md to reflect the new changes
+ - Bump the version number
 
 Change Log
 ----------------------------
