@@ -165,11 +165,7 @@
 
           // http://stackoverflow.com/questions/1703228/how-can-i-clear-an-html-file-input-with-javascript
           scope._clearInput = function () {
-            try { //for IE11, latest Chrome/Firefox/Opera...
-              elem.value = '';
-            }catch (err) { //for IE5 ~ IE10
-              elem.replaceWith(elem.clone(true));
-            }
+            elem[0].value = '';
           };
 
           scope.$watch(function () {

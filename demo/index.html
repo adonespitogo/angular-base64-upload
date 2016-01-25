@@ -13,7 +13,7 @@
       var uploadedCount = 0;
 
       $scope.files = [];
-      $scope.filesArr = [{}, {}];
+      $scope.file = {};
 
       $scope.uploadFiles = function() {
 
@@ -51,25 +51,20 @@
   <div class="container">
     <form name="form">
     <h3>Single File Selection</h3>
-      <div class="input-group" ng-repeat="file in filesArr">
-        <ng-form name="fileForm">
-          <label for="file">Select File</label>
-          <input type="file" ng-model="file" name="inputFile" base-sixty-four-input required maxsize="500" accept="image/*">
-          <button class="btn btn-danger" ng-click="file=null">Clear Input</button>
-          <span class="help-block">
-            <ul>
-              <li>required</li>
-              <li>maxsize = 500</li>
-              <li>accept = image/*</li>
-            </ul>
-          </span>
-          <div class="alert" ng-class="{'alert-danger': form.file.$invalid, 'alert-success': form.file.$valid}">
-            <!-- form.file[{{$index}}].$error: {{form['file_'+$index].$error}}<br>
-            form.file[{{$index}}].$dirty: {{form['file_'+$index].$dirty}}<br>
-            form.file[{{$index}}].$pristine: {{form['file_'+$index].$pristine}}<br> -->
-            {{fileForm.inputFile.$error}}
-          </div>
-        </ng-form>
+      <div class="input-group">
+        <label for="file">Select File</label>
+        <input class="form-control" type="file" ng-model="file" name="inputFile" base-sixty-four-input required maxsize="500" accept="image/*">
+        <span class="help-block">
+          <a ng-click="file=null" class="btn btn-default">Clear input</a>
+          <ul>
+            <li>required</li>
+            <li>maxsize = 500</li>
+            <li>accept = image/*</li>
+          </ul>
+        </span>
+        <div class="alert" ng-class="{'alert-danger': form.inputFile.$invalid, 'alert-success': form.inputFile.$valid}">
+          form.inputFile.$error: {{ form.inputFile.$error }}
+        </div>
       </div>
     <b>Model Value:</b>
     <table class="table table-bordered table-striped">
@@ -103,12 +98,11 @@
             <li>minnum = 2</li>
           </ul>
         </span>
-        <input type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*, .zip" minsize="500" required minnum="2">
+        <input class="form-control" type="file" ng-model="files" name="files" base-sixty-four-input multiple accept="image/*, .zip" minsize="500" required minnum="2">
+        <a ng-click="files=null" class="help-block btn btn-default">Clear input</a>
       </div>
       <div class="alert" ng-class="{'alert-danger': form.files.$invalid, 'alert-success': form.files.$valid}">
         form.files.$error: {{form.files.$error}}<br>
-        form.files.$dirty: {{form.files.$dirty}}<br>
-        form.files.$pristine: {{form.files.$pristine}}<br>
       </div>
     <b>Model Value:</b>
     <table class="table table-bordered table-striped">
