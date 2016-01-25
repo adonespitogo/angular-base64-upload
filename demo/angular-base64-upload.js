@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.1.16
+/*! angular-base64-upload - v0.1.17
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 26, 2016]
 * Licensed MIT */

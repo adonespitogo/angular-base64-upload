@@ -1,6 +1,9 @@
 Change Log
 --------
 
+v0.1.17
+ - Manually run parsers to be consistent to all angular versions.
+
 v0.1.16
  - Implement clear input mechanism, fixes [#53](https://github.com/adonespitogo/angular-base64-upload/issues/53)
  - Reimplemented `required` validation, overriding `ngModel.$isEmpty()` method :D
