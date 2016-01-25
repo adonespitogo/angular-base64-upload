@@ -16,7 +16,7 @@ Requires angular version greater than or equal to `1.2.0`. Tested on angular ver
 `$scope.myfile` :
 ```javascript
   {
-    "filesize": 54836, // bytes
+    "filesize": 54836, /* bytes */
     "filetype": "image/jpeg",
     "filename": "profile.jpg",
     "base64":   "/9j/4AAQSkZJRgABAgAAAQABAAD//gAEKgD/4gIctcwIQA..."
