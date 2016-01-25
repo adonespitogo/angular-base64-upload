@@ -364,6 +364,42 @@ describe('AngularBase64Upload', function(){
 
     describe('Validations', function () {
 
+      describe('required', function () {
+
+        var attrs;
+        var directive;
+        var scope;
+
+        beforeEach(function () {
+          attrs = [
+            {attr: 'required', val: 'required'},
+            {attr: 'name', val: 'myinput'},
+          ];
+          scope = $ROOTSCOPE.$new();
+        });
+
+        it('should validate required on single file selection', function () {
+          scope.file = {};
+          directive = _compile({ngModel: 'files', attrs: attrs, scope: scope});
+        });
+
+        it('should validate required on multiple file selection', function () {
+          scope.files = [];
+          directive = _compile({ngModel: 'files', multiple:true, attrs: attrs, scope: scope});
+        });
+
+        afterEach(function () {
+          $ROOTSCOPE.$apply();
+          expect(directive.$scope.form.myinput.$error.required).toBe(true);
+          expect(directive.$scope.form.myinput.$dirty).toBeFalsy();
+          expect(directive.$scope.form.myinput.$pristine).toBe(true);
+          directive.$input.triggerHandler(event);
+          $ROOTSCOPE.$apply();
+          expect(directive.$scope.form.myinput.$error.required).toBeFalsy();
+        });
+
+      });
+
       describe('maxsize', function () {
 
         var maxsize;
@@ -654,6 +690,35 @@ describe('AngularBase64Upload', function(){
           testType("", "image/jpg", false);
 
         });
+      });
+    });
+
+    describe('Clear input', function () {
+      var scope, directive, spy;
+      beforeEach(function () {
+        scope = $ROOTSCOPE.$new();
+        directive = _compile({ngModel: 'file'});
+        directive.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        spy = spyOn(directive.$input.isolateScope(), '_clearInput').andCallThrough();
+        expect(directive.$scope.file).toBeTruthy();
+      });
+
+      it('should clear input when $viewValue is null', function () {
+        directive.$scope.file = null;
+      });
+
+      it('should clear input when $viewValue is empty object', function () {
+        directive.$scope.file = {};
+      });
+
+      it('should clear input when $viewValue is empty array', function () {
+        directive.$scope.file = [];
+      });
+
+      afterEach(function () {
+        $ROOTSCOPE.$apply();
+        expect(spy).toHaveBeenCalled();
       });
     });
 

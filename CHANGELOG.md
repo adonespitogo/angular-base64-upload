@@ -1,6 +1,10 @@
 Change Log
 --------
 
+v0.1.16
+ - Implement clear input mechanism, fixes [#53](https://github.com/adonespitogo/angular-base64-upload/issues/53)
+ - Reimplemented `required` validation, overriding `ngModel.$isEmpty()` method :D
+
 v0.1.15
  - Implement `on-after-validate` event
  - Removed `ngModel.$setViewValue(null)` that was used to activate `required` state of the input when it is multiple and model is predefined with value (e.g. `$scope.files = []`). It caused the [form to be initially dirty](https://github.com/adonespitogo/angular-base64-upload/issues/62). For multiple file selection with `required` validation, use `minnum="1"` instead of `required`, or just don't predefine the value of your model.

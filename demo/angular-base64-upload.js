@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.1.15
+/*! angular-base64-upload - v0.1.16
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [January 26, 2016]
 * Licensed MIT */
@@ -50,6 +50,28 @@
 
           var rawFiles = [];
           var fileObjects = [];
+
+          ngModel.$isEmpty = function (val) {
+            return !val || (angular.isArray(val)? val.length === 0 : !val.base64);
+          };
+
+          // http://stackoverflow.com/questions/1703228/how-can-i-clear-an-html-file-input-with-javascript
+          scope._clearInput = function () {
+            try { //for IE11, latest Chrome/Firefox/Opera...
+              elem.value = '';
+            }catch (err) { //for IE5 ~ IE10
+              elem.replaceWith(elem.clone(true));
+            }
+          };
+
+          scope.$watch(function () {
+            return ngModel.$viewValue;
+          }, function (val, oldVal) {
+            if (ngModel.$isEmpty(oldVal)) {return;}
+            if (ngModel.$isEmpty(val)) {
+              scope._clearInput();
+            }
+          });
 
           elem.on('change', function(e) {
 

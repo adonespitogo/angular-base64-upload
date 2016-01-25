@@ -169,6 +169,28 @@
               }
           }
 
+          ngModel.$isEmpty = function (val) {
+            return !val || (angular.isArray(val)? val.length === 0 : !val.base64);
+          };
+
+          // http://stackoverflow.com/questions/1703228/how-can-i-clear-an-html-file-input-with-javascript
+          scope._clearInput = function () {
+            try { //for IE11, latest Chrome/Firefox/Opera...
+              elem.value = '';
+            }catch (err) { //for IE5 ~ IE10
+              elem.replaceWith(elem.clone(true));
+            }
+          };
+
+          scope.$watch(function () {
+            return ngModel.$viewValue;
+          }, function (val, oldVal) {
+            if (ngModel.$isEmpty(oldVal)) {return;}
+            if (ngModel.$isEmpty(val)) {
+              scope._clearInput();
+            }
+          });
+
           // VALIDATIONS =========================================================
 
           function _maxnum (val) {
