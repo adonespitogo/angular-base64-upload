@@ -60,12 +60,12 @@
             }
           };
 
-          scope.$watch(function () {}, function (val, oldVal) {
-            if (ngModel.$isEmpty(oldVal)) {return;}
-            if (ngModel.$isEmpty(val)) {
-              $scope._clearInput();
-            }
-          });
+          // scope.$watch(function () {}, function (val, oldVal) {
+          //   if (ngModel.$isEmpty(oldVal)) {return;}
+          //   if (ngModel.$isEmpty(val)) {
+          //     scope._clearInput();
+          //   }
+          // });
 
           elem.on('change', function(e) {
 

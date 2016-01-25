@@ -67,7 +67,7 @@
           // scope.$watch(function () {}, function (val, oldVal) {
           //   if (ngModel.$isEmpty(oldVal)) {return;}
           //   if (ngModel.$isEmpty(val)) {
-          //     $scope._clearInput();
+          //     scope._clearInput();
           //   }
           // });
 
