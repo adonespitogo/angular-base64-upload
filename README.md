@@ -14,7 +14,7 @@ Requires angular version greater than or equal to `1.2.0`. Tested on angular ver
 ```
 
 `$scope.myfile` :
-```json
+```javascript
   {
     "filesize": 54836, // bytes
     "filetype": "image/jpeg",
