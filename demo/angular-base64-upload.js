@@ -39,7 +39,7 @@
 
       return {
         restrict: 'A',
-        require: '?ngModel',
+        require: 'ngModel',
         scope: isolateScope,
         link: function (scope, elem, attrs, ngModel) {
 
@@ -50,28 +50,6 @@
 
           var rawFiles = [];
           var fileObjects = [];
-
-          ngModel.$isEmpty = function (val) {
-            return !val || (angular.isArray(val)? val.length === 0 : !val.base64);
-          };
-
-          // http://stackoverflow.com/questions/1703228/how-can-i-clear-an-html-file-input-with-javascript
-          scope._clearInput = function () {
-            try { //for IE11, latest Chrome/Firefox/Opera...
-              elem.value = '';
-            }catch (err) { //for IE5 ~ IE10
-              elem.replaceWith(elem.clone(true));
-            }
-          };
-
-          scope.$watch(function () {
-            return ngModel.$viewValue;
-          }, function (val, oldVal) {
-            if (ngModel.$isEmpty(oldVal)) {return;}
-            if (ngModel.$isEmpty(val)) {
-              scope._clearInput();
-            }
-          });
 
           elem.on('change', function(e) {
 
@@ -178,22 +156,34 @@
           function _setViewValue () {
               var newVal = attrs.multiple ? fileObjects : fileObjects[0];
               ngModel.$setViewValue(newVal);
-              if (angular.isFunction(ngModel.$validate)) {
-                ngModel.$validate();
-              }
-
-              // manually run parsers for angular versions >= 1.3.4 since they are not triggered automatically on ngModel.$setViewValue
-              var v = angular.version.full.split('.');
-
-              if (v[0] === '1' && v[1] === '3' && parseInt(v[2]) >= 4) {
-                var val = ngModel.$viewValue;
-                _maxsize(val);
-                _minsize(val);
-                _maxnum(val);
-                _minnum(val);
-                _accept(val);
-              }
+              _maxsize(newVal);
+              _minsize(newVal);
+              _maxnum(newVal);
+              _minnum(newVal);
+              _accept(newVal);
           }
+
+          ngModel.$isEmpty = function (val) {
+            return !val || (angular.isArray(val)? val.length === 0 : !val.base64);
+          };
+
+          // http://stackoverflow.com/questions/1703228/how-can-i-clear-an-html-file-input-with-javascript
+          scope._clearInput = function () {
+            try { //for IE11, latest Chrome/Firefox/Opera...
+              elem.value = '';
+            }catch (err) { //for IE5 ~ IE10
+              elem.replaceWith(elem.clone(true));
+            }
+          };
+
+          scope.$watch(function () {
+            return ngModel.$viewValue;
+          }, function (val, oldVal) {
+            if (ngModel.$isEmpty(oldVal)) {return;}
+            if (ngModel.$isEmpty(val)) {
+              scope._clearInput();
+            }
+          });
 
           // VALIDATIONS =========================================================
 
@@ -286,12 +276,6 @@
 
             return val;
           }
-
-          ngModel.$parsers.push(_maxnum);
-          ngModel.$parsers.push(_minnum);
-          ngModel.$parsers.push(_maxsize);
-          ngModel.$parsers.push(_minsize);
-          ngModel.$parsers.push(_accept);
 
         }
       };

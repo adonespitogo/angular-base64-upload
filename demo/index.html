@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Angular Base64 Upload Demo</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.5/angular.min.js"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.3.5/angular.min.js"></script>
   <script type="text/javascript" src="angular-base64-upload.js"></script>
   <script type="text/javascript">
     angular.module('myApp', ['naif.base64'])
@@ -13,7 +13,7 @@
       var uploadedCount = 0;
 
       $scope.files = [];
-      $scope.file = {};
+      $scope.filesArr = [{}, {}];
 
       $scope.uploadFiles = function() {
 
@@ -51,22 +51,25 @@
   <div class="container">
     <form name="form">
     <h3>Single File Selection</h3>
-      <div class="input-group">
-        <label for="file">Select File</label>
-        <input type="file" ng-model="file" name="file" base-sixty-four-input required maxsize="500" accept="image/*">
-        <button class="btn btn-danger" ng-click="file=null">Clear Input</button>
-        <span class="help-block">
-          <ul>
-            <li>required</li>
-            <li>maxsize = 500</li>
-            <li>accept = image/*</li>
-          </ul>
-        </span>
-      </div>
-      <div class="alert" ng-class="{'alert-danger': form.file.$invalid, 'alert-success': form.file.$valid}">
-        form.file.$error: {{form.file.$error}}<br>
-        form.file.$dirty: {{form.file.$dirty}}<br>
-        form.file.$pristine: {{form.file.$pristine}}<br>
+      <div class="input-group" ng-repeat="file in filesArr">
+        <ng-form name="fileForm">
+          <label for="file">Select File</label>
+          <input type="file" ng-model="file" name="inputFile" base-sixty-four-input required maxsize="500" accept="image/*">
+          <button class="btn btn-danger" ng-click="file=null">Clear Input</button>
+          <span class="help-block">
+            <ul>
+              <li>required</li>
+              <li>maxsize = 500</li>
+              <li>accept = image/*</li>
+            </ul>
+          </span>
+          <div class="alert" ng-class="{'alert-danger': form.file.$invalid, 'alert-success': form.file.$valid}">
+            <!-- form.file[{{$index}}].$error: {{form['file_'+$index].$error}}<br>
+            form.file[{{$index}}].$dirty: {{form['file_'+$index].$dirty}}<br>
+            form.file[{{$index}}].$pristine: {{form['file_'+$index].$pristine}}<br> -->
+            {{fileForm.inputFile.$error}}
+          </div>
+        </ng-form>
       </div>
     <b>Model Value:</b>
     <table class="table table-bordered table-striped">
