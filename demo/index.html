@@ -54,6 +54,7 @@
       <div class="input-group">
         <label for="file">Select File</label>
         <input type="file" ng-model="file" name="file" base-sixty-four-input required maxsize="500" accept="image/*">
+        <button class="btn btn-danger" ng-click="file=null">Clear Input</button>
         <span class="help-block">
           <ul>
             <li>required</li>

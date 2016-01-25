@@ -399,7 +399,6 @@ describe('AngularBase64Upload', function(){
         });
 
       });
-      
 
       describe('maxsize', function () {
 
