@@ -364,6 +364,43 @@ describe('AngularBase64Upload', function(){
 
     describe('Validations', function () {
 
+      describe('required', function () {
+
+        var attrs;
+        var directive;
+        var scope;
+
+        beforeEach(function () {
+          attrs = [
+            {attr: 'required', val: 'required'},
+            {attr: 'name', val: 'myinput'},
+          ];
+          scope = $ROOTSCOPE.$new();
+        });
+
+        it('should validate required on single file selection', function () {
+          scope.file = {};
+          directive = _compile({ngModel: 'files', attrs: attrs, scope: scope});
+        });
+
+        it('should validate required on multiple file selection', function () {
+          scope.files = [];
+          directive = _compile({ngModel: 'files', multiple:true, attrs: attrs, scope: scope});
+        });
+
+        afterEach(function () {
+          $ROOTSCOPE.$apply();
+          expect(directive.$scope.form.myinput.$error.required).toBe(true);
+          expect(directive.$scope.form.myinput.$dirty).toBeFalsy();
+          expect(directive.$scope.form.myinput.$pristine).toBe(true);
+          directive.$input.triggerHandler(event);
+          $ROOTSCOPE.$apply();
+          expect(directive.$scope.form.myinput.$error.required).toBeFalsy();
+        });
+
+      });
+      
+
       describe('maxsize', function () {
 
         var maxsize;
