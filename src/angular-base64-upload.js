@@ -135,7 +135,9 @@
 
               promise.then(function (fileObj) {
                 fileObjects.push(fileObj);
-                _setViewValue();
+                // update model only once all files are loaded to have a single angular event
+                if (rawFiles.length == fileObjects.length)
+                  _setViewValue();
 
                 // fulfill the promise here.
                 file.deferredObj.resolve();
