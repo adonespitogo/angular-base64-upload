@@ -1,6 +1,10 @@
 Change Log
 --------
 
+v0.1.18
+ - Export module name for use with CommonJS syntax (#70)
+ - add test against tampering with form state (#71)
+
 v0.1.17
  - Manually run parsers to be consistent to all angular versions.
 

@@ -217,15 +217,7 @@ Author
 
 Contributors
 ------------
- - [@agibson-fl](https://github.com/agibson-fl)
- - [@drola](https://github.com/drola)
- - [@jamesharrington](https://github.com/jamesharrington)
- - [@gbrennon](https://github.com/gbrennon)
- - [@boxfrommars](https://github.com/boxfrommars)
- - [@kermit666](https://github.com/kermit666)
- - [@marksyzm](https://github.com/marksyzm)
- - [@arturgspb](https://github.com/arturgspb)
- - [@pegasuspect](https://github.com/pegasuspect)
+See [contributors list](https://github.com/adonespitogo/angular-base64-upload/graphs/contributors)
 
 ## License
 
