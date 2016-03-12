@@ -86,9 +86,9 @@ describe('Events', function() {
         handler: function(e, _, fileList) {
           expect(e.target.files).toBe(fileList);
           expect(fileList).toBe(event.target.files);
-          for (var i = 0; i < 4; i++) {
-            var expectation = allErrorTypes.indexOf(expectedErrorTypes[i]) > -1 ? "toBeTruthy" : "toBeFalsy";
-            expect(d.$scope.form.myinput.$error[expectedErrorTypes[i]])[expectation]();
+          for (var i = 0; i < expectedErrorTypes.length; i++) {
+            expect(d.$scope.form.myinput.$error[expectedErrorTypes[i]]).toBeTruthy();
+            // console.log(expectedErrorTypes[i], d.$scope.form.myinput.$error[expectedErrorTypes[i]]);
           }
         },
         bindTo: 'onAfterValidateHandler'
@@ -98,8 +98,8 @@ describe('Events', function() {
       d = _compile({
         attrs: [
           { attr: 'ng-model', val: 'files' },
-          { attr: 'maxsize', val: 600 },
           { attr: 'multiple', val: true },
+          { attr: 'maxsize', val: 600 },
           { attr: 'minsize', val: 300 },
           { attr: 'maxnum', val: 3 },
           { attr: 'minnum', val: 2 },
@@ -121,6 +121,7 @@ describe('Events', function() {
       d.$input.triggerHandler(event);
       $ROOTSCOPE.$apply();
       expect(spy).toHaveBeenCalled();
+      // console.log(d.$scope.form.myinput.$error);
     };
 
 
@@ -150,6 +151,7 @@ describe('Events', function() {
     testForErrors(files, ["minnum", "maxsize"]);
 
     files = files.concat(files).concat(files);
+    files = [f2, angular.copy(f2)];
     testForErrors(files, ["maxsize"]);
   });
 
