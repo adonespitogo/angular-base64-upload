@@ -1,16 +1,16 @@
-describe('Validations', function () {
+describe('Validations', function() {
 
   var event;
 
-  beforeEach(function(){
+  beforeEach(function() {
 
     module('naif.base64');
 
-    module(function ($provide) {
+    module(function($provide) {
       $provide.value('$window', $windowMock);
     });
 
-    inject(function($injector){
+    inject(function($injector) {
 
       $INJECTOR = $injector;
       $COMPILE = $injector.get('$compile');
@@ -22,31 +22,36 @@ describe('Validations', function () {
 
   });
 
-  describe('required', function () {
+  describe('required', function() {
 
     var attrs;
     var directive;
     var scope;
 
-    beforeEach(function () {
+    beforeEach(function() {
       attrs = [
-        {attr: 'required', val: 'required'},
-        {attr: 'name', val: 'myinput'},
+        { attr: 'ng-model', val: 'files' },
+        { attr: 'required', val: 'required' },
+        { attr: 'name', val: 'myinput' },
       ];
       scope = $ROOTSCOPE.$new();
     });
 
-    it('should validate required on single file selection', function () {
+    it('should validate required on single file selection', function() {
       scope.file = {};
-      directive = _compile({ngModel: 'files', attrs: attrs, scope: scope});
+      directive = _compile({ attrs: attrs, scope: scope });
     });
 
-    it('should validate required on multiple file selection', function () {
+    it('should validate required on multiple file selection', function() {
       scope.files = [];
-      directive = _compile({ngModel: 'files', multiple:true, attrs: attrs, scope: scope});
+      attrs.push({
+        attr: 'multiple',
+        val: true
+      });
+      directive = _compile({ attrs: attrs, scope: scope });
     });
 
-    afterEach(function () {
+    afterEach(function() {
       $ROOTSCOPE.$apply();
       expect(directive.$scope.form.myinput.$error.required).toBe(true);
       expect(directive.$scope.form.myinput.$dirty).toBeFalsy();
@@ -58,33 +63,34 @@ describe('Validations', function () {
 
   });
 
-  describe('maxsize', function () {
+  describe('maxsize', function() {
 
     var maxsize;
     var attrs;
 
-    beforeEach(function () {
+    beforeEach(function() {
       maxsize = 500;
       attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'maxsize', val: maxsize},
+        { attr: 'ng-model', val: 'model' },
+        { attr: 'name', val: 'myinput' },
+        { attr: 'maxsize', val: maxsize },
       ];
     });
 
 
-    it('should validate maxsize on single file selection', function () {
+    it('should validate maxsize on single file selection', function() {
 
-      var d = _compile({ngModel: 'files', attrs: attrs});
+      var d = _compile({ attrs: attrs });
       expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
 
-      var testSize = function (size, result) {
+      var testSize = function(size, result) {
 
-        var f1 = new File({size: size * 1000});
+        var f1 = new File({ size: size * 1000 });
 
         event.target.files = [f1];
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.maxsize)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testSize(200, false);
@@ -93,21 +99,23 @@ describe('Validations', function () {
 
     });
 
-    it('should validate maxsize on multiple file selection', function () {
+    it('should validate maxsize on multiple file selection', function() {
 
-      var d = _compile({ngModel: 'files', attrs: attrs, multiple: true});
+      attrs.push({ attr: 'multiple', val: true });
+
+      var d = _compile({ attrs: attrs });
 
       expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
 
-      var testSize = function (size, size2, result) {
+      var testSize = function(size, size2, result) {
 
-        var f1 = new File({size: size * 1000});
-        var f2 = new File({size: size2 * 1000});
+        var f1 = new File({ size: size * 1000 });
+        var f2 = new File({ size: size2 * 1000 });
 
         event.target.files = [f1, f2];
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.maxsize)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.maxsize)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testSize(200, 100, false);
@@ -118,35 +126,36 @@ describe('Validations', function () {
     });
   });
 
-  describe('minsize', function () {
+  describe('minsize', function() {
 
     var minsize;
     var attrs;
 
-    beforeEach(function () {
+    beforeEach(function() {
       minsize = 500; //kb
 
       attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'minsize', val: minsize},
+        { attr: 'ng-model', val: 'model' },
+        { attr: 'name', val: 'myinput' },
+        { attr: 'minsize', val: minsize },
       ];
     });
 
-    it('should validate minsize on single file selection', function () {
+    it('should validate minsize on single file selection', function() {
 
 
-      var d = _compile({ngModel: 'files', attrs: attrs});
+      var d = _compile({ attrs: attrs });
 
       expect(d.$scope.form.myinput.$error.minsize).not.toBeDefined();
 
-      var testSize = function (size, result) {
+      var testSize = function(size, result) {
 
-        var f1 = new File({size: size * 1000});
+        var f1 = new File({ size: size * 1000 });
 
         event.target.files = [f1];
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.minsize)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testSize(200, true);
@@ -155,21 +164,23 @@ describe('Validations', function () {
 
     });
 
-    it('should validate minsize on multiple file selection', function () {
+    it('should validate minsize on multiple file selection', function() {
 
-      var d = _compile({ngModel: 'files', attrs: attrs, multiple: true});
+      attrs.push({ attr: 'multiple', val: true });
+
+      var d = _compile({ attrs: attrs });
 
       expect(d.$scope.form.myinput.$error.minsize).not.toBeDefined();
 
-      var testSize = function (size, size2, result) {
+      var testSize = function(size, size2, result) {
 
-        var f1 = new File({size: size * 1000});
-        var f2 = new File({size: size2 * 1000});
+        var f1 = new File({ size: size * 1000 });
+        var f2 = new File({ size: size2 * 1000 });
 
         event.target.files = [f1, f2];
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.minsize)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.minsize)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testSize(200, 100, true);
@@ -181,26 +192,27 @@ describe('Validations', function () {
 
   });
 
-  describe('maxnum and minnum', function () {
+  describe('maxnum and minnum', function() {
 
-    it('should validate maxnum', function () {
+    it('should validate maxnum', function() {
       var maxnum = 2;
 
       var attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'maxnum', val: maxnum},
+        { attr: 'ng-model', val: 'model' },
+        { attr: 'multiple', val: true },
+        { attr: 'name', val: 'myinput' },
+        { attr: 'maxnum', val: maxnum },
       ];
 
-
-      var d = _compile({ngModel: 'files', multiple: true, attrs: attrs});
+      var d = _compile({ attrs: attrs });
 
       expect(d.$scope.form.myinput.$error.maxnum).not.toBeDefined();
 
-      var testNumber = function (num, result) {
+      var testNumber = function(num, result) {
         event.target.files = new FileList(num);
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.maxnum)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.maxnum)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testNumber(1, false);
@@ -209,24 +221,26 @@ describe('Validations', function () {
 
     });
 
-    it('should validate minnum', function () {
+    it('should validate minnum', function() {
       var minnum = 2;
 
       var attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'minnum', val: minnum},
+        { attr: 'ng-model', val: 'model' },
+        { attr: 'multiple', val: true },
+        { attr: 'name', val: 'myinput' },
+        { attr: 'minnum', val: minnum },
       ];
 
 
-      var dir = _compile({ngModel: 'files', multiple: true, attrs: attrs});
+      var dir = _compile({ attrs: attrs });
 
       expect(dir.$scope.form.myinput.$error.minnum).not.toBeDefined();
 
-      var testNumber = function (num, result) {
+      var testNumber = function(num, result) {
         event.target.files = new FileList(num);
         dir.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(dir.$scope.form.myinput.$error.minnum)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(dir.$scope.form.myinput.$error.minnum)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testNumber(1, true);
@@ -237,7 +251,7 @@ describe('Validations', function () {
 
   });
 
-  describe('accept', function () {
+  describe('accept', function() {
     /*
       All possible file types:
       - file_extension  A file extension starting with the STOP character.
@@ -251,31 +265,32 @@ describe('Validations', function () {
     var accept;
     var attrs;
 
-    beforeEach(function () {
+    beforeEach(function() {
       accept = "image/*, .amr"; // all images
 
       attrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'accept', val: accept},
+        { attr: 'ng-model', val: 'files' },
+        { attr: 'name', val: 'myinput' },
+        { attr: 'accept', val: accept },
       ];
       // default filename: "filename.txt"
     });
 
-    it('should validate accept on single file selection', function () {
+    it('should validate accept on single file selection', function() {
 
 
-      var d = _compile({ngModel: 'files', attrs: attrs});
+      var d = _compile({ attrs: attrs });
 
       expect(d.$scope.form.myinput.$error.accept).not.toBeDefined();
 
-      var testType = function (isFileNameAMR, type, result) {
+      var testType = function(isFileNameAMR, type, result) {
         var fileName = "Maid with the Flaxen Hair.amr";
-        var f1 = new File({name: isFileNameAMR ? fileName : "filename.txt", type: type});
+        var f1 = new File({ name: isFileNameAMR ? fileName : "filename.txt", type: type });
 
         event.target.files = [f1];
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.accept)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.accept)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testType(false, "image/jpg", false);
@@ -288,21 +303,23 @@ describe('Validations', function () {
       testType(true, "", false);
     });
 
-    it('should validate accept on multiple file selection', function () {
+    it('should validate accept on multiple file selection', function() {
 
-      var d = _compile({ngModel: 'files', attrs: attrs, multiple: true});
+      attrs.push({ attr: 'multiple', val: true });
+
+      var d = _compile({ attrs: attrs });
 
       expect(d.$scope.form.myinput.$error.accept).not.toBeDefined();
 
-      var testType = function (type, type2, result) {
+      var testType = function(type, type2, result) {
 
-        var f1 = new File({type: type});
-        var f2 = new File({type: type2});
+        var f1 = new File({ type: type });
+        var f2 = new File({ type: type2 });
 
         event.target.files = [f1, f2];
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.accept)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.accept)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testType("image/jpeg", "image/png", false);
@@ -317,26 +334,28 @@ describe('Validations', function () {
 
     });
 
-    it('should validate accept on multiple file selection with custom extentions', function () {
+    it('should validate accept on multiple file selection with custom extentions', function() {
 
       var customAttrs = [
-        {attr: 'name', val: 'myinput'},
-        {attr: 'accept', val: "image/*, .zip"},
+        { attr: 'ng-model', val: 'model' },
+        { attr: 'multiple', val: true },
+        { attr: 'name', val: 'myinput' },
+        { attr: 'accept', val: "image/*, .zip" },
       ];
-      var d = _compile({ngModel: 'files', attrs: customAttrs, multiple: true});
+      var d = _compile({ attrs: customAttrs});
 
       expect(d.$scope.form.myinput.$error.accept).not.toBeDefined();
 
-      var testType = function (type, type2, result) {
+      var testType = function(type, type2, result) {
 
         //setting f1 to .zip to check custom accept values
-        var f1 = new File({name: "dont-download-git-repos-as.zip", type: type});
-        var f2 = new File({name: "clone-them:)", type: type2});
+        var f1 = new File({ name: "dont-download-git-repos-as.zip", type: type });
+        var f2 = new File({ name: "clone-them:)", type: type2 });
 
         event.target.files = [f1, f2];
         d.$input.triggerHandler(event);
         $ROOTSCOPE.$apply();
-        expect(d.$scope.form.myinput.$error.accept)[ result? 'toBe' : 'toBeFalsy'](result);
+        expect(d.$scope.form.myinput.$error.accept)[result ? 'toBe' : 'toBeFalsy'](result);
       };
 
       testType("image/jpeg1", "image/png2", false);

@@ -28,7 +28,7 @@ describe('BaseSixtyFourInput Directive', function () {
     var fileObj = new FileObject();
     var event = new Event({files: [file]});
 
-    var directive = _compile({ngModel: 'file'});
+    var directive = _compile({attrs: [{attr: 'ng-model', val: 'file'}]});
 
     directive.$input.triggerHandler(event);
     $ROOTSCOPE.$apply();
@@ -38,7 +38,12 @@ describe('BaseSixtyFourInput Directive', function () {
 
   it('should support multi-select input', function () {
 
-    var directive = _compile({ngModel: 'files', multiple: true});
+    var directive = _compile({
+      attrs: [
+        {attr: 'ng-model', val: 'files'}, 
+        {attr: 'multiple', val: true}
+      ]
+    });
 
     var expectedFileList = event.target.files;
     var expectedFileObjects = new FileObjects(expectedFileList.length);
@@ -52,7 +57,11 @@ describe('BaseSixtyFourInput Directive', function () {
   });
 
   it('should not tamper with dirty or pristine flags of his parent form', function () {
-    var d = _compile({ngModel: 'files'});
+    var d = _compile({
+      attrs: [
+        {attr: 'ng-model', val: 'files'}
+      ]
+    });
 
     expect(d.$scope.form.$dirty).toBe(false);
     expect(d.$scope.form.$pristine).toBe(true);

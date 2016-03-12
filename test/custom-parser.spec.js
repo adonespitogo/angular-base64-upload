@@ -91,11 +91,18 @@ describe('Custom Parser', function () {
 
   afterEach(function () {
 
-    directive = _compile({events: [{
-      name: 'parser',
-      handler: parser,
-      bindTo: 'parserHandler'
-    }]});
+    directive = _compile({
+      attrs: [
+        {attr: 'ng-model', val: 'model'}
+      ],
+      events: [
+        {
+          name: 'parser',
+          handler: parser,
+          bindTo: 'parserHandler'
+        }
+      ]
+    });
 
     var spy = spyOn(directive.$scope, 'parserHandler').andCallThrough();
 

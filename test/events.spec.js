@@ -1,16 +1,16 @@
-describe('Events', function () {
+describe('Events', function() {
 
   var event;
 
-  beforeEach(function(){
+  beforeEach(function() {
 
     module('naif.base64');
 
-    module(function ($provide) {
+    module(function($provide) {
       $provide.value('$window', $windowMock);
     });
 
-    inject(function($injector){
+    inject(function($injector) {
 
       $INJECTOR = $injector;
       $COMPILE = $injector.get('$compile');
@@ -22,21 +22,25 @@ describe('Events', function () {
 
   });
 
-
-  it('should trigger on-change handler', function () {
+  it('should trigger on-change handler', function() {
 
     event.target.files = new FileList(1);
 
     var onChangeHandler = {
       name: 'on-change',
-      handler: function (e, fileList) {
+      handler: function(e, fileList) {
         expect(e.target.files).toBe(fileList);
         expect(fileList).toBe(event.target.files);
       },
       bindTo: 'onChangeHandler'
     };
 
-    var d = _compile({events: [onChangeHandler]});
+    var d = _compile({
+      attrs: [
+        { attr: 'ng-model', val: 'model' }
+      ],
+      events: [onChangeHandler]
+    });
 
     var spy = spyOn(d.$scope, 'onChangeHandler').andCallThrough();
 
@@ -45,20 +49,25 @@ describe('Events', function () {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should trigger on-after-validate handler', function () {
+  it('should trigger on-after-validate handler', function() {
 
     event.target.files = new FileList(1);
 
     var onAfterValidateHandler = {
       name: 'on-after-validate',
-      handler: function (e, _, fileList) {
+      handler: function(e, _, fileList) {
         expect(e.target.files).toBe(fileList);
         expect(fileList).toBe(event.target.files);
       },
       bindTo: 'onAfterValidateHandler'
     };
 
-    var d = _compile({events: [onAfterValidateHandler]});
+    var d = _compile({
+      attrs: [
+        { attr: 'ng-model', val: 'model' }
+      ],
+      events: [onAfterValidateHandler]
+    });
 
     var spy = spyOn(d.$scope, 'onAfterValidateHandler').andCallThrough();
 
@@ -67,14 +76,14 @@ describe('Events', function () {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should validate for errors on-after-validate handler', function () {
+  it('should validate for errors on-after-validate handler', function() {
     var allErrorTypes = ["maxsize", "minsize", "maxnum", "minnum"];
 
-    var testForErrors = function(files, expectedErrorTypes){
+    var testForErrors = function(files, expectedErrorTypes) {
       var d;
       var onAfterValidateHandler = {
         name: 'on-after-validate',
-        handler: function (e, _, fileList) {
+        handler: function(e, _, fileList) {
           expect(e.target.files).toBe(fileList);
           expect(fileList).toBe(event.target.files);
           for (var i = 0; i < 4; i++) {
@@ -87,8 +96,8 @@ describe('Events', function () {
 
       // define element with attributes
       d = _compile({
-        ngModel: 'files',
         attrs: [
+          { attr: 'ng-model', val: 'files' },
           { attr: 'maxsize', val: 600 },
           { attr: 'multiple', val: true },
           { attr: 'minsize', val: 300 },
@@ -117,8 +126,8 @@ describe('Events', function () {
 
     // Tests
     // min 2 max 3, at least 300, at most 500
-    var f1 = new File({size: 200 * 1000});
-    var f2 = new File({size: 700 * 1000});
+    var f1 = new File({ size: 200 * 1000 });
+    var f2 = new File({ size: 700 * 1000 });
 
     var files = [new File()];
     testForErrors(files, ["minnum"]);
@@ -144,11 +153,11 @@ describe('Events', function () {
     testForErrors(files, ["maxsize"]);
   });
 
-  it('should validate for base64 on-after-validate handler', function () {
+  it('should validate for base64 on-after-validate handler', function() {
     var d;
     var onAfterValidateHandler = {
       name: 'on-after-validate',
-      handler: function (e, fileObjects) {
+      handler: function(e, fileObjects) {
         expect(fileObjects.length > 0).toBeTruthy();
         expect(fileObjects[0].base64).toBeTruthy();
       },
@@ -157,7 +166,9 @@ describe('Events', function () {
 
     // define element with attributes
     d = _compile({
-      ngModel: 'files',
+      attrs: [
+        { attr: 'ng-model', val: 'files' }
+      ],
       scope: $ROOTSCOPE.$new(),
       // bind event handler
       events: [onAfterValidateHandler]
@@ -172,12 +183,12 @@ describe('Events', function () {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should trigger file reader event handlers', function () {
+  it('should trigger file reader event handlers', function() {
 
     event.target.files = new FileList(1);
 
-    var makeHandler = function (type) {
-      return function (e, reader, file, fileList, fileObjects, fileObject) {
+    var makeHandler = function(type) {
+      return function(e, reader, file, fileList, fileObjects, fileObject) {
         expect(e.type).toBe(type);
         expect(fileList).toEqual(event.target.files);
       };
@@ -194,13 +205,18 @@ describe('Events', function () {
       });
     }
 
-    var dir = _compile({events: eventsOpt});
+    var dir = _compile({
+      attrs: [
+        { attr: 'ng-model', val: 'model' }
+      ],
+      events: eventsOpt
+    });
 
     var handlerSpies = [];
 
     for (var c = FILE_READER_EVENTS.length - 1; c >= 0; c--) {
       var e = FILE_READER_EVENTS[c];
-      var spy = spyOn(dir.$scope, e+'Handler').andCallThrough();
+      var spy = spyOn(dir.$scope, e + 'Handler').andCallThrough();
       handlerSpies.push(spy);
     }
 
@@ -215,17 +231,22 @@ describe('Events', function () {
 
   });
 
-  it('should not trigger events when no file is selected', function () {
+  it('should not trigger events when no file is selected', function() {
 
     event.target.files = [];
 
     var e = {
       name: 'on-change',
-      handler: function () {},
+      handler: function() {},
       bindTo: 'onChangeHandler'
     };
 
-    var d = _compile({events: [e]});
+    var d = _compile({
+      attrs: [
+        { attr: 'ng-model', val: 'model' }
+      ],
+      events: [e]
+    });
 
     var spy = spyOn(d.$scope, 'onChangeHandler').andCallThrough();
 

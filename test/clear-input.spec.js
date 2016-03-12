@@ -18,7 +18,11 @@ describe('Clear input', function () {
 
       event = new Event();
       scope = $ROOTSCOPE.$new();
-      directive = _compile({ngModel: 'file'});
+      directive = _compile({
+        attrs: [
+          {attr: 'ng-model', val: 'file'}
+        ]
+      });
       directive.$input.triggerHandler(event);
       $ROOTSCOPE.$apply();
       spy = spyOn(directive.$input.isolateScope(), '_clearInput').andCallThrough();
