@@ -63,7 +63,8 @@
 
           function _readFiles() {
             var promises = [];
-            for (var i = rawFiles.length - 1; i >= 0; i--) {
+            var i;
+            for (i = rawFiles.length - 1; i >= 0; i--) {
               // append file a new promise, that waits until resolved
               rawFiles[i].deferredObj = $q.defer();
               promises.push(rawFiles[i].deferredObj.promise);
@@ -73,7 +74,7 @@
             // set view value once all files are read
             $q.all(promises).then(_setViewValue);
 
-            for (var i = rawFiles.length - 1; i >= 0; i--) {
+            for (i = rawFiles.length - 1; i >= 0; i--) {
               var reader = new $window.FileReader();
               var file = rawFiles[i];
               var fileObject = {};
