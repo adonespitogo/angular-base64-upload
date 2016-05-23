@@ -50,6 +50,9 @@
           elem.on('change', function(e) {
 
             if (!e.target.files.length) {
+              rawFiles = [];
+              fileObjects = [];
+              _onAfterValidate(e);
               return;
             }
 
@@ -82,7 +85,7 @@
               fileObject.filetype = file.type;
               fileObject.filename = file.name;
               fileObject.filesize = file.size;
-              
+
               _attachEventHandlers(reader, file, fileObject);
               reader.readAsArrayBuffer(file);
             }
