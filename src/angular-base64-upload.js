@@ -176,9 +176,7 @@
 
           scope.$watch(function() {
             return ngModel.$viewValue;
-          }, function(val, oldVal) {
-            if (ngModel.$isEmpty(oldVal)) {
-              return; }
+          }, function(val) {
             if (ngModel.$isEmpty(val)) {
               scope._clearInput();
             }
