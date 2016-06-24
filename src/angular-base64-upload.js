@@ -89,22 +89,28 @@
           }
 
           function _onChange(e) {
-            if (attrs.onChange) {
-              scope.onChange()(e, rawFiles);
-            }
+              if (attrs.onChange) {
+                  if (scope.onChange && typeof scope.onChange() === "function")
+                      scope.onChange()(e, rawFiles);
+                  else
+                      scope.onChange(e, rawFiles);
+              }
           }
 
           function _onAfterValidate(e) {
             if (attrs.onAfterValidate) {
-              // wait for all promises, in rawFiles,
-              //   then call onAfterValidate
-              var promises = [];
-              for (var i = rawFiles.length - 1; i >= 0; i--) {
-                promises.push(rawFiles[i].deferredObj.promise);
-              }
-              $q.all(promises).then(function() {
-                scope.onAfterValidate(e, fileObjects, rawFiles);
-              });
+                // wait for all promises, in rawFiles,
+                //   then call onAfterValidate
+                var promises = [];
+                for (var i = rawFiles.length - 1; i >= 0; i--) {
+                    promises.push(rawFiles[i].deferredObj.promise);
+                }
+                $q.all(promises).then(function () {
+                    if (scope.onAfterValidate && typeof scope.onAfterValidate() === "function")
+                        scope.onAfterValidate()(e, fileObjects, rawFiles);
+                    else
+                        scope.onAfterValidate(e, fileObjects, rawFiles);
+                });
             }
           }
 
@@ -148,7 +154,10 @@
               });
 
               if (attrs.onload) {
-                scope.onload()(e, fReader, file, rawFiles, fileObjects, fileObject);
+                  if (scope.onload && typeof scope.onload() === "function")
+                      scope.onload()(e, fReader, file, rawFiles, fileObjects, fileObject);
+                  else
+                      scope.onload(e, rawFiles);
               }
 
             };
