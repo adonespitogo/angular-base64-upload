@@ -103,7 +103,7 @@
                 promises.push(rawFiles[i].deferredObj.promise);
               }
               $q.all(promises).then(function() {
-                scope.onAfterValidate()(e, fileObjects, rawFiles);
+                scope.onAfterValidate(e, fileObjects, rawFiles);
               });
             }
           }
