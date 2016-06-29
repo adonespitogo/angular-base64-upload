@@ -1,6 +1,6 @@
-/*! angular-base64-upload - v0.1.19
+/*! angular-base64-upload - v0.1.20
 * https://github.com/adonespitogo/angular-base64-upload
-* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [March 13, 2016]
+* Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [June 29, 2016]
 * Licensed MIT */
 (function(window, undefined) {
 
@@ -66,24 +66,27 @@
           });
 
           function _readFiles() {
-            for (var i = rawFiles.length - 1; i >= 0; i--) {
+            var promises = [];
+            var i;
+            for (i = rawFiles.length - 1; i >= 0; i--) {
+              // append file a new promise, that waits until resolved
+              rawFiles[i].deferredObj = $q.defer();
+              promises.push(rawFiles[i].deferredObj.promise);
+              // TODO: Make sure all promises are resolved even during file reader error, otherwise view value wont be updated
+            }
+
+            // set view value once all files are read
+            $q.all(promises).then(_setViewValue);
+
+            for (i = rawFiles.length - 1; i >= 0; i--) {
               var reader = new $window.FileReader();
               var file = rawFiles[i];
               var fileObject = {};
-              var promises = [];
 
               fileObject.filetype = file.type;
               fileObject.filename = file.name;
               fileObject.filesize = file.size;
-
-              // append file a new promise, that waits until resolved
-              rawFiles[i].deferredObj = $q.defer();
-              promises.push(rawFiles[i].deferredObj.promise);
-
-              // set view value once all files are read
-              $q.all(promises).then(_setViewValue);
-              // TODO: Make sure all promises are resolved even during file reader error, otherwise view value wont be updated
-
+              
               _attachEventHandlers(reader, file, fileObject);
               reader.readAsArrayBuffer(file);
             }
@@ -134,7 +137,14 @@
               var buffer = e.target.result;
               var promise;
 
-              fileObject.base64 = $window._arrayBufferToBase64(buffer);
+              // do not convert the image to base64 if it exceeds the maximum
+              // size to prevent the browser from freezing
+              var exceedsMaxSize = attrs.maxsize && file.size > attrs.maxsize * 1024;
+              if (attrs.doNotParseIfOversize !== undefined && exceedsMaxSize) {
+                fileObject.base64 = null;
+              } else {
+                fileObject.base64 = $window._arrayBufferToBase64(buffer);
+              }
 
               if (attrs.parser) {
                 promise = $q.when(scope.parser()(file, fileObject));
@@ -144,8 +154,6 @@
 
               promise.then(function(fileObj) {
                 fileObjects.push(fileObj);
-                // _setViewValue();
-
                 // fulfill the promise here.
                 file.deferredObj.resolve();
               });

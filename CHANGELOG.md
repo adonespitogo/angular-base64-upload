@@ -1,6 +1,9 @@
 Change Log
 --------
 
+v0.1.20
+ - Added do-not-parse-if-oversize flag to prevent images above maximum size to be converted to base64.
+
 v0.1.19
  - Refactored unit tests - separated into multiple files for easier navigation.
  - Set view value only once

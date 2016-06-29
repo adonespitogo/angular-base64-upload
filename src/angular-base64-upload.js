@@ -133,7 +133,14 @@
               var buffer = e.target.result;
               var promise;
 
-              fileObject.base64 = $window._arrayBufferToBase64(buffer);
+              // do not convert the image to base64 if it exceeds the maximum
+              // size to prevent the browser from freezing
+              var exceedsMaxSize = attrs.maxsize && file.size > attrs.maxsize * 1024;
+              if (attrs.doNotParseIfOversize !== undefined && exceedsMaxSize) {
+                fileObject.base64 = null;
+              } else {
+                fileObject.base64 = $window._arrayBufferToBase64(buffer);
+              }
 
               if (attrs.parser) {
                 promise = $q.when(scope.parser()(file, fileObject));
