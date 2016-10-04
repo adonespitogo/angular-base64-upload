@@ -71,6 +71,16 @@ Validations
 </form>
 ```
 
+Options
+-------------------
+ - `do-not-parse-if-oversize` = Prevents the image from being converted to base64 whenever its size exceeds the maximum file size; this can be useful to prevent the browser from freezing whenever an exceedingly large file is uploaded. If this flag is set, the base64 attribute in the model will be set to null whenever an oversized image is uploaded.
+ 
+```html
+<form name="form">
+  <input type="file" ng-model="files" name="files" base-sixty-four-input do-not-parse-if-oversize>
+</form>
+```
+
 Custom Parser
 -------------------
 You can implement your own parsing logic before the data gets added into the model.

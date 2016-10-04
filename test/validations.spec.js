@@ -368,4 +368,125 @@ describe('Validations', function() {
 
     });
   });
+
+  describe('doNotParseIfOversize', function() {
+    var maxsize;
+    var attrs;
+
+    beforeEach(function() {
+      maxsize = 500; //kb
+
+      attrs = [
+        { attr: 'ng-model', val: 'model' },
+        { attr: 'name', val: 'myinput' },
+        { attr: 'maxsize', val: maxsize }
+      ];
+    });
+
+    it('should not parse single oversized files when doNotParseIfOversize is set', function() {
+      attrs.push({ attr: 'do-not-parse-if-oversize', val: '' });
+      var d = _compile({ attrs: attrs });
+
+      var testSize = function(size, shouldBeNull) {
+
+        var f1 = new File({ size: size * 1000 });
+
+        event.target.files = [f1];
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        if (shouldBeNull) {
+          expect(d.$scope.model.base64).toBe(null);
+        } else {
+          expect(d.$scope.model.base64).not.toBe(null);
+        }
+        
+      };
+
+      testSize(200, false);
+      testSize(500, false);
+      testSize(600, true);
+
+    });
+
+    it('should not parse multiple oversized files when doNotParseIfOversize is set', function() {
+      attrs.push({ attr: 'do-not-parse-if-oversize', val: '' });
+      attrs.push({ attr: 'multiple', val: true });
+
+      var d = _compile({ attrs: attrs });
+
+      expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
+
+      var testSize = function(size, size2, shouldBeNull, shouldBeNull2) {
+
+        var f1 = new File({ size: size * 1000 });
+        var f2 = new File({ size: size2 * 1000 });
+
+        event.target.files = [f1, f2];
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        if (shouldBeNull) {
+          expect(d.$scope.model[1].base64).toBe(null);
+        } else {
+          expect(d.$scope.model[1].base64).not.toBe(null);
+        }
+        if (shouldBeNull2) {
+          expect(d.$scope.model[0].base64).toBe(null);
+        } else {
+          expect(d.$scope.model[0].base64).not.toBe(null);
+        }
+      };
+
+      testSize(200, 100, false, false);
+      testSize(500, 123, false, false);
+      testSize(200, 600, false, true);
+      testSize(600, 100, true, false);
+
+    });
+
+    it('should parse single oversized files when doNotParseIfOversize is not set', function() {
+      var d = _compile({ attrs: attrs });
+
+      var testSize = function(size) {
+
+        var f1 = new File({ size: size * 1000 });
+
+        event.target.files = [f1];
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        expect(d.$scope.model.base64).not.toBe(null);
+        
+      };
+
+      testSize(200);
+      testSize(500);
+      testSize(600);
+
+    });
+
+    it('should parse multiple oversized files when doNotParseIfOversize is not set', function() {
+      attrs.push({ attr: 'multiple', val: true });
+
+      var d = _compile({ attrs: attrs });
+
+      expect(d.$scope.form.myinput.$error.maxsize).not.toBeDefined();
+
+      var testSize = function(size, size2) {
+
+        var f1 = new File({ size: size * 1000 });
+        var f2 = new File({ size: size2 * 1000 });
+
+        event.target.files = [f1, f2];
+        d.$input.triggerHandler(event);
+        $ROOTSCOPE.$apply();
+        expect(d.$scope.model[0].base64).not.toBe(null);
+        expect(d.$scope.model[1].base64).not.toBe(null);
+      };
+
+      testSize(200, 100);
+      testSize(500, 123);
+      testSize(200, 600);
+      testSize(600, 100);
+
+    });
+  });
 });
