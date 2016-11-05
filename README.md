@@ -155,7 +155,7 @@ Events
 
 Example event handler implementation:
    ```
-   $scope.errorHandler = function (event, reader, fileList, fileObjs, file) {
+   $scope.errorHandler = function (event, reader, file, fileList, fileObjs, object) {
      console.log("An error occurred while reading file: "+file.name);
      reader.abort();
    };
