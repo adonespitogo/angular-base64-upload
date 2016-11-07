@@ -194,6 +194,12 @@
           // http://stackoverflow.com/questions/1703228/how-can-i-clear-an-html-file-input-with-javascript
           scope._clearInput = function() {
             elem[0].value = '';
+            // Remove validation errors
+            ngModel.$setValidity('maxnum', true);
+            ngModel.$setValidity('minnum', true);
+            ngModel.$setValidity('maxsize', true);
+            ngModel.$setValidity('minsize', true);
+            ngModel.$setValidity('accept', true);
           };
 
           scope.$watch(function() {
