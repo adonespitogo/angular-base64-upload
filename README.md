@@ -85,28 +85,42 @@ Custom Parser
 -------------------
 You can implement your own parsing logic before the data gets added into the model.
 
-Use case: You want images to be auto-resized after selecting files and add custom model attributes.
+Use case: You want images to be auto-resized after selecting files and add custom model attributes ([Jimp](https://github.com/oliver-moran/jimp) has been used in the example below).
+
 
 ```
-app.controller('ctrl', function ($scope, $q, imageProcessor) {
+app.controller('ctrl', function ($scope, $q) {
 
   $scope.resizeImage = function ( file, base64_object ) {
-
+    // file is an instance of File constructor.
+    // base64_object is an object that contains compiled base64 image data from file.
     var deferred = $q.defer();
-
-    imageProcessor.run(file).then(function (resized) {
-      var modelVal = {
-        file: file,
-        resized: resized
-      };
-      deferred.resolve(modelVal); // resolved value is appended to the model
+    var url = URL.createObjectURL(file);// creates url for file object.
+    Jimp.read(url)
+    .then(function (item) {
+      item
+      .resize(1280, Jimp.AUTO)// width of 1280px, auto-adjusted height
+      .quality(50)//drops the image quality to 50%
+      .getBase64(file.type, function (err, newBase64) {
+        if (err) {throw err;}
+        var bytes = Math.round((3/4)*newBase64.length);
+        base64Object.filetype = file.type;
+        base64Object.filesize = bytes;
+        base64Object.base64 = newBase64;
+        // Note that base64 in this package doesn't contain "data:image/jpeg;base64," part,
+        // while base64 string from Jimp does. It should be taken care of in back-end side.
+        deferred.resolve(base64Object);
+      });
+    })
+    .catch(function (err) {
+      return console.log(err);// error handling
     });
-
     return deferred.promise;
   };
 
 });
 
+<script src='/js/jimp.min.js'></script>
 <input type="file" base-sixty-four-input ng-model="images" parser="resizeImage" multiple>
 
 ```
