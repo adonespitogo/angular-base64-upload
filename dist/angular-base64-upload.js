@@ -2,16 +2,18 @@
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [Wed Apr 26 2017]
 * Licensed MIT */
-(function(window) {
+(function(window, undefined) {
 
   'use strict';
 
   /* istanbul ignore next */
-  window._arrayBufferToBase64 = function(buffer) { //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  window._arrayBufferToBase64 = function(buffer) {
     var binary = '';
     var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
+
+    for (var i = 0; i < len; i += 1) {
       binary += String.fromCharCode(bytes[i]);
     }
     return window.btoa(binary);
@@ -32,10 +34,10 @@
       };
 
       var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
-      for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
-        var e = FILE_READER_EVENTS[i];
+
+      FILE_READER_EVENTS.forEach(function(e) {
         isolateScope[e] = '&';
-      }
+      });
 
       return {
         restrict: 'A',

@@ -38,9 +38,9 @@ gulp.task('debug', ['clean'], () => {
 
 gulp.task('uglify', ['clean'], () => {
   return gulp.src(src)
-    .pipe(insert.prepend(banner))
     .pipe(sourcemaps.init())
     .pipe(uglify())
+    .pipe(insert.prepend(banner))
     .pipe(rename(path => {
       path.basename += '.min'
     }))
@@ -48,6 +48,6 @@ gulp.task('uglify', ['clean'], () => {
     .pipe(gulp.dest(dist))
 })
 
-gulp.task('build', ['clean', 'debug', 'uglify'])
+gulp.task('build', ['clean', 'jshint', 'debug', 'uglify'])
 
 gulp.task('default', ['build'])
