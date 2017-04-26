@@ -291,16 +291,21 @@
 
           elem.on('change', function(e) {
 
-            if (!e.target.files.length) {
-              return;
-            }
-
             fileObjects = [];
             fileObjects = angular.copy(fileObjects);
-            rawFiles = e.target.files; // use event target so we can mock the files from test
-            _readFiles();
-            _onChange(e);
-            _onAfterValidate(e);
+
+            if (e.target.files.length === 0) {
+              rawFiles = [];
+              _setViewValue();
+            } else {
+              rawFiles = e.target.files; // use event target so we can mock the files from test
+              _readFiles();
+              _onChange(e);
+              _onAfterValidate(e);
+            }
+
+            scope._clearInput();
+
           });
 
         }

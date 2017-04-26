@@ -1,4 +1,4 @@
-/*! angular-base64-upload - v0.1.21
+/*! angular-base64-upload - v0.1.22
 * https://github.com/adonespitogo/angular-base64-upload
 * Copyright (c) Adones Pitogo <pitogo.adones@gmail.com> [Wed Apr 26 2017]
 * Licensed MIT */
@@ -282,23 +282,34 @@
           scope.$watch(function() {
             return ngModel.$viewValue;
           }, function(val) {
-            if (ngModel.$isEmpty(val)) {
+            if (ngModel.$isEmpty(val) && ngModel.$dirty) {
               scope._clearInput();
+              // Remove validation errors
+              ngModel.$setValidity('maxnum', true);
+              ngModel.$setValidity('minnum', true);
+              ngModel.$setValidity('maxsize', true);
+              ngModel.$setValidity('minsize', true);
+              ngModel.$setValidity('accept', true);
             }
           });
 
           elem.on('change', function(e) {
 
-            if (!e.target.files.length) {
-              return;
-            }
-
             fileObjects = [];
             fileObjects = angular.copy(fileObjects);
-            rawFiles = e.target.files; // use event target so we can mock the files from test
-            _readFiles();
-            _onChange(e);
-            _onAfterValidate(e);
+
+            if (e.target.files.length === 0) {
+              rawFiles = [];
+              _setViewValue();
+            } else {
+              rawFiles = e.target.files; // use event target so we can mock the files from test
+              _readFiles();
+              _onChange(e);
+              _onAfterValidate(e);
+            }
+
+            scope._clearInput();
+
           });
 
         }
