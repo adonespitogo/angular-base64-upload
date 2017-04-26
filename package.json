@@ -4,7 +4,7 @@
   "description": "Converts files from file input into base64 encoded models.",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "gulp test"
   },
   "devDependencies": {
     "bower": "^1.8.0",
