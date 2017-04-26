@@ -2,7 +2,7 @@
 
 const gulp = require('gulp')
 const uglify = require('gulp-uglify')
-const jslint = require('gulp-jslint')
+const jshint = require('gulp-jshint')
 const insert = require('gulp-insert')
 const rename = require('gulp-rename')
 const sourcemaps = require('gulp-sourcemaps')
@@ -20,30 +20,23 @@ gulp.task('clean', done => {
   })
 })
 
-gulp.task('jslint', () => {
+gulp.task('jshint', () => {
   return gulp.src(src)
-    .pipe(jslint({
-      for: true
-    }))
-    .on('error', function swallowError(err) {
-      gutil.log(err);
-      gutil.beep();
-      this.emit('end');
-    })
-    .pipe(jslint.reporter('default'))
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'))
 })
 
-gulp.task('test', done => {
+gulp.task('test', ['jshint'], done => {
   new TestRunner(done)
 })
 
-gulp.task('debug', () => {
+gulp.task('debug', ['clean'], () => {
   return gulp.src(src)
     .pipe(insert.prepend(banner))
     .pipe(gulp.dest(dist))
 })
 
-gulp.task('uglify', () => {
+gulp.task('uglify', ['clean'], () => {
   return gulp.src(src)
     .pipe(insert.prepend(banner))
     .pipe(sourcemaps.init())

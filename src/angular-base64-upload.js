@@ -1,4 +1,4 @@
-(function(window) {
+(function(window, undefined) {
 
   'use strict';
 
@@ -9,13 +9,9 @@
     var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
 
-    // http://stackoverflow.com/questions/35327452/jslint-unexpected-for-unexpected-var
-    (function() {
-      var i = 0;
-      for (i; i < len; i += 1) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-    })();
+    for (var i = 0; i < len; i += 1) {
+      binary += String.fromCharCode(bytes[i]);
+    }
     return window.btoa(binary);
   };
 
