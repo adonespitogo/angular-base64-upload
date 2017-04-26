@@ -41,5 +41,8 @@
   "bugs": {
     "url": "https://github.com/adonespitogo/angular-base64-upload/issues"
   },
-  "homepage": "https://github.com/adonespitogo/angular-base64-upload"
+  "homepage": "https://github.com/adonespitogo/angular-base64-upload",
+  "engines": {
+    "node": ">=4.0"
+  }
 }

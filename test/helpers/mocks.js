@@ -21,7 +21,7 @@ function FileObject (file) {
   this.filename = file.name;
   this.filetype = file.type;
   this.filesize = file.size;
-  this.base64 = $windowMock._arrayBufferToBase64();
+  this.base64 = $windowMock.arrayBufferToBase64();
 }
 
 function FileObjects (num) {
@@ -80,7 +80,7 @@ FileReaderMock.autoTriggerEvents = false;
 
 $windowMock = {
   document: window.document,
-  _arrayBufferToBase64: function () {
+  arrayBufferToBase64: function () {
     return 'base64-mock-string';
   },
   FileReader: FileReaderMock

@@ -34,11 +34,12 @@ class TestRunner {
       configFile: __dirname + '/karma.conf.js',
       files,
       reporters
-    }, () => {
+    }, exitCode => {
       if (this.version_index === ANGULAR_VERSIONS.length - 1) {
         if (!this.isDone) {
           this.done()
           this.isDone = true
+          process.exit(exitCode)
         }
       } else {
         this.version_index += 1

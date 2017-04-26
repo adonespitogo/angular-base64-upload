@@ -3,13 +3,19 @@
   'use strict';
 
   /* istanbul ignore next */
-  window._arrayBufferToBase64 = function(buffer) { //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+  window.arrayBufferToBase64 = function(buffer) {
     var binary = '';
     var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
-    for (var i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
+
+    // http://stackoverflow.com/questions/35327452/jslint-unexpected-for-unexpected-var
+    (function() {
+      var i = 0;
+      for (i; i < len; i += 1) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+    })();
     return window.btoa(binary);
   };
 
@@ -28,10 +34,10 @@
       };
 
       var FILE_READER_EVENTS = ['onabort', 'onerror', 'onloadstart', 'onloadend', 'onprogress', 'onload'];
-      for (var i = FILE_READER_EVENTS.length - 1; i >= 0; i--) {
-        var e = FILE_READER_EVENTS[i];
+
+      FILE_READER_EVENTS.forEach(function(e) {
         isolateScope[e] = '&';
-      }
+      });
 
       return {
         restrict: 'A',
@@ -170,7 +176,7 @@
               if (attrs.doNotParseIfOversize !== undefined && exceedsMaxSize) {
                 fileObject.base64 = null;
               } else {
-                fileObject.base64 = $window._arrayBufferToBase64(buffer);
+                fileObject.base64 = $window.arrayBufferToBase64(buffer);
               }
 
               if (attrs.parser) {

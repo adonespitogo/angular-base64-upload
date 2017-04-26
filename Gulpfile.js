@@ -22,7 +22,9 @@ gulp.task('clean', done => {
 
 gulp.task('jslint', () => {
   return gulp.src(src)
-    .pipe(jslint())
+    .pipe(jslint({
+      for: true
+    }))
     .on('error', function swallowError(err) {
       gutil.log(err);
       gutil.beep();
