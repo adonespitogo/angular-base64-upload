@@ -30,7 +30,7 @@ Installation
 
 Example
 --------------------------
-See [plunker](http://embed.plnkr.co/MTzfQASN8ZVeocAq7VcM/preview) or the [./demo](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo) folder.
+See [plunker](http://embed.plnkr.co/MTzfQASN8ZVeocAq7VcM/preview).
 
 Usage
 -------
@@ -223,10 +223,12 @@ end
 
 Contribution
 ------------
- - Using [Grunt](http://gruntjs.com) as build tool
  - Uses [jasmine 1.3](http://jasmine.github.io/1.3/introduction.html) in writing unit test specs
- - `grunt test` to run unit tests
- - `grunt build` to build the project
+ - `npm install -g gulp gulp-cli bower`
+ - `npm install`
+ - `bower install`
+ - `gulp test` to run unit tests
+ - `gulp build` to build the project
  - Update `README.md` and `CHANGELOG.md` to reflect the new changes
  - Update the version number of `package.json` and `bower.json`
 

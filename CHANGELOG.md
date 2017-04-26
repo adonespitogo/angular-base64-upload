@@ -1,6 +1,10 @@
 Change Log
 --------
 
+v0.1.21
+ - Migrate to `Gulp` build
+ - Clear validation errors after clearing input with empty value - [see PR#90](https://github.com/adonespitogo/angular-base64-upload/pull/90)
+
 v0.1.20
  - Added do-not-parse-if-oversize flag to prevent images above maximum size to be converted to base64.
 
