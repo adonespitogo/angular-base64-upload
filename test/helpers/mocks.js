@@ -21,7 +21,7 @@ function FileObject (file) {
   this.filename = file.name;
   this.filetype = file.type;
   this.filesize = file.size;
-  this.base64 = $windowMock.arrayBufferToBase64();
+  this.base64 = $windowMock._arrayBufferToBase64();
 }
 
 function FileObjects (num) {
