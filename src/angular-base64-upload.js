@@ -278,8 +278,14 @@
           scope.$watch(function() {
             return ngModel.$viewValue;
           }, function(val) {
-            if (ngModel.$isEmpty(val)) {
+            if (ngModel.$isEmpty(val) && ngModel.$dirty) {
               scope._clearInput();
+              // Remove validation errors
+              ngModel.$setValidity('maxnum', true);
+              ngModel.$setValidity('minnum', true);
+              ngModel.$setValidity('maxsize', true);
+              ngModel.$setValidity('minsize', true);
+              ngModel.$setValidity('accept', true);
             }
           });
 
