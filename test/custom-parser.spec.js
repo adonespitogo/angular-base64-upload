@@ -40,7 +40,7 @@ describe('Custom Parser', function () {
         filename: file.name,
         filesize: file.size,
         filetype: file.type,
-        base64: $window.arrayBufferToBase64()
+        base64: $window._arrayBufferToBase64()
       });
       return expectedModel;
     };
@@ -60,7 +60,7 @@ describe('Custom Parser', function () {
         filename: file.name,
         filesize: file.size,
         filetype: file.type,
-        base64: $window.arrayBufferToBase64()
+        base64: $window._arrayBufferToBase64()
       });
 
       var $q = $INJECTOR.get('$q');
@@ -82,7 +82,7 @@ describe('Custom Parser', function () {
         filename: file.name,
         filesize: file.size,
         filetype: file.type,
-        base64: $window.arrayBufferToBase64()
+        base64: $window._arrayBufferToBase64()
       });
 
     };

@@ -4,7 +4,7 @@
 
   /* istanbul ignore next */
   //http://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
-  window.arrayBufferToBase64 = function(buffer) {
+  window._arrayBufferToBase64 = function(buffer) {
     var binary = '';
     var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
@@ -172,7 +172,7 @@
               if (attrs.doNotParseIfOversize !== undefined && exceedsMaxSize) {
                 fileObject.base64 = null;
               } else {
-                fileObject.base64 = $window.arrayBufferToBase64(buffer);
+                fileObject.base64 = $window._arrayBufferToBase64(buffer);
               }
 
               if (attrs.parser) {
