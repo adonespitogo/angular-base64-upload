@@ -80,7 +80,7 @@ FileReaderMock.autoTriggerEvents = false;
 
 $windowMock = {
   document: window.document,
-  arrayBufferToBase64: function () {
+  _arrayBufferToBase64: function () {
     return 'base64-mock-string';
   },
   FileReader: FileReaderMock
