@@ -1,6 +1,6 @@
 describe('BaseSixtyFourInput Directive', function () {
 
-  var event;
+  var event, spy;
 
   beforeEach(function(){
 
@@ -32,6 +32,7 @@ describe('BaseSixtyFourInput Directive', function () {
 
     directive.$input.triggerHandler(event);
     $ROOTSCOPE.$apply();
+    spy = spyOn(directive.$input.isolateScope(), '_clearInput').andCallThrough();
     expect(directive.$scope.file).toEqual(fileObj);
 
   });
@@ -66,6 +67,18 @@ describe('BaseSixtyFourInput Directive', function () {
     expect(d.$scope.form.$dirty).toBe(false);
     expect(d.$scope.form.$pristine).toBe(true);
   });
+
+  it('should clear input after each selection', function () {
+
+    var event = new Event();
+
+    var directive = _compile({attrs: [{attr: 'ng-model', val: 'file'}]});
+
+    spy = spyOn(directive.$input.isolateScope(), '_clearInput').andCallThrough();
+    directive.$input.triggerHandler(event);
+    $ROOTSCOPE.$apply();
+    expect(spy).toHaveBeenCalled();
+  })
 
 });
 

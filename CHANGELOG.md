@@ -1,6 +1,10 @@
 Change Log
 --------
 
+v0.1.22
+ - Clear model when selecting empty files. See [PR#75](https://github.com/adonespitogo/angular-base64-upload/pull/75)
+ - Allow selecting the same file (issue [#66](https://github.com/adonespitogo/angular-base64-upload/issues/66))
+
 v0.1.21
  - Migrate to `Gulp` build
  - Clear validation errors after clearing input with empty value - [see PR#90](https://github.com/adonespitogo/angular-base64-upload/pull/90)
