@@ -186,14 +186,7 @@ Just assign your model with `null`, `{}` or `[]` and it will automatically clear
 Server-Side
 ---------------
 
-You will have to decode the base64 file in your backend on your own.
-Sample PHP code for decoding base64 file in
-[demo folder](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo).
-Start it by cd-ing to this directory and running:
-
-    php -S 0.0.0.0:8000
-
-Then point your browser to [http://localhost:8000]().
+You will have to decode the base64 file in your backend by yourself.
 
 Below is a ruby code for decoding the base64-encoded file to be passed to paperclip:
 ```ruby
