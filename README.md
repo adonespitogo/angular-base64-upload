@@ -30,7 +30,7 @@ Installation
 
 Example
 --------------------------
-See [plunker](http://embed.plnkr.co/MTzfQASN8ZVeocAq7VcM/preview) or the [./demo](https://github.com/adonespitogo/angular-base64-upload/tree/master/demo) folder.
+See [plunker](http://embed.plnkr.co/MTzfQASN8ZVeocAq7VcM/preview).
 
 Usage
 -------
@@ -71,32 +71,56 @@ Validations
 </form>
 ```
 
+Options
+-------------------
+ - `do-not-parse-if-oversize` = Prevents the image from being converted to base64 whenever its size exceeds the maximum file size; this can be useful to prevent the browser from freezing whenever an exceedingly large file is uploaded. If this flag is set, the base64 attribute in the model will be set to null whenever an oversized image is uploaded.
+ 
+```html
+<form name="form">
+  <input type="file" ng-model="files" name="files" base-sixty-four-input do-not-parse-if-oversize>
+</form>
+```
+
 Custom Parser
 -------------------
 You can implement your own parsing logic before the data gets added into the model.
 
-Use case: You want images to be auto-resized after selecting files and add custom model attributes.
+Use case: You want images to be auto-resized after selecting files and add custom model attributes ([Jimp](https://github.com/oliver-moran/jimp) has been used in the example below).
+
 
 ```
-app.controller('ctrl', function ($scope, $q, imageProcessor) {
+app.controller('ctrl', function ($scope, $q) {
 
   $scope.resizeImage = function ( file, base64_object ) {
-
+    // file is an instance of File constructor.
+    // base64_object is an object that contains compiled base64 image data from file.
     var deferred = $q.defer();
-
-    imageProcessor.run(file).then(function (resized) {
-      var modelVal = {
-        file: file,
-        resized: resized
-      };
-      deferred.resolve(modelVal); // resolved value is appended to the model
+    var url = URL.createObjectURL(file);// creates url for file object.
+    Jimp.read(url)
+    .then(function (item) {
+      item
+      .resize(1280, Jimp.AUTO)// width of 1280px, auto-adjusted height
+      .quality(50)//drops the image quality to 50%
+      .getBase64(file.type, function (err, newBase64) {
+        if (err) {throw err;}
+        var bytes = Math.round((3/4)*newBase64.length);
+        base64Object.filetype = file.type;
+        base64Object.filesize = bytes;
+        base64Object.base64 = newBase64;
+        // Note that base64 in this package doesn't contain "data:image/jpeg;base64," part,
+        // while base64 string from Jimp does. It should be taken care of in back-end side.
+        deferred.resolve(base64Object);
+      });
+    })
+    .catch(function (err) {
+      return console.log(err);// error handling
     });
-
     return deferred.promise;
   };
 
 });
 
+<script src='/js/jimp.min.js'></script>
 <input type="file" base-sixty-four-input ng-model="images" parser="resizeImage" multiple>
 
 ```
@@ -145,7 +169,7 @@ Events
 
 Example event handler implementation:
    ```
-   $scope.errorHandler = function (event, reader, fileList, fileObjs, file) {
+   $scope.errorHandler = function (event, reader, file, fileList, fileObjs, object) {
      console.log("An error occurred while reading file: "+file.name);
      reader.abort();
    };
@@ -199,10 +223,12 @@ end
 
 Contribution
 ------------
- - Using [Grunt](http://gruntjs.com) as build tool
  - Uses [jasmine 1.3](http://jasmine.github.io/1.3/introduction.html) in writing unit test specs
- - `grunt test` to run unit tests
- - `grunt build` to build the project
+ - `npm install -g gulp gulp-cli bower`
+ - `npm install`
+ - `bower install`
+ - `gulp test` to run unit tests
+ - `gulp build` to build the project
  - Update `README.md` and `CHANGELOG.md` to reflect the new changes
  - Update the version number of `package.json` and `bower.json`
 
@@ -217,15 +243,7 @@ Author
 
 Contributors
 ------------
- - [@agibson-fl](https://github.com/agibson-fl)
- - [@drola](https://github.com/drola)
- - [@jamesharrington](https://github.com/jamesharrington)
- - [@gbrennon](https://github.com/gbrennon)
- - [@boxfrommars](https://github.com/boxfrommars)
- - [@kermit666](https://github.com/kermit666)
- - [@marksyzm](https://github.com/marksyzm)
- - [@arturgspb](https://github.com/arturgspb)
- - [@pegasuspect](https://github.com/pegasuspect)
+See [contributors list](https://github.com/adonespitogo/angular-base64-upload/graphs/contributors)
 
 ## License
 

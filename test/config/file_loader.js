@@ -11,6 +11,6 @@ module.exports = function (ANGULAR_VERSION) {
       "test/helpers/globals.js",
       "test/helpers/mocks.js",
       "test/helpers/compiler.js",
-      "test/angular-base64-upload.spec.js"
+      "test/*.spec.js"
   ];
 };

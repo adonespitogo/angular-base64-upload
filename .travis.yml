@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-  - '0.10.37'
+  - '4.0'
 before_script:
   - 'export DISPLAY=:99.0'
   - 'sh -e /etc/init.d/xvfb start'
-  - 'npm install -g bower karma grunt-cli jshint'
+  - 'npm install -g bower jshint karma gulp gulp-cli'
   - 'npm install' # install npm packages
   - 'bower install' # install bower packages
 
 after_script:
-  - 'grunt test' # or other command for build, run tests, etc
+  - 'gulp test' # or other command for build, run tests, etc

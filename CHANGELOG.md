@@ -1,6 +1,20 @@
 Change Log
 --------
 
+v0.1.21
+ - Migrate to `Gulp` build
+
+v0.1.20
+ - Added do-not-parse-if-oversize flag to prevent images above maximum size to be converted to base64.
+
+v0.1.19
+ - Refactored unit tests - separated into multiple files for easier navigation.
+ - Set view value only once
+
+v0.1.18
+ - Export module name for use with CommonJS syntax [#70](https://github.com/adonespitogo/angular-base64-upload/pull/70)
+ - add test against tampering with form state [#71](https://github.com/adonespitogo/angular-base64-upload/pull/71)
+
 v0.1.17
  - Manually run parsers to be consistent to all angular versions.
 

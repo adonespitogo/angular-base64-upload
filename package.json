@@ -1,30 +1,28 @@
 {
   "name": "angular-base64-upload",
-  "version": "v0.1.17",
+  "version": "v0.1.21",
   "description": "Converts files from file input into base64 encoded models.",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "gulp test"
   },
-  "dependencies": {},
   "devDependencies": {
-    "bower": "^1.3.12",
-    "grunt": "^0.4.5",
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-concat": "^0.5.1",
-    "grunt-contrib-copy": "^0.8.0",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-uglify": "^0.9.1",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-karma": "^0.9.0",
-    "grunt-then": "^1.0.0",
-    "karma": "^0.12.23",
-    "karma-coverage": "^0.2.6",
-    "karma-jasmine": "^0.1.5",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "karma-story-reporter": "^0.3.1",
-    "load-grunt-tasks": "^3.2.0"
+    "bower": "^1.8.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-insert": "^0.5.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.0",
+    "gulp-uglify": "^2.1.2",
+    "gulp-util": "^3.0.8",
+    "jasmine-core": "^2.6.0",
+    "jshint": "^2.9.4",
+    "karma": "^1.6.0",
+    "karma-coverage": "^1.1.1",
+    "karma-jasmine": "^0.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-story-reporter": "^0.3.1"
   },
   "repository": {
     "type": "git",
@@ -45,5 +43,8 @@
   "bugs": {
     "url": "https://github.com/adonespitogo/angular-base64-upload/issues"
   },
-  "homepage": "https://github.com/adonespitogo/angular-base64-upload"
+  "homepage": "https://github.com/adonespitogo/angular-base64-upload",
+  "engines": {
+    "node": ">=4.0"
+  }
 }
