@@ -72,13 +72,13 @@ describe('BaseSixtyFourInput Directive', function () {
 
     var event = new Event();
 
-    var directive = _compile({attrs: [{attr: 'ng-model', val: 'file'}]});
+    var directive = _compile({attrs: [{attr: 'ng-model', val: 'file'}, {attr: 'allow-same-file', val: true}]});
 
     spy = spyOn(directive.$input.isolateScope(), '_clearInput').andCallThrough();
     directive.$input.triggerHandler(event);
     $ROOTSCOPE.$apply();
     expect(spy).toHaveBeenCalled();
-  })
+  });
 
 });
 

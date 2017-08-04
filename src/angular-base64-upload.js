@@ -304,7 +304,9 @@
               _onAfterValidate(e);
             }
 
-            scope._clearInput();
+            if (attrs.allowSameFile) {
+              scope._clearInput();
+            }
 
           });
 
