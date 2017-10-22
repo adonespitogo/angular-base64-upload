@@ -52,25 +52,39 @@
           // VALIDATIONS =========================================================
 
           function _maxnum(val) {
+            var valid = true;
+            var toReturn = val;
             if (attrs.maxnum && attrs.multiple && val) {
-              var valid = val.length <= parseInt(attrs.maxnum);
+              valid = val.length <= parseInt(attrs.maxnum);
               ngModel.$setValidity('maxnum', valid);
               if(!valid) {
-                return [];
+                toReturn = [];
               }
             }
-            return val;
+
+            if(attrs.maxnum && attrs.showalert && !valid) {
+              alert('You cannot select more than '+parseInt(attrs.maxnum)+' files');
+            }
+
+            return toReturn;
           }
 
           function _minnum(val) {
+            var valid = true;
+            var toReturn = val;
             if (attrs.minnum && attrs.multiple && val) {
-              var valid = val.length >= parseInt(attrs.minnum);
+              valid = val.length >= parseInt(attrs.minnum);
               ngModel.$setValidity('minnum', valid);
               if(!valid) {
-                return [];
+                toReturn = [];
               }
             }
-            return val;
+
+            if(attrs.minnum && attrs.showalert && !valid) {
+              alert('Please select atleast '+parseInt(attrs.minnum)+' files');
+            }
+
+            return toReturn;
           }
 
           function _maxsize(val) {
@@ -98,6 +112,11 @@
               ngModel.$setValidity('maxsize', valid);
             }
 
+
+            if(attrs.maxsize && attrs.showalert && !valid) {
+              alert('You can only select files with size upto '+parseInt(attrs.maxsize)+' KB');
+            }
+
             return toReturn;
           }
 
@@ -123,6 +142,10 @@
                 }
               }
               ngModel.$setValidity('minsize', valid);
+            }
+
+            if(attrs.minsize && attrs.showalert && !valid) {
+              alert('You can only select files with size greater than '+parseInt(attrs.minsize)+' KB');
             }
 
             return toReturn;
