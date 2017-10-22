@@ -63,10 +63,12 @@ Validations
  - `minnum` = Minimum number of items to select (applicable only for multi-select)
  - `accept` = [Input file accept attribute](http://www.w3schools.com/tags/att_input_accept.asp). `file_extension|audio/*|video/*|image/*|media_type` comma separated
  - `required` = Checks if the model value is `null`, empty array `[]` or empty object `{}`
+ - `showalert` = if set to "true" this attribute will allow showing of an alert
+   window whenever a validation - maxnum, minnum, minsize, maxsize - fails.
 
 ```html
 <form name="form">
-  <input type="file" ng-model="files" name="files" multiple accept="image/*, .zip" maxsize="5000" required base-sixty-four-input>
+  <input type="file" ng-model="files" name="files" multiple showalert="true" accept="image/*, .zip" maxsize="5000" required base-sixty-four-input>
   <span ng-show="form.files.$error.maxsize">Files must not exceed 5000 KB</span>
 </form>
 ```

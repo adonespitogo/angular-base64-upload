@@ -52,23 +52,44 @@
           // VALIDATIONS =========================================================
 
           function _maxnum(val) {
+            var valid = true;
+            var toReturn = val;
             if (attrs.maxnum && attrs.multiple && val) {
-              var valid = val.length <= parseInt(attrs.maxnum);
+              valid = val.length <= parseInt(attrs.maxnum);
               ngModel.$setValidity('maxnum', valid);
+              if(!valid) {
+                toReturn = [];
+              }
             }
-            return val;
+
+            if(attrs.maxnum && attrs.showalert && !valid) {
+              alert('You cannot select more than '+parseInt(attrs.maxnum)+' files');
+            }
+
+            return toReturn;
           }
 
           function _minnum(val) {
+            var valid = true;
+            var toReturn = val;
             if (attrs.minnum && attrs.multiple && val) {
-              var valid = val.length >= parseInt(attrs.minnum);
+              valid = val.length >= parseInt(attrs.minnum);
               ngModel.$setValidity('minnum', valid);
+              if(!valid) {
+                toReturn = [];
+              }
             }
-            return val;
+
+            if(attrs.minnum && attrs.showalert && !valid) {
+              alert('Please select atleast '+parseInt(attrs.minnum)+' files');
+            }
+
+            return toReturn;
           }
 
           function _maxsize(val) {
             var valid = true;
+            var toReturn = val;
 
             if (attrs.maxsize && val) {
               var max = parseFloat(attrs.maxsize) * 1000;
@@ -78,20 +99,30 @@
                   var file = val[i];
                   if (file.filesize > max) {
                     valid = false;
+                    toReturn = [];
                     break;
                   }
                 }
               } else {
                 valid = val.filesize <= max;
+                if(!valid) {
+                  toReturn = null;
+                }
               }
               ngModel.$setValidity('maxsize', valid);
             }
 
-            return val;
+
+            if(attrs.maxsize && attrs.showalert && !valid) {
+              alert('You can only select files with size upto '+parseInt(attrs.maxsize)+' KB');
+            }
+
+            return toReturn;
           }
 
           function _minsize(val) {
             var valid = true;
+            var toReturn = val;
             var min = parseFloat(attrs.minsize) * 1000;
 
             if (attrs.minsize && val) {
@@ -100,20 +131,29 @@
                   var file = val[i];
                   if (file.filesize < min) {
                     valid = false;
+                    toReturn = [];
                     break;
                   }
                 }
               } else {
                 valid = val.filesize >= min;
+                if(!valid) {
+                  toReturn = null;
+                }
               }
               ngModel.$setValidity('minsize', valid);
             }
 
-            return val;
+            if(attrs.minsize && attrs.showalert && !valid) {
+              alert('You can only select files with size greater than '+parseInt(attrs.minsize)+' KB');
+            }
+
+            return toReturn;
           }
 
           function _accept(val) {
             var valid = true;
+            var toReturn = val;
             var regExp, exp, fileExt;
             if (attrs.accept) {
               exp = attrs.accept.trim().replace(/[,\s]+/gi, "|").replace(/\./g, "\\.").replace(/\/\*/g, "/.*");
@@ -128,29 +168,33 @@
                   valid = regExp.test(file.filetype) || regExp.test(fileExt);
 
                   if (!valid) {
+                    toReturn = [];
                     break;
                   }
                 }
               } else {
                 fileExt = "." + val.filename.split('.').pop();
                 valid = regExp.test(val.filetype) || regExp.test(fileExt);
+                if(!valid) {
+                  toReturn = null;
+                }
               }
               ngModel.$setValidity('accept', valid);
             }
 
-            return val;
+            return toReturn;
           }
 
           //end validations ===============
 
           function _setViewValue() {
             var newVal = attrs.multiple ? fileObjects : fileObjects[0];
+            newVal = _maxsize(newVal);
+            newVal = _minsize(newVal);
+            newVal = _maxnum(newVal);
+            newVal = _minnum(newVal);
+            newVal = _accept(newVal);
             ngModel.$setViewValue(newVal);
-            _maxsize(newVal);
-            _minsize(newVal);
-            _maxnum(newVal);
-            _minnum(newVal);
-            _accept(newVal);
           }
 
           function _attachHandlerForEvent(eventName, handler, fReader, file, fileObject) {
