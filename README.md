@@ -75,7 +75,7 @@ Options
 -------------------
  - `do-not-parse-if-oversize` = Prevents the image from being converted to base64 whenever its size exceeds the maximum file size; this can be useful to prevent the browser from freezing whenever an exceedingly large file is uploaded. If this flag is set, the base64 attribute in the model will be set to null whenever an oversized image is uploaded.
 
- - `allow-same-file` = <i>boolean</i> allow or disallow selecting same file
+ - `allow-same-file` = [<i>boolean</i>](https://www.scaler.com/topics/boolean-in-javascript/) allow or disallow selecting same file
 
 ```html
 <form name="form">
